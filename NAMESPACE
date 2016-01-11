@@ -1,0 +1,11 @@
+import(methods)
+import(Biostrings)
+import(GenomicRanges)
+import(IRanges)
+import(KernSmooth)
+
+importFrom(plotrix, color.legend)
+
+exportMethods(motifScanHits, motifScanScores, getPatternOccurrenceList,
+plotPatternDensityMap, plotPatternOccurrenceAverage, plotMotifDensityMap,
+plotMotifOccurrenceAverage, plotMotifScanScores)

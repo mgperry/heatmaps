@@ -1,0 +1,22 @@
+Package: seqPattern
+Title: Visualising oligonucleotide patterns and motif occurrences
+        across a set of sorted sequences
+Version: 1.2.0
+Date: 08-05-2015
+Author: Vanja Haberle <vanja.haberle@gmail.com>
+Maintainer: Vanja Haberle <vanja.haberle@gmail.com>
+Imports: Biostrings, GenomicRanges, IRanges, KernSmooth, plotrix
+Depends: methods, R (>= 2.15.0)
+Suggests: BSgenome.Drerio.UCSC.danRer7, CAGEr, RUnit, BiocGenerics,
+        BiocStyle
+Enhances: parallel
+Description: Visualising oligonucleotide patterns and sequence motifs
+        occurrences across a large set of sequences centred at a common
+        reference point and sorted by a user defined feature.
+License: GPL-3
+biocViews: Visualization, SequenceMatching
+Collate: MotifScanningFunctions.R MotifScanningMethods.R
+        PatternOccurrenceFunctions.R PatternOccurrenceMethods.R
+        PlottingFunctions.R PlottingMethods.R
+NeedsCompilation: no
+Packaged: 2015-10-14 04:11:43 UTC; biocbuild

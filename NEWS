@@ -1,0 +1,32 @@
+Updated to version 1.0.1 in release and 1.1.1 in development (08/05/2015)
+06/05/2015    Updated the vignette with sections describing how to plot average 
+              profiles.
+01/05/2015    Added new colour palettes for plotting density plots. Eight  
+              different colour palettes are now available in addition to 
+              previous default palette in shades of blue. Preview of the
+              palettes is available in the vignette.
+30/04/2015    Marray package is no longer imported and, instead of the 
+              maPalette() function for creating colour palettes, the           
+              colorRampPalette() function is now used throughout.
+
+Updated to version 1.0.0 (17/04/2015)
+17/04/2015    Bioconductor 3.1 release
+Updated to version 0.99.3 (23/03/2015)
+23/03/2015    Added function plotMotifOccurrenceAverage() for plotting
+              average profile of motif occurrence.
+21/03/2015    Added function plotPatternOccurrenceAverage() for plotting
+              average profiles of patterns occurrence.
+18/03/2015    Fixed the problem of motif matching to Ns (which are assigned 
+              weights 0) when PWM has very negative values.
+
+Updated to version 0.99.2 (02/02/2015)
+02/02/2015    Updated the man pages and the vignette.
+01/02/2015    Adjusted the calculation of PWM score percentage for motif
+              scanning functions to correctly calculate percentage of maximal 
+              PWM score taking into account minimal PWM score as a baseline 
+              (important when minimal score of the PWM is negative). The score 
+              threshold specified as a percentage (e.g. default value of 80%) is
+              now converted to PWM score threshold as follows:
+                minScore(motifPWM) + percThreshold/100 * 
+                (maxScore(motifPWM) - minScore(motifPWM))
+Version 0.99.1 released in the development branch (07/01/2015)
