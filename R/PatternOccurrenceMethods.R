@@ -54,6 +54,24 @@ function(regionsSeq, patterns, seqOrder = c(1:length(regionsSeq))){
     return(pattern.matrix.melt)
 }
 
+# library(Matrix)
+
+.get.pattern.occurence.melted.sm <- function(pattern, seq, seqOrder){
+    pattern.matches <- vmatchPattern(pattern=pattern, subject=seq, fixed=FALSE)
+    pattern.starts <- startIndex(pattern.matches)
+    pattern.starts <- pattern.starts[seqOrder]
+    pattern.starts.ul <- unlist(pattern.starts)
+    sm = sparseMatrix(
+        i = rep(1:length(pattern.starts), lengths(pattern.starts)), 
+        j = pattern.starts.ul,
+        dims = c(length(seq), width(seq)[1]))
+    return(sm)
+}
+
+
+
+
+
 
 
 

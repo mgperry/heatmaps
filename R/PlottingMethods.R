@@ -81,8 +81,7 @@ following color scales: 'green','cyan','blue','purple','pink','red','orange',
         scale.width = scaleWidth, add.label = addPatternLabel,
         cex.label = cexLabel, label.col = labelCol,
         addReferenceLine = addReferenceLine, plotColorLegend = plotColorLegend,
-        out = outFile, plot.width = plotWidth, plot.height = plotHeight,
-        useMulticore = useMulticore, nrCores = nrCores)
+        out = outFile)
     
     }
 )
