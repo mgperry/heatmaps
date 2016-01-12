@@ -1,6 +1,6 @@
 .smoothScatter <- function(
         map,
-        xlim, ylim,
+        xlim, ylim, # can these be taken from map easily ?
         color='blue',
         transf=NULL, 
         max.value=NULL) {
@@ -8,29 +8,26 @@
     if (is.null(transf)) transf = function(x) x^.25 # transform should be outside function
     colramp = .myColorPalette(color) # take text argument and use myColorPalette?
 
-    ## xlim and ylim
-    xlim <- range(x[,1])
-    ylim <- range(x[,2])
-
     ## create density map [ code in --> ../../grDevices/R/smooth2d.R ]:
     xm <- map$x1
     ym <- map$x2
-    dens <- map$fhat
-    dens[] <- transf(dens)
+    dens <- transf(map$fhat)
 
     breaks <- seq(0, transf(max.value), length.out=257)
 
+    message("plotting in .smoothScatter")
     ## plot color image
     image(xm, ym, z=dens,
           col=colramp(256), breaks=breaks,
-          xlab=xlab, ylab=ylab,
           xlim=xlim, ylim=ylim,
           xaxs="i", yaxs="i", # may be default
+          xlab="", ylab="", # may be default
           axes=FALSE, # maybe goes here
           # previously passed via dots
           pch=20, cex=0.8,
           main='', cex.main=1.5)
     box()
+    message("done plotting in .smoothScatter")
 }
 
 .myColorPalette <- function(colorName){
@@ -49,7 +46,7 @@ log5 <- function(x) {
 .pattern.smoothscatter <- function(
     melted, orig, patterns, out,
     flankUp=NULL, flankDown=NULL,
-    bw=NULL, nbin=NULL, color='blue', transf=NULL,
+    bw=NULL, color='blue', transf=NULL,
     xTicks=NULL, xTicksAt=NULL, yTicks=NULL, yTicksAt=NULL, cex.axis=8,
     plot.scale=TRUE, scale.length=NULL, scale.width=10,
     add.label=TRUE, cex.label=8, label.col='black',
@@ -61,13 +58,14 @@ log5 <- function(x) {
     nr.seq <- length(orig)
 
     scale.factor <- 2*log5(20)*log5(100)/log5(flank/2) - 2*log5(4)
+    message("scale.factor: ", scale.factor)
 
-    if(length(nbin) == 0){
-        nbin <- c(round(flank*scale.factor), length(orig))
-    }
-    if(length(bw) == 0){
-        bw = c(3/scale.factor,3)
-    }
+    # settings no longer options, can experiment later
+    # for 1000 sequences this means more bins than sequences !?
+    nbin <- c(round(flank*scale.factor), length(orig))
+    message("nbin: ", nbin[1], ", ", nbin[2])
+    bw = c(3/scale.factor,3)
+    message("bw: ", bw[1], ", ", bw[2])
 
     sums <- vector()
     for(di in patterns) {
@@ -116,7 +114,16 @@ log5 <- function(x) {
         par(mar=c(12, 8.5, 2, 8.5))
         dinuc.subset=melted[[di]]
 
-        x <- dinuc.subset$position-cols.to.draw[1],
+        # almost certainly xlim/ylim can be recovered from map
+        x <- dinuc.subset$position-cols.to.draw[1]
+        y <- max(rows.to.draw)+1-dinuc.subset$sequence
+
+        ## similar as in plot.default
+        xy <- xy.coords(x, y)
+        
+        ## eliminate non-finite (incl. NA) values
+        x <- cbind(xy$x, xy$y)[ is.finite(xy$x) & is.finite(xy$y), , drop = FALSE]
+        xlim <- range(x[,1])
         ylim <- range(x[,2])
 
         .smoothScatter(
@@ -124,7 +131,7 @@ log5 <- function(x) {
             xlim=c(0.5,flank-0.5), 
             ylim=ylim,
             color=color, 
-            transformation=transf,
+            transf=transf,
             max.value=max.value[di]) 
 
         if(length(xTicks) > 0){
@@ -158,10 +165,11 @@ log5 <- function(x) {
         dev.off()
     }
 
+    message("plotting legend")
     if(plotColorLegend == TRUE){
         png(filename=paste(out,"ColorLegend","png",sep="."),
         width=0.15*plot.height, height=plot.height)
-        f <- colorRampPalette(mycols)
+        f <- .myColorPalette(color)
         nr.labels <- 4
         leg <- rep('', 256)
         leg[seq(0.05*256, 0.95*256, length.out=nr.labels)] <-

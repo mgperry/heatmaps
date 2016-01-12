@@ -1,34 +1,14 @@
 setGeneric(
 name="getPatternOccurrenceList",
-def=function(regionsSeq, patterns, seqOrder = c(1:length(regionsSeq)),
-    useMulticore = FALSE, nrCores = NULL){
+def=function(regionsSeq, patterns, seqOrder = c(1:length(regionsSeq))){
         standardGeneric("getPatternOccurrenceList")
     }
 )
 
+# probably should work on only 1 pattern (collate later) and ignore seqOrder (handle at input)
 setMethod("getPatternOccurrenceList",
 signature(regionsSeq = "DNAStringSet"),
-function(regionsSeq, patterns, seqOrder = c(1:length(regionsSeq)),
-    useMulticore = FALSE, nrCores = NULL){
-        
-        pt <- .Platform$OS.type
-        if(useMulticore == TRUE){
-            if(pt == "unix"){
-                if("parallel" %in% rownames(installed.packages()) == FALSE){
-                    stop("Cannot use multicore because package 'parallel' is 
-                    not installed!")
-                }else{
-                    library(parallel)
-                    if(is.null(nrCores)){
-                        nrCores <- detectCores()
-                    }
-                }
-            }else{
-                useMulticore = FALSE
-                warning("Multicore is not supported on non-Unix platforms! 
-                Setting useMulticore=FALSE")
-            }
-        }
+function(regionsSeq, patterns, seqOrder = c(1:length(regionsSeq))){
         
         if(!(length(unique(width(regionsSeq))) == 1)){
             stop("All sequences in the input DNAStringSet must have the same 
@@ -44,21 +24,37 @@ function(regionsSeq, patterns, seqOrder = c(1:length(regionsSeq)),
         
         regionsSeq <- DNAStringSet(gsub("N", "+", regionsSeq))
         
-        if(useMulticore == TRUE){
-            patterns.occurence.melted.list <- mclapply(as.list(patterns),
-                function(x){
-                    .get.pattern.occurence.melted(pattern = x, seq = regionsSeq,
-                    seqOrder = seqOrder)
-                }, mc.cores = nrCores)
-        }else{
-            patterns.occurence.melted.list <- lapply(as.list(patterns),
-                function(x){
-                    .get.pattern.occurence.melted(pattern = x, seq = regionsSeq,
-                    seqOrder = seqOrder)
-                })
-        }
-        
+        patterns.occurence.melted.list <- lapply(patterns, .get.pattern.occurence.melted.new, seq = regionsSeq, seqOrder = seqOrder)
         names(patterns.occurence.melted.list) <- patterns
         return(patterns.occurence.melted.list)
     }
 )
+
+.get.pattern.occurence.melted <- function(pattern, seq, seqOrder){
+    pattern.matches <- vmatchPattern(pattern=pattern, subject=seq, fixed=FALSE)
+    pattern.starts <- startIndex(pattern.matches)
+    pattern.starts <- pattern.starts[seqOrder]
+    non.zero.idx <- which(unlist(lapply(pattern.starts, length))>0)
+    pattern.matrix.melt <- do.call(rbind, lapply(as.list(non.zero.idx),
+        function(n) {
+            data.frame(sequence = n, position = pattern.starts[[n]], value = 1)
+        }))
+    return(pattern.matrix.melt)
+}
+
+.get.pattern.occurence.melted.new <- function(pattern, seq, seqOrder){
+    pattern.matches <- vmatchPattern(pattern=pattern, subject=seq, fixed=FALSE)
+    pattern.starts <- startIndex(pattern.matches)
+    pattern.starts <- pattern.starts[seqOrder]
+    pattern.starts.ul <- unlist(pattern.starts)
+    pattern.matrix.melt <- data.frame(
+        sequence = rep(1:length(pattern.starts), lengths(pattern.starts)), 
+        position = pattern.starts.ul, 
+        value = 1)
+    return(pattern.matrix.melt)
+}
+
+
+
+
+
