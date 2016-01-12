@@ -1,9 +1,12 @@
 .smoothScatter <- function(
         map,
-        xlim, ylim, # can these be taken from map easily ?
         color='blue',
         transf=NULL, 
-        max.value=NULL) {
+        max.value=NULL,
+        xTicks=xTicks, xTicksAt=xTicksAt, cex.axis=cex.axis,
+        plot.scale=plot.scale, scale.length=scale.length, scale.width=scale.width, flank=flank,
+        add.label=add.label, cex.label=cex.label, label.col=label.col,
+        addReferenceLine=addReferenceLine, flankUp=flankUp, max_dinuc=max_dinuc) {
 
     if (is.null(transf)) transf = function(x) x^.25 # transform should be outside function
     colramp = .myColorPalette(color) # take text argument and use myColorPalette?
@@ -19,15 +22,38 @@
     ## plot color image
     image(xm, ym, z=dens,
           col=colramp(256), breaks=breaks,
-          xlim=xlim, ylim=ylim,
+          xlim=c(0.5,flank-0.5),
           xaxs="i", yaxs="i", # may be default
           xlab="", ylab="", # may be default
           axes=FALSE, # maybe goes here
           # previously passed via dots
           pch=20, cex=0.8,
           main='', cex.main=1.5)
-    box()
-    message("done plotting in .smoothScatter")
+    box(lwd = 6)
+    message("plotting labels in .smoothScatter")
+    if(length(xTicks) > 0){
+        axis(1, at=xTicksAt, labels=xTicks, cex.axis=cex.axis, padj=1,
+        lwd=6, tcl=-1)
+    }
+    if(plot.scale){
+        if(length(scale.length) == 0){
+            scale.length = flank/5
+        }
+        lines(c(0.03*flank/2,0.03*flank/2 + scale.length),
+                c(0.03*max_dinuc, 0.03*
+                max_dinuc), lwd=scale.width, col=label.col)
+        text(x=0.03*flank/2 + scale.length/2,
+                y=0.06*max_dinuc,
+                labels=paste(round(scale.length), 'bp', sep=''),
+                cex=cex.label, adj=c(0.5,0), col=label.col, font=2)
+    }
+    if(add.label){
+        text(x=0.02*flank/2, y=0.98*max_dinuc,
+        labels=di, cex=cex.label, adj=c(0,1), col=label.col, font=2)
+    }
+    if(addReferenceLine){
+        abline(v=flankUp+0.5, lty="dashed", lwd=6)
+    }
 }
 
 .myColorPalette <- function(colorName){
@@ -112,56 +138,20 @@ log5 <- function(x) {
         outfile <- paste(out,di,"png",sep=".")
         png(filename=outfile, width=plot.width, height=plot.height)
         par(mar=c(12, 8.5, 2, 8.5))
-        dinuc.subset=melted[[di]]
 
-        # almost certainly xlim/ylim can be recovered from map
-        x <- dinuc.subset$position-cols.to.draw[1]
-        y <- max(rows.to.draw)+1-dinuc.subset$sequence
-
-        ## similar as in plot.default
-        xy <- xy.coords(x, y)
-        
-        ## eliminate non-finite (incl. NA) values
-        x <- cbind(xy$x, xy$y)[ is.finite(xy$x) & is.finite(xy$y), , drop = FALSE]
-        xlim <- range(x[,1])
-        ylim <- range(x[,2])
+        max_dinuc = max(melted[[di]]$sequence)
 
         .smoothScatter(
             map=a0[[di]],
-            xlim=c(0.5,flank-0.5), 
-            ylim=ylim,
             color=color, 
             transf=transf,
-            max.value=max.value[di]) 
+            max.value=max.value[di],
+            # scale/label options
+            xTicks=xTicks, xTicksAt=xTicksAt, cex.axis=cex.axis,
+            plot.scale=plot.scale, scale.length=scale.length, scale.width=scale.width, flank=flank, 
+            add.label=add.label, cex.label=cex.label, label.col=label.col,
+            addReferenceLine=addReferenceLine, flankUp=flankUp, max_dinuc=max_dinuc) 
 
-        if(length(xTicks) > 0){
-            axis(1, at=xTicksAt, labels=xTicks, cex.axis=cex.axis, padj=1,
-            lwd=6, tcl=-1)
-        }
-        if(length(yTicks) > 0){
-            axis(2, at=yTicksAt, labels=yTicks, cex.axis=cex.axis, las=1,
-            lwd=6, tcl=-1)
-        }
-        box(lwd = 6) # duplicate?
-        if(plot.scale){
-            if(length(scale.length) == 0){
-                scale.length = flank/5
-            }
-            lines(c(0.03*flank/2,0.03*flank/2 + scale.length),
-                  c(0.03*max(dinuc.subset$sequence), 0.03*
-                    max(dinuc.subset$sequence)), lwd=scale.width, col=label.col)
-            text(x=0.03*flank/2 + scale.length/2,
-                 y=0.06*max(dinuc.subset$sequence),
-                 labels=paste(round(scale.length), 'bp', sep=''),
-                 cex=cex.label, adj=c(0.5,0), col=label.col, font=2)
-        }
-        if(add.label){
-            text(x=0.02*flank/2, y=0.98*max(dinuc.subset$sequence),
-            labels=di, cex=cex.label, adj=c(0,1), col=label.col, font=2)
-        }
-        if(addReferenceLine){
-            abline(v=flankUp+0.5, lty="dashed", lwd=6)
-        }
         dev.off()
     }
 
@@ -237,7 +227,7 @@ scaleLength=NULL, scaleWidth=15, addReferenceLine=TRUE){
 
 
 #######################################
-# Function of plotting average signal
+# Function for plotting average signal
 
 
 .plot.windowed.average <- function(occurence.melted.list, nr.seq,
