@@ -1,36 +1,16 @@
 .smoothScatter <- function(
-        x, y=NULL, map,
+        map,
         xlim, ylim,
-        colramp=NULL,
+        color='blue',
         transf=NULL, 
         max.value=NULL) {
 
-    if (is.null(transf)) transf = function(x) x^.25
-    if (is.null(colramp)) colramp = colorRampPalette(c("white", blues9))
-
-    ## similar as in plot.default
-    xlabel <- if (!missing(x)) deparse(substitute(x))
-    ylabel <- if (!missing(y)) deparse(substitute(y))
-    xy <- xy.coords(x, y, xlabel, ylabel)
-    xlab <- if (is.null(xlab)) xy$xlab else xlab
-    ylab <- if (is.null(ylab)) xy$ylab else ylab
-
-    ## eliminate non-finite (incl. NA) values
-    x <- cbind(xy$x, xy$y)[ is.finite(xy$x) & is.finite(xy$y), , drop = FALSE]
+    if (is.null(transf)) transf = function(x) x^.25 # transform should be outside function
+    colramp = .myColorPalette(color) # take text argument and use myColorPalette?
 
     ## xlim and ylim
-    if(!missing(xlim)) {
-        stopifnot(is.numeric(xlim), length(xlim)==2, is.finite(xlim))
-        x <- x[ min(xlim) <= x[,1] & x[,1] <= max(xlim), ]
-    } else {
-        xlim <- range(x[,1])
-    }
-    if(!missing(ylim)) {
-        stopifnot(is.numeric(ylim), length(ylim)==2, is.finite(ylim))
-        x <- x[ min(ylim) <= x[,2] & x[,2] <= max(ylim), ]
-    } else {
-        ylim <- range(x[,2])
-    }
+    xlim <- range(x[,1])
+    ylim <- range(x[,2])
 
     ## create density map [ code in --> ../../grDevices/R/smooth2d.R ]:
     xm <- map$x1
@@ -54,14 +34,12 @@
 }
 
 .myColorPalette <- function(colorName){
-    colors.df <- data.frame(midcol=c("palegreen","aquamarine","lightblue",
-        "lavender","mistyrose","peachpuff","lightgoldenrod2","wheat2",
-        "lightgray"), highcol=c("darkgreen","darkslategrey","blue4","purple4",
-        "deeppink4","red4","darkorange4","salmon4","black"),
+    colors.df <- data.frame(
+        midcol=c("palegreen", "aquamarine", "lightblue", "lavender", "mistyrose", "peachpuff", "lightgoldenrod2", "wheat2", "lightgray"),
+        highcol=c("darkgreen", "darkslategrey", "blue4", "purple4", "deeppink4", "red4", "darkorange4", "salmon4", "black"),
         stringsAsFactors = FALSE)
-    rownames(colors.df) <- c("green","cyan","blue","purple","pink","red",
-        "orange","brown","gray")
-    c("white", colors.df[colorName,"midcol"], colors.df[colorName,"highcol"])
+    rownames(colors.df) <- c("green", "cyan", "blue", "purple", "pink", "red", "orange", "brown", "gray")
+    colorRampPalette( c("white", colors.df[colorName,"midcol"], colors.df[colorName,"highcol"]) )
 }
 
 log5 <- function(x) {
@@ -78,8 +56,6 @@ log5 <- function(x) {
     addReferenceLine=TRUE, plotColorLegend=TRUE,
     plot.width=2000, plot.height=2000,
     useMulticore=FALSE, nrCores=NULL) {
-
-    mycols <- .myColorPalette(color)
 
     flank <- width(orig)[1]
     nr.seq <- length(orig)
@@ -140,12 +116,14 @@ log5 <- function(x) {
         par(mar=c(12, 8.5, 2, 8.5))
         dinuc.subset=melted[[di]]
 
+        x <- dinuc.subset$position-cols.to.draw[1],
+        ylim <- range(x[,2])
+
         .smoothScatter(
-            x=dinuc.subset$position-cols.to.draw[1],
-            y=max(rows.to.draw)+1-dinuc.subset$sequence, 
             map=a0[[di]],
             xlim=c(0.5,flank-0.5), 
-            colramp=colorRampPalette(mycols), 
+            ylim=ylim,
+            color=color, 
             transformation=transf,
             max.value=max.value[di]) 
 
@@ -157,7 +135,7 @@ log5 <- function(x) {
             axis(2, at=yTicksAt, labels=yTicks, cex.axis=cex.axis, las=1,
             lwd=6, tcl=-1)
         }
-        box(lwd = 6)
+        box(lwd = 6) # duplicate?
         if(plot.scale){
             if(length(scale.length) == 0){
                 scale.length = flank/5
