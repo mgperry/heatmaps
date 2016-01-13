@@ -32,10 +32,10 @@ signature(seq = "DNAStringSet", pattern="character"),
 )
 
 setMethod("getPatternOccurrence",
-signature(regionsSeq = "DNAStringSet", pattern = "PWM"),
-function(regionsSeq, pattern) {
+signature(seq = "DNAStringSet", pattern = "PWM"),
+function(seq, pattern) {
 
-        if (!(length(unique(width(regionsSeq))) == 1)) {
+        if (!(length(unique(width(seq))) == 1)) {
             stop("All sequences in the input DNAStringSet must have the same
             length!")
         }

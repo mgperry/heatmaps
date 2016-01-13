@@ -1,4 +1,9 @@
-setMethod("plot", signature="Heatmap",
+setGeneric(name="plotHeatmap",
+           def=function(heatmap, options=NULL, ...) {
+    standardGeneric("plotHeatmap")
+})
+
+setMethod("plotHeatmap", signature="Heatmap",
     function(heatmap, options=NULL, ...) {
 
     if (is.null(options)) {
@@ -7,13 +12,12 @@ setMethod("plot", signature="Heatmap",
 
     colramp = colorRampPalette(.myColorPalette(options$color)) # could check for function as input
 
-    breaks <- seq(0, heatmap@transform(heatmap@max_value), length.out=257) # could be option
+    breaks <- seq(0, options$transform(heatmap@max_value), length.out=257) # could be option
 
     xm <- heatmap@xm
     ym <- heatmap@ym
     val <- options$transform(heatmap@value)
 
-    message("plotting in ss_heatmap")
     ## plot color image
     image(xm, ym, z=val,
           col=colramp(256), breaks=breaks,
@@ -24,8 +28,6 @@ setMethod("plot", signature="Heatmap",
           # previously passed via dots
           pch=20, cex=0.8,
           main='', cex.main=1.5)
-
-    message("plotting labels in ss_heatmap")
 
     if (options$box.width > 0) box(lwd = options$box.width)
 
@@ -53,7 +55,7 @@ setMethod("plot", signature="Heatmap",
     if(options$addReferenceLine){
         abline(v=(-heatmap@coords[1])+0.5, lty="dashed", lwd=6)
     }
-}
+})
 
 heatmapOptions = function(...) {
     usr = list(...)
@@ -68,25 +70,19 @@ heatmapOptions = function(...) {
         cex.label=8,
         label.col='black',
         legend=TRUE,
-        leged.width=0.2,
-        leged.ticks=4,
+        legend.width=0.2,
+        legend.ticks=5,
+        cex.legend=6,
         addReferenceLine=TRUE,
         transform=function(x) x)
     def[names(usr)] = usr
     return(def)
 }
 
-plotHeatmapList = function(heatmap_list, groups=NULL, group_colors=NULL, group_transform=NULL, options) {
+plotHeatmapList = function(heatmap_list, groups=NULL, options=heatmapOptions(), ...) {
     if (class(heatmap_list) == "Heatmap") heatmap_list = list(heatmap_list) # allow single heatmap argument
     n_plots = length(heatmap_list)
-    n_groups = max(groups)
-    if (!is.null(group_colors) && length(group_colors) != n_groups) {
-        stop("length(group_colors) != #groups")
-    }
-    if (!is.null(group_transform) && length(group_colors) != n_groups) {
-        stop("length(group_transform) != #groups")
-    }
-    # colors for groups?
+    message(paste("Plotting", n_plots, "plots"))
 
     if (is.null(groups) || length(unique(groups)) == n_plots) {
         groups = 1:n_plots
@@ -99,8 +95,11 @@ plotHeatmapList = function(heatmap_list, groups=NULL, group_colors=NULL, group_t
         groups = as.numeric(factor(groups, levels=unique(groups)))
     }
 
-    if (groups != 1:n_plots) {
-        for (i = 1:max(groups)) {
+    n_groups = max(groups)
+    message(paste("groups:", paste(groups, collapse=', '), "giving", n_groups, "groups"))
+
+    if (all(groups != 1:n_plots)) {
+        for (i in 1:max(groups)) {
             group = which(groups == i)
             max_d = sum(vapply(heatmaps_list[group], function(x) max(x@value), integer(1)))
             for (index in group) {
@@ -109,38 +108,49 @@ plotHeatmapList = function(heatmap_list, groups=NULL, group_colors=NULL, group_t
         }
     }
 
-    # neater way of supplying group options?
-    group_list = split(1:n_plots, groups)
+    # neater way of supplying group options
+    dots = list(...)
+    options[names(dots)] = dots
+    opt_lengths = lengths(options)
+    if (!all(opt_lengths %in% c(1, n_groups))) stop("supplied options must be length 1 or #groups")
     group_options = list()
-    for (i in 1:n_groups) {
-        go = options
-        if(!is.null(group_colors)) go$color = group_colors[i]
-        if(!is.null(group_transform)) go$color = group_transform[i]
-        group_options[[i]] = go
+    if (n_groups > 1) {
+        for (i in 1:n_groups) {
+            opt = options
+            extra_opts = opt[lengths(opt) == n_groups]
+            opt[names(extra_opts)] = lapply(extra_opts, function(x) unlist(x[i]))
+            group_options[[i]] = opt
+        }
+    } else {
+        group_options[[1]] = options
     }
 
-    if (options$legend = TRUE) {
+    group_list = split(1:n_plots, groups)
+
+    if (options$legend == TRUE) {
         widths = numeric(0)
         for (grp in group_list) {
             widths = c(widths, 0.2, rep(1, length(grp)))
         }
-        mat = 1:length(widths)
+        mat = t(1:length(widths))
         widths = widths/sum(widths)
         layout(mat, widths)
     } else {
-        layout(1:n_plots)
+        layout(t(1:n_plots))
     }
 
     for (i in 1:n_groups) {
         go = group_options[[i]]
         grp = group_list[[i]]
-        if(options$legend = TRUE) {
+        if(options$legend == TRUE) {
+            message("plotting legend")
             par(mar = c(12, 14, 2, 0.5)) # from .pattern.smoothscatter
             plot_legend(heatmap_list[[grp[1]]]@max_value, go)
         }
         for (j in grp) {
+            message("plotting heatmap")
             par(mar=c(12, 8.5, 2, 8.5)) # from .pattern.smoothscatter
-            plot(heatmap_list[[j]], go)
+            plotHeatmap(heatmap_list[[j]], go)
         }
     }
 }
@@ -163,7 +173,7 @@ plot_legend <- function(max_value, options) {
         box(lwd = 6)
         color.legend(0, 0, 1, 7, legend=leg,
                      rect.col=rgb(col_ramp(transf(seq(0, 1, length.out=256)))/256),
-                     align="lt", gradient='y', cex=options$cex.axis)
+                     align="lt", gradient='y', cex=options$cex.legend)
 }
 
 .myColorPalette <- function(colorName){

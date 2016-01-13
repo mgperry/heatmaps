@@ -1,33 +1,29 @@
 setGeneric(
 name="plotPatternDensityMap",
-def=function(regionsSeq, patterns, coords, options=heatmapOptions(), ...) {
+def=function(seq, patterns, ...) {
         standardGeneric("plotPatternDensityMap")
     }
 )
 
 setMethod("plotPatternDensityMap",
-signature(regionsSeq = "DNAStringSet"),
-function(regionsSeq, patterns, coord, options=heatmapOptions(), ...){
+signature(seq = "DNAStringSet"),
+function(seq, patterns, coords=NULL, options=heatmapOptions(), ...){
+
+        if (is.null(coords)) {
+            coords = c(-width(seq[1])/2, width(seq[1])/2)
+        }
 
         # unify with motifs ??? even accept GR input somehow?
         message("\nGetting oligonucleotide occurrence matrix...")
-        sm.list <- lapply(patterns, getPatternOccurrence, seq=regionsSeq)
-        labels = sapply(patterns, function (x) ifelse(class(x) == "PWM", x@name, x)
+        sm.list <- lapply(patterns, getPatternOccurrence, seq=seq)
+        labels = sapply(patterns, function (x) ifelse(class(x) == "PWM", x@name, x))
 
         heatmaps <- list()
-        for (i in 1:lengthe(patterns)) {
-            heatmaps[[i]] = smoothHeatmap(
-                sm.list[[i]],
-                coords=coords,
-                label = patterns[i])
+        for (i in 1:length(patterns)) {
+            heatmaps[[i]] = smoothHeatmap( sm.list[[i]], coords=coords, label = labels[i])
         }
 
-        if (legend) {
-            plot_legend(heatmaps[[1]]) # shoudln't matter which
-        }
-
-        plotHeatmapList(heatmaps, single.scale=TRUE, options)
-
+        plotHeatmapList(heatmaps, groups=1, options)
     }
 )
 

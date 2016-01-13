@@ -15,8 +15,8 @@ Description: Visualising oligonucleotide patterns and sequence motifs
         reference point and sorted by a user defined feature.
 License: GPL-3
 biocViews: Visualization, SequenceMatching
-Collate: MotifScanningFunctions.R MotifScanningMethods.R
-        PatternOccurrenceFunctions.R PatternOccurrenceMethods.R
-        PlottingFunctions.R PlottingMethods.R
+Collate: PWM-class.R Heatmap-class.R Heatmap-plotting-methods.R 
+         MotifScanningMethods.R
+        PatternOccurrenceMethods.R PlottingMethods.R
 NeedsCompilation: no
 Packaged: 2015-10-14 04:11:43 UTC; biocbuild

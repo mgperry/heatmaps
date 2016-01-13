@@ -5,7 +5,7 @@ import(IRanges)
 import(KernSmooth)
 
 importFrom(plotrix, color.legend)
-import(Matrix, sparseMatrix)
+importFrom(Matrix, sparseMatrix)
 
 exportMethods(motifScanHits, motifScanScores, getPatternOccurrenceList,
 plotPatternDensityMap, plotPatternOccurrenceAverage, plotMotifDensityMap,
