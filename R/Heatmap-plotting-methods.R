@@ -70,12 +70,64 @@ heatmapOptions = function(...) {
         cex.label=8,
         label.col='black',
         legend=TRUE,
+        lenged.width=0.2,
         addReferenceLine=TRUE,
         transform=function(x) x,
         untransform=function(x) x)
     def[names(usr)] = usr
     return(def)
 }
+
+plotHeatmapList = function(heatmap_list, groups=NULL, group_colours=NULL, group_transform=NULL, options) {
+    n_plots = length(heatmap_list)
+
+    # colors for groups?
+
+    if (is.null(groups) || length(unique(groups)) == n_plots) {
+        groups = 1:n_plots
+    } else if (length(groups) == 1) {
+        if (groups != 1) stop("groups incorrectly formatted, refer to ?plotHeatmapList")
+        groups = rep(1, n_plots)
+    } else if (length(groups) != n_plots) {
+        stop("groups must have 1 value per plot")
+    } else {
+        groups = as.numeric(factor(groups, levels=unique(groups)))
+    }
+
+    if (groups != 1:n_plots) {
+        for (i = 1:max(groups)) {
+            group = which(groups == i)
+            max_d = sum(vapply(heatmaps_list[group], function(x) max(x@value), integer(1)))
+            for (index in group) {
+                heatmaps_list[[index]]@max_value = max_d
+            }
+        }
+    }
+
+    group_list = split(1:n_plots, groups)
+
+    if (options$legend = TRUE) {
+        widths = numeric(0)
+        for (g in group_list) {
+            widths = c(widths, 0.2, rep(1, length(g)))
+        }
+        mat = 1:length(widths)
+        widths = widths/sum(widths)
+        layout(mat, widths)
+    } else {
+        layout(1:7)
+    }
+
+    for (g in group_list) {
+        if(options$legend = TRUE) {
+            plot_legend(heatmap_list[g[1]], options)
+        }
+        for (i in g) {
+            plot(heatmap_list[i], options)
+        }
+    }
+}
+
 
 # additional functions
 

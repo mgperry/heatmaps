@@ -22,19 +22,11 @@ function(regionsSeq, patterns, coord, options=heatmapOptions(), ...){
                 label = patterns[i])
         }
 
-        max_d = sum(vapply(heatmaps, function(x) max(x@value), integer(1)))
-        for (i in 1:length(patterns)) {
-            heatmaps[[i]]@max_value = max_d
-        }
-
         if (legend) {
             plot_legend(heatmaps[[1]]) # shoudln't matter which
         }
 
-        # capture plot in list?
-        for (p in patterns) {
-            ss_heatmap(heatmaps[[p]], options)
-        }
+        plotHeatmapList(heatmaps, single.scale=TRUE, options)
 
     }
 )
