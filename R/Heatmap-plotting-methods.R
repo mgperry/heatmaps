@@ -11,7 +11,7 @@ setMethod("plot", signature="Heatmap",
 
     xm <- heatmap@xm
     ym <- heatmap@ym
-    val <- heatmap@transform(heatmap@value)
+    val <- options$transform(heatmap@value)
 
     message("plotting in ss_heatmap")
     ## plot color image
@@ -70,7 +70,9 @@ heatmapOptions = function(...) {
         cex.label=8,
         label.col='black',
         legend=TRUE,
-        addReferenceLine=TRUE)
+        addReferenceLine=TRUE,
+        transform=function(x) x,
+        untransform=function(x) x)
     def[names(usr)] = usr
     return(def)
 }

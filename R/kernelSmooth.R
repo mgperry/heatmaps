@@ -1,5 +1,5 @@
 #takes a sparse matrix
-smoothHeatmap = function(sm, coords, label=NULL, transform=NULL) {
+smoothHeatmap = function(sm, coords, label=NULL) {
 
     scale.factor <- 2*log5(20)*log5(100)/log5(ncol(sm)/2) - 2*log5(4)
     message("scale.factor: ", scale.factor)
@@ -25,8 +25,7 @@ smoothHeatmap = function(sm, coords, label=NULL, transform=NULL) {
         nseq=nrow(sm),
         coords=as.integer(coords),
         max_value=max(map$fhat),
-        label=label,
-        transform=transform)
+        label=label)
 }
 
 log5 <- function(x) {
