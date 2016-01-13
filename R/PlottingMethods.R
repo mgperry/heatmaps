@@ -22,12 +22,9 @@ function(regionsSeq, patterns, coord, options=heatmapOptions(), ...){
                 label = patterns[i])
         }
 
-        # instead denormalize densities at object creation and have shared max?
-        sums = sum(vapply(sm.list, sum, integer(1)))
         max_d = sum(vapply(heatmaps, function(x) max(x@value), integer(1)))
-        max_value <- max(max_d*sums)/sums
         for (i in 1:length(patterns)) {
-            heatmaps[[i]]@max_value = max_value[i]
+            heatmaps[[i]]@max_value = max_d
         }
 
         if (legend) {

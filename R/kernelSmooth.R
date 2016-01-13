@@ -6,15 +6,16 @@ smoothHeatmap = function(sm, coords, label=NULL, transform=NULL) {
 
     # settings no longer options, can experiment later
     # for 1000 sequences this means more bins than sequences !?
-    width = coords[2] - coords[1]
+    width <- coords[2] - coords[1]
     nbin <- c(round(width*scale.factor), nrow(sm))
     message("nbin: ", nbin[1], ", ", nbin[2])
-    bw = c(3/scale.factor,3)
+    bw <- c(3/scale.factor,3)
     message("bw: ", bw[1], ", ", bw[2])
 
     message("\nCalculating density...")
-    df = summary(sm)
+    df <- summary(sm)
     map <- bkde2D(cbind(df$j, df$i), bandwidth=bw, gridsize=nbin)
+    map$fhat <- sum(sm)*map$fhat
 
     if(is.null(coords)) coords=c(0, ncol(sm))
     new("Heatmap",
