@@ -9,24 +9,9 @@ setMethod("plotPatternDensityMap",
 signature(regionsSeq = "DNAStringSet"),
 function(regionsSeq, patterns, coord, options=heatmapOptions(), ...){
         
-        # refactor into getOccurence-method again?
         # unify with motifs ??? even accept GR input somehow?
-        if(!(length(unique(width(regionsSeq))) == 1)){
-            stop("All sequences in the input DNAStringSet must have the 
-            same length!")
-        }
-
-        if(length(patterns) == 0){
-            stop("At least one pattern needs to be specified!")
-        }
-
-        legend = options[["legend"]]
-        options[["legend"]] = FALSE
-        
         message("\nGetting oligonucleotide occurrence matrix...")
-        sm.list <- lapply(patterns, 
-                          .get.pattern.occurence.melted.sm,
-                          seq = regionsSeq)
+        sm.list <- lapply(patterns, getPatternOccurrence, seq=regionsSeq)
 
         heatmaps <- list()
         for (i in 1:lengthe(patterns)) {
