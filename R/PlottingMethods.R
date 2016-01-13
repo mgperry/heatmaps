@@ -73,8 +73,8 @@ following color scales: 'green','cyan','blue','purple','pink','red','orange',
         message("\nOligonucleotide occurrence matrix done...")
         
         a <- .pattern.smoothscatter(melted = patterns.occurence.melted.list,
-        orig = regionsSeq, patterns = patterns, flankUp = flankUp,
-        flankDown = flankDown, bw = bandWidth, color = color,
+        nseq = length(regionsSeq), coord = c(-flankUp, flankDown),
+        patterns = patterns, bw = bandWidth, color = color,
         transf = transf, xTicks = xTicks, xTicksAt = xTicksAt,
         yTicks = yTicks, yTicksAt = yTicksAt,
         cex.axis = cexAxis, plot.scale = plotScale, scale.length = scaleLength,

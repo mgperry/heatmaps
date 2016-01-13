@@ -71,14 +71,14 @@
 
     # settings no longer options, can experiment later
     # for 1000 sequences this means more bins than sequences !?
-    nbin <- c(round(flank*scale.factor), length(orig))
+    nbin <- c(round(flank*scale.factor), nseq)
     message("nbin: ", nbin[1], ", ", nbin[2])
     bw = c(3/scale.factor,3)
     message("bw: ", bw[1], ", ", bw[2])
 
     sums <- vector()
     for(di in patterns) {
-        melted[[di]]$sequence <- length(orig) + 1 - melted[[di]]$sequence # inverts
+        melted[[di]]$sequence <- nseq + 1 - melted[[di]]$sequence # inverts
         sums <- c(sums, sum(melted[[di]][,3])) # basically equal to length(orig)
     }
     names(sums) <- patterns
@@ -157,7 +157,7 @@ plot_legend <- function(max_value, untransf, color='blue', cex=8) {
         plot(1, 1, type='n', bty='n', xaxt='n', yaxt='n', xlim=c(0,1),
         ylim=c(0,7), xaxs="i", yaxs="i", xlab='', ylab='')
         box(lwd = 6)
-        color.legend(0, 0, 1, 7, legend=leg, rect.col=f(256), align="lt", gradient='y', cex=cex.axis)
+        color.legend(0, 0, 1, 7, legend=leg, rect.col=f(256), align="lt", gradient='y', cex=cex)
 }
 
 .myColorPalette <- function(colorName){
