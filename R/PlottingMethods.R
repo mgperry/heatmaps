@@ -12,13 +12,13 @@ function(regionsSeq, patterns, coord, options=heatmapOptions(), ...){
         # unify with motifs ??? even accept GR input somehow?
         message("\nGetting oligonucleotide occurrence matrix...")
         sm.list <- lapply(patterns, getPatternOccurrence, seq=regionsSeq)
+        labels = sapply(patterns, function (x) ifelse(class(x) == "PWM", x@name, x)
 
         heatmaps <- list()
         for (i in 1:lengthe(patterns)) {
             heatmaps[[i]] = smoothHeatmap(
                 sm.list[[i]],
                 coords=coords,
-                transform=function(x) x^(1/3),
                 label = patterns[i])
         }
 

@@ -32,8 +32,8 @@ signature(seq = "DNAStringSet", pattern="character"),
 )
 
 setMethod("getPatternOccurrence",
-signature(regionsSeq = "DNAStringSet", pattern = "matrix"),
-function(regionsSeq, pattern, min.score = "80%") {
+signature(regionsSeq = "DNAStringSet", pattern = "PWM"),
+function(regionsSeq, pattern) {
 
         if (!(length(unique(width(regionsSeq))) == 1)) {
             stop("All sequences in the input DNAStringSet must have the same
@@ -42,7 +42,7 @@ function(regionsSeq, pattern, min.score = "80%") {
 
         # Are Ns a problem?
 
-        pattern.matches <- matchPWM(pwm=pattern, subject=seq, min.score=min.score)
+        pattern.matches <- matchPWM(pwm=pattern@matrix, subject=seq, min.score=PWM@min.score)
         pattern.starts <- start(pattern.matches)
         pattern.starts.ul <- unlist(pattern.starts)
         sm = sparseMatrix(
