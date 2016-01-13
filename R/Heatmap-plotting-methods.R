@@ -5,7 +5,7 @@ setMethod("plot", signature="Heatmap",
         options = heatmapOptions(...)
     }
 
-    colramp = .myColorPalette(options$color) # could check for function as input
+    colramp = colorRampPalette(.myColorPalette(options$color)) # could check for function as input
 
     breaks <- seq(0, heatmap@transform(heatmap@max_value), length.out=257) # could be option
 
@@ -53,8 +53,6 @@ setMethod("plot", signature="Heatmap",
     if(options$addReferenceLine){
         abline(v=(-heatmap@coords[1])+0.5, lty="dashed", lwd=6)
     }
-
-    # plot legend
 }
 
 heatmapOptions = function(...) {
@@ -70,17 +68,24 @@ heatmapOptions = function(...) {
         cex.label=8,
         label.col='black',
         legend=TRUE,
-        lenged.width=0.2,
+        leged.width=0.2,
+        leged.ticks=4,
         addReferenceLine=TRUE,
-        transform=function(x) x,
-        untransform=function(x) x)
+        transform=function(x) x)
     def[names(usr)] = usr
     return(def)
 }
 
-plotHeatmapList = function(heatmap_list, groups=NULL, group_colours=NULL, group_transform=NULL, options) {
+plotHeatmapList = function(heatmap_list, groups=NULL, group_colors=NULL, group_transform=NULL, options) {
+    if (class(heatmap_list) == "Heatmap") heatmap_list = list(heatmap_list) # allow single heatmap argument
     n_plots = length(heatmap_list)
-
+    n_groups = max(groups)
+    if (!is.null(group_colors) && length(group_colors) != n_groups) {
+        stop("length(group_colors) != #groups")
+    }
+    if (!is.null(group_transform) && length(group_colors) != n_groups) {
+        stop("length(group_transform) != #groups")
+    }
     # colors for groups?
 
     if (is.null(groups) || length(unique(groups)) == n_plots) {
@@ -104,26 +109,38 @@ plotHeatmapList = function(heatmap_list, groups=NULL, group_colours=NULL, group_
         }
     }
 
+    # neater way of supplying group options?
     group_list = split(1:n_plots, groups)
+    group_options = list()
+    for (i in 1:n_groups) {
+        go = options
+        if(!is.null(group_colors)) go$color = group_colors[i]
+        if(!is.null(group_transform)) go$color = group_transform[i]
+        group_options[[i]] = go
+    }
 
     if (options$legend = TRUE) {
         widths = numeric(0)
-        for (g in group_list) {
-            widths = c(widths, 0.2, rep(1, length(g)))
+        for (grp in group_list) {
+            widths = c(widths, 0.2, rep(1, length(grp)))
         }
         mat = 1:length(widths)
         widths = widths/sum(widths)
         layout(mat, widths)
     } else {
-        layout(1:7)
+        layout(1:n_plots)
     }
 
-    for (g in group_list) {
+    for (i in 1:n_groups) {
+        go = group_options[[i]]
+        grp = group_list[[i]]
         if(options$legend = TRUE) {
-            plot_legend(heatmap_list[g[1]], options)
+            par(mar = c(12, 14, 2, 0.5)) # from .pattern.smoothscatter
+            plot_legend(heatmap_list[[grp[1]]]@max_value, go)
         }
-        for (i in g) {
-            plot(heatmap_list[i], options)
+        for (j in grp) {
+            par(mar=c(12, 8.5, 2, 8.5)) # from .pattern.smoothscatter
+            plot(heatmap_list[[j]], go)
         }
     }
 }
@@ -131,18 +148,22 @@ plotHeatmapList = function(heatmap_list, groups=NULL, group_colours=NULL, group_
 
 # additional functions
 
-plot_legend <- function(max_value, untransf, color='blue', cex=8) {
-        f <- .myColorPalette(color)
-        nr.labels <- 4
+plot_legend <- function(max_value, options) {
+        col_ramp <- colorRamp(.myColorPalette(options$color))
+        ticks <- options$legend.ticks
+        transf <- options$transform
         leg <- rep('', 256)
-        leg[seq(0.05*256, 0.95*256, length.out=nr.labels)] <-
-            formatC(untransf(seq(0.05*max_value, 0.95*max_value, length.out=nr.labels)),
-                    format='f', digits=2)
-        par(mar = c(12, 14, 2, 0.5))
-        plot(1, 1, type='n', bty='n', xaxt='n', yaxt='n', xlim=c(0,1),
-        ylim=c(0,7), xaxs="i", yaxs="i", xlab='', ylab='')
+        leg[seq(1, 256, length.out=ticks)] <- formatC(seq(0, max_value, length.out=ticks), format='f', digits=2)
+        plot(1, 1,
+             type='n', bty='n',
+             xaxt='n', yaxt='n',
+             xlim=c(0,1), ylim=c(0,7),
+             xaxs="i", yaxs="i",
+             xlab='', ylab='')
         box(lwd = 6)
-        color.legend(0, 0, 1, 7, legend=leg, rect.col=f(256), align="lt", gradient='y', cex=cex)
+        color.legend(0, 0, 1, 7, legend=leg,
+                     rect.col=rgb(col_ramp(transf(seq(0, 1, length.out=256)))/256),
+                     align="lt", gradient='y', cex=options$cex.axis)
 }
 
 .myColorPalette <- function(colorName){
@@ -158,7 +179,7 @@ plot_legend <- function(max_value, untransf, color='blue', cex=8) {
                   "deeppink4", "red4", "darkorange4", "salmon4", "black"),
         stringsAsFactors = FALSE)
     rownames(colors.df) <- colnames
-    colorRampPalette( c("white", colors.df[colorName,"midcol"], colors.df[colorName,"highcol"]) )
+    return(colors.df[colorName,])
 }
 
 log5 <- function(x) {
