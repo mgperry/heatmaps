@@ -1,88 +1,59 @@
 setGeneric(
 name="plotPatternDensityMap",
-def=function(regionsSeq, patterns, seqOrder = c(1:length(regionsSeq)),
-    flankUp = NULL, flankDown = NULL, nBin = NULL, bandWidth = NULL,
-    color = "blue", transf = NULL, xTicks = NULL, xTicksAt = NULL, xLabel = "",
-    yTicks = NULL, yTicksAt = NULL, yLabel = "", cexAxis = 8, plotScale = TRUE,
-    scaleLength = NULL, scaleWidth = 15, addPatternLabel = TRUE, cexLabel = 8,
-    labelCol = "black", addReferenceLine = TRUE, plotColorLegend = TRUE,
-    outFile = "PatternDensityMap", plotWidth = 2000, plotHeight = 2000,
-    useMulticore = FALSE, nrCores = NULL){
+def=function(regionsSeq, patterns, coords, options=heatmapOptions(), ...) {
         standardGeneric("plotPatternDensityMap")
     }
 )
 
 setMethod("plotPatternDensityMap",
 signature(regionsSeq = "DNAStringSet"),
-function(regionsSeq, patterns, seqOrder = c(1:length(regionsSeq)),
-    flankUp = NULL, flankDown = NULL, nBin = NULL, bandWidth = NULL,
-    color = "blue", transf = NULL, xTicks = NULL, xTicksAt = NULL, xLabel = "",
-    yTicks = NULL, yTicksAt = NULL, yLabel = "", cexAxis = 8, plotScale = TRUE,
-    scaleLength = NULL, scaleWidth = 15, addPatternLabel = TRUE, cexLabel = 8,
-    labelCol = "black", addReferenceLine = TRUE, plotColorLegend = TRUE,
-    outFile = "PatternDensityMap", plotWidth = 2000, plotHeight = 2000,
-    useMulticore = FALSE, nrCores = NULL){
+function(regionsSeq, patterns, coord, options=heatmapOptions(), ...){
         
-        pt <- .Platform$OS.type
-        if(useMulticore == TRUE){
-            if(pt == "unix"){
-                if("parallel" %in% rownames(installed.packages()) == FALSE){
-                    stop("Cannot use multicore because package 'parallel' 
-                    is not installed!")
-                }else{
-                    library(parallel)
-                    if(is.null(nrCores)){
-                        nrCores <- detectCores()
-                    }
-                }
-            }else{
-                useMulticore <- FALSE
-                warning("Multicore is not supported on non-Unix platforms! 
-                Setting useMulticore=FALSE")
-            }
-        }
-        
+        # refactor into getOccurence-method again?
+        # unify with motifs ??? even accept GR input somehow?
         if(!(length(unique(width(regionsSeq))) == 1)){
             stop("All sequences in the input DNAStringSet must have the 
             same length!")
         }
-        if(!(length(seqOrder) == length(regionsSeq))){
-            stop("The number of elements in 'seqOrder' must match the number 
-            of input sequences in 'regionsSeq'!")
-        }
+
         if(length(patterns) == 0){
             stop("At least one pattern needs to be specified!")
         }
-        
-        if(length(flankUp) == 0){
-            flankUp <- round(width(regionsSeq)[1]/2)
-        }
-        if(length(flankDown) == 0){
-            flankDown <- width(regionsSeq)[1] - flankUp
-        }
-        if(!(color %in% c("green","cyan","blue","purple","pink","red","orange",
-        "brown","gray"))){
-            stop("Specified color scale not supported! Please choose one of the 
-following color scales: 'green','cyan','blue','purple','pink','red','orange',
-'brown','gray', and refer to the vignette for their appearance.")
-        }
+
+        legend = options[["legend"]]
+        options[["legend"]] = FALSE
         
         message("\nGetting oligonucleotide occurrence matrix...")
-        patterns.occurence.melted.list <- getPatternOccurrenceList(regionsSeq =
-        regionsSeq, patterns = patterns, seqOrder = seqOrder)
-        message("\nOligonucleotide occurrence matrix done...")
+        sm.list <- lapply(patterns, 
+                          .get.pattern.occurence.melted.sm,
+                          seq = regionsSeq)
+
+        heatmaps <- list()
+        for (i in 1:lengthe(patterns)) {
+            heatmaps[[i]] = smoothHeatmap(
+                sm.list[[i]],
+                coords=coords,
+                transform=function(x) x^(1/3),
+                label = patterns[i])
+        }
+
+        # instead denormalize densities at object creation and have shared max?
+        sums = sum(vapply(sm.list, sum, integer(1)))
+        max_d = sum(vapply(heatmaps, function(x) max(x@value), integer(1)))
+        max_value <- max(max_d*sums)/sums
+        for (i in 1:length(patterns)) {
+            heatmaps[[i]]@max_value = max_value[i]
+        }
         
-        a <- .pattern.smoothscatter(melted = patterns.occurence.melted.list,
-        nseq = length(regionsSeq), coord = c(-flankUp, flankDown),
-        patterns = patterns, bw = bandWidth, color = color,
-        transf = transf, xTicks = xTicks, xTicksAt = xTicksAt,
-        yTicks = yTicks, yTicksAt = yTicksAt,
-        cex.axis = cexAxis, plot.scale = plotScale, scale.length = scaleLength,
-        scale.width = scaleWidth, add.label = addPatternLabel,
-        cex.label = cexLabel, label.col = labelCol,
-        addReferenceLine = addReferenceLine, plotColorLegend = plotColorLegend,
-        out = outFile)
+        if (legend) {
+            plot_legend(heatmaps[[1]]) # shoudln't matter which
+        }
     
+        # capture plot in list?
+        for (p in patterns) {
+            ss_heatmap(heatmaps[[p]], options)
+        }
+
     }
 )
 
