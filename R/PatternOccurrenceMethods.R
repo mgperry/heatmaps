@@ -42,8 +42,9 @@ function(seq, pattern) {
 
         # Are Ns a problem?
 
-        pattern.matches <- matchPWM(pwm=pattern@matrix, subject=seq, min.score=PWM@min.score)
-        pattern.starts <- start(pattern.matches)
+        pattern.starts <- lapply(seq, function(x) {
+            start(matchPWM(subject=x, pwm=pattern@matrix, min.score=pattern@min.score))
+        })
         pattern.starts.ul <- unlist(pattern.starts)
         sm = sparseMatrix(
             i = rep(1:length(pattern.starts), lengths(pattern.starts)),

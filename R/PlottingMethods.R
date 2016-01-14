@@ -8,15 +8,16 @@ def=function(seq, patterns, ...) {
 setMethod("plotPatternDensityMap",
 signature(seq = "DNAStringSet"),
 function(seq, patterns, coords=NULL, options=heatmapOptions(), ...){
-
         if (is.null(coords)) {
             coords = c(-width(seq[1])/2, width(seq[1])/2)
         }
 
         # unify with motifs ??? even accept GR input somehow?
         message("\nGetting oligonucleotide occurrence matrix...")
+        message("Input classes:")
+        message(paste(sapply(patterns, class), collapse=", "))
         sm.list <- lapply(patterns, getPatternOccurrence, seq=seq)
-        labels = sapply(patterns, function (x) ifelse(class(x) == "PWM", x@name, x))
+        labels = sapply(patterns, function(x) if(class(x) == "PWM") x@name else x)
 
         heatmaps <- list()
         for (i in 1:length(patterns)) {

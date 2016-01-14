@@ -18,16 +18,11 @@ setMethod("plotHeatmap", signature="Heatmap",
     ym <- heatmap@ym
     val <- options$transform(heatmap@value)
 
-    ## plot color image
     image(xm, ym, z=val,
           col=colramp(256), breaks=breaks,
           xlim=c(0.5,width(heatmap)-0.5), # remove fluffy edges
-          xaxs="i", yaxs="i", # may be default
           xlab="", ylab="",
-          axes=FALSE, # maybe goes here
-          # previously passed via dots
-          pch=20, cex=0.8,
-          main='', cex.main=1.5)
+          axes=FALSE)
 
     if (options$box.width > 0) box(lwd = options$box.width)
 
@@ -81,13 +76,11 @@ heatmapOptions = function(...) {
 
 plotHeatmapList = function(heatmap_list, groups=NULL, options=heatmapOptions(), ...) {
     if (class(heatmap_list) == "Heatmap") heatmap_list = list(heatmap_list) # allow single heatmap argument
-    n_plots = length(heatmap_list)
-    message(paste("Plotting", n_plots, "plots"))
+    # n_plots = length(heatmap_list)
 
     if (is.null(groups) || length(unique(groups)) == n_plots) {
         groups = 1:n_plots
     } else if (length(groups) == 1) {
-        if (groups != 1) stop("groups incorrectly formatted, refer to ?plotHeatmapList")
         groups = rep(1, n_plots)
     } else if (length(groups) != n_plots) {
         stop("groups must have 1 value per plot")
@@ -96,7 +89,7 @@ plotHeatmapList = function(heatmap_list, groups=NULL, options=heatmapOptions(), 
     }
 
     n_groups = max(groups)
-    message(paste("groups:", paste(groups, collapse=', '), "giving", n_groups, "groups"))
+    # message(paste("groups:", paste(groups, collapse=', '), "\ntotal:", n_groups, "groups"))
 
     if (all(groups != 1:n_plots)) {
         for (i in 1:max(groups)) {
@@ -144,12 +137,13 @@ plotHeatmapList = function(heatmap_list, groups=NULL, options=heatmapOptions(), 
         grp = group_list[[i]]
         if(options$legend == TRUE) {
             message("plotting legend")
-            par(mar = c(12, 14, 2, 0.5)) # from .pattern.smoothscatter
+            par(mai=c(2, 2.8, 0.4, 0.1))
             plot_legend(heatmap_list[[grp[1]]]@max_value, go)
+
         }
         for (j in grp) {
             message("plotting heatmap")
-            par(mar=c(12, 8.5, 2, 8.5)) # from .pattern.smoothscatter
+            par(mai=c(2, 1, 0.4, 1))
             plotHeatmap(heatmap_list[[j]], go)
         }
     }

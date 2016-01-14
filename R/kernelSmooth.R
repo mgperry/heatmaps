@@ -14,7 +14,7 @@ smoothHeatmap = function(sm, coords, label=NULL) {
 
     message("\nCalculating density...")
     df <- summary(sm)
-    map <- bkde2D(cbind(df$j, df$i), bandwidth=bw, gridsize=nbin)
+    map <- bkde2D(cbind(df$j, df$i), bandwidth=bw, gridsize=nbin, range.x=list(c(1, width), c(1, nrow(sm))))
     map$fhat <- sum(sm)*map$fhat
 
     if(is.null(coords)) coords=c(0, ncol(sm))
