@@ -33,17 +33,24 @@ setMethod("plotHeatmap", signature="Heatmap",
 
     if(options$scale){
         scale.length = width(heatmap)/5
-        lines(c(0.03*width(heatmap)/2,0.03*width(heatmap)/2 + scale.length),
-                c(0.03*length(heatmap), 0.03*
-                length(heatmap)), lwd=options$scale.width, col=options$label.col)
-        text(x=0.03*width(heatmap)/2 + scale.length/2,
-                y=0.06*length(heatmap),
-                labels=paste(round(scale.length), 'bp', sep=''),
-                cex=options$cex.label, adj=c(0.5,0), col=options$label.col, font=2)
+        x.start.in = grconvertX(0, from="user", to="inches") + 0.8
+        x.start = grconvertX(x.start.in, from="inches", to="user")
+        y.start.in = grconvertY(0, from="user", to="inches") + 0.8
+        y.start = grconvertY(y.start.in, from="inches", to="user")
+        lines(c(x.start, x.start + scale.length),
+              c(y.start, y.start),
+              lwd=options$scale.lwd, col=options$label.col)
+        text(x=x.start+scale.length/2, y=y.start*2,
+             labels=paste(round(scale.length), 'bp', sep=''),
+             cex=options$cex.label, adj=c(0.5,0), col=options$label.col, font=2)
     }
 
     if(options$label){
-        text(x=0.02*width(heatmap)/2, y=0.98*length(heatmap),
+        x.start.in = grconvertX(0, from="user", to="inches") + 0.8
+        x.start = grconvertX(x.start.in, from="inches", to="user")
+        y.start.in = grconvertY(0, from="user", to="inches") + 0.8
+        y.start = grconvertY(y.start.in, from="inches", to="user")
+        text(x=x.start, y=length(heatmap)-y.start,
         labels=heatmap@label, cex=options$cex.label, adj=c(0,1), col=options$label.col, font=2)
     }
 
@@ -58,9 +65,9 @@ heatmapOptions = function(...) {
         color='blue',
         box.width=6,
         x_ticks=TRUE,
-        cex.axis=8,
         scale=TRUE,
-        scale.width=10,
+        scale.lwd=15,
+        cex.axis=6,
         label=TRUE,
         cex.label=8,
         label.col='black',
@@ -76,7 +83,7 @@ heatmapOptions = function(...) {
 
 plotHeatmapList = function(heatmap_list, groups=NULL, options=heatmapOptions(), ...) {
     if (class(heatmap_list) == "Heatmap") heatmap_list = list(heatmap_list) # allow single heatmap argument
-    # n_plots = length(heatmap_list)
+    n_plots = length(heatmap_list)
 
     if (is.null(groups) || length(unique(groups)) == n_plots) {
         groups = 1:n_plots
@@ -132,6 +139,8 @@ plotHeatmapList = function(heatmap_list, groups=NULL, options=heatmapOptions(), 
         layout(t(1:n_plots))
     }
 
+    par(cex=1) # can be changed by layout
+
     for (i in 1:n_groups) {
         go = group_options[[i]]
         grp = group_list[[i]]
@@ -143,7 +152,7 @@ plotHeatmapList = function(heatmap_list, groups=NULL, options=heatmapOptions(), 
         }
         for (j in grp) {
             message("plotting heatmap")
-            par(mai=c(2, 1, 0.4, 1))
+            par(mai=c(2, 1.2, 0.4, 1.2))
             plotHeatmap(heatmap_list[[j]], go)
         }
     }
