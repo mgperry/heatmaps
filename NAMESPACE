@@ -5,6 +5,7 @@ import(IRanges)
 import(KernSmooth)
 
 importFrom(plotrix, color.legend)
+importFrom(Matrix, Matrix)
 importFrom(Matrix, sparseMatrix)
 
 exportMethods(motifScanHits, motifScanScores, getPatternOccurrenceList,

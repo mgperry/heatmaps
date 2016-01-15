@@ -2,7 +2,7 @@
 # Function for plotting average signal
 
 
-.plot.windowed.average <- function(occurence.melted.list, nr.seq,
+plotMetaRegion <- function(occurence.melted.list, nr.seq,
 pattern.widths, flankUp = NULL, flankDown = NULL, smoothingWindow = 3,
 color = rainbow(length(occurence.melted.list)), xLabel =
 "Distance to reference point (bp)", yLabel = "Relative frequency", cexAxis = 2,

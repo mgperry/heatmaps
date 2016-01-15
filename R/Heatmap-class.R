@@ -1,8 +1,6 @@
 setClass("Heatmap",
          slots=c(
-            xm="numeric",
-            ym="numeric",
-            value="matrix",
+            matrix="matrix",
             max_value="numeric",
             coords="integer",
             nseq="integer",
@@ -26,7 +24,7 @@ setMethod("width", signature="Heatmap", function(x) x@coords[2] - x@coords[1])
 setMethod("show", signature="Heatmap", function(object) {
     cat("coords:", object@coords, "\n")
     cat("nseq:", object@nseq, "\n")
-    cat("obs:", length(object@xm), "\n")
+    cat("obs:", length(object@matrix), "\n")
     cat("max_value:", object@max_value, "\n")
     cat("label:", object@label, "\n")
 })

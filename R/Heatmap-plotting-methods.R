@@ -14,11 +14,13 @@ setMethod("plotHeatmap", signature="Heatmap",
 
     breaks <- seq(0, options$transform(heatmap@max_value), length.out=257) # could be option
 
-    xm <- heatmap@xm
-    ym <- heatmap@ym
-    val <- options$transform(heatmap@value)
+    xm <- 0:ncol(heatmap@matrix)
+    ym <- 0:nrow(heatmap@matrix)
+    val <- options$transform(heatmap@matrix)
+    val[val < 0] = 0
+    val[val > heatmap@max_value] = heatmap@max_value
 
-    image(xm, ym, z=val,
+    image(xm, ym, z=t(val),
           col=colramp(256), breaks=breaks,
           xlim=c(0.5,width(heatmap)-0.5), # remove fluffy edges
           xlab="", ylab="",
