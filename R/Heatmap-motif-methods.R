@@ -1,6 +1,6 @@
 setGeneric(
 name="motifScanScores",
-def=function(seq, PWM, asPercentage = TRUE){
+def=function(seq, PWM, ...){
     standardGeneric("motifScanScores")
     }
 )
