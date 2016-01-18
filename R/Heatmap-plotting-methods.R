@@ -163,7 +163,7 @@ plotHeatmapList = function(heatmap_list, groups=NULL, options=heatmapOptions(), 
         }
         if(go$legend == TRUE && go$legend.pos == 'r') {
             message("plotting legend")
-            par(mai=c(2, 2.8, 0.4, 0.1))
+            par(mai=c(2, 0.1, 0.4, 2.8))
             plot_legend(heatmap_list[[grp[1]]]@max_value, go)
         }
     }
@@ -176,6 +176,7 @@ plot_legend <- function(max_value, options) {
         col_ramp <- colorRamp(.myColorPalette(options$color))
         ticks <- options$legend.ticks
         transf <- options$transform
+        align <- ifelse(options$legend.pos=='l', 'lt', 'rb')
         leg <- rep('', 256)
         leg[seq(1, 256, length.out=ticks)] <- formatC(seq(0, max_value, length.out=ticks), format='f', digits=2)
         plot(1, 1,
@@ -187,7 +188,7 @@ plot_legend <- function(max_value, options) {
         box(lwd = 6)
         color.legend(0, 0, 1, 7, legend=leg,
                      rect.col=rgb(col_ramp(transf(seq(0, 1, length.out=256)))/256),
-                     align="lt", gradient='y', cex=options$cex.legend)
+                     align=align, gradient='y', cex=options$cex.legend)
 }
 
 .myColorPalette <- function(colorName){
