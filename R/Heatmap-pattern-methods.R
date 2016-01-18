@@ -24,7 +24,7 @@ signature(seq = "DNAStringSet", pattern="character"),
 
         pattern.matches <- vmatchPattern(pattern=pattern, subject=seq, fixed=FALSE)
         pattern.starts <- startIndex(pattern.matches)
-        pattern.starts.ul <- unlist(pattern.starts)
+        pattern.starts.ul <- unlist(pattern.starts) + floor(length(pattern)/2)
 
         sm = sparseMatrix(
             i = rep(1:length(pattern.starts), lengths(pattern.starts)),
@@ -61,7 +61,7 @@ function(seq, pattern, coords=NULL) {
         pattern.starts <- lapply(seq, function(x) {
             start(matchPWM(subject=x, pwm=pattern@matrix, min.score=pattern@min.score))
         })
-        pattern.starts.ul <- unlist(pattern.starts)
+        pattern.starts.ul <- unlist(pattern.starts) + floor(ncol(PWM@matrix)/2)
 
         sm = sparseMatrix(
             i = rep(1:length(pattern.starts), lengths(pattern.starts)),
