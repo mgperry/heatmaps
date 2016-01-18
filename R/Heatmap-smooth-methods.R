@@ -4,42 +4,33 @@ setGeneric("smooth", function(heatmap, ...) {
 })
 
 setMethod("smooth", signature(heatmap="Heatmap"),
-    function(heatmap, nbin=NULL, bw=NULL) {
+    function(heatmap, nbin=NULL, bw=NULL, vsmooth=1, hsmooth=1) {
+    message("\nCalculating density...")
 
-    scale.factor <- 2*log5(20)*log5(100)/log5(ncol(heatmap@matrix)/2) - 2*log5(4)
-    message("scale.factor: ", scale.factor)
-
-    # settings no longer options, can experiment later
-    # for 1000 sequences this means more bins than sequences !?
-    width <- heatmap@coords[2] - heatmap@coords[1]
-    if (is.null(nbin)) {
-        nbin <- c(nrow(heatmap@matrix), round(width*scale.factor))
-        message("nbin: ", nbin[1], ", ", nbin[2])
-    } else {
+    if (!is.null(nbin)) {
         if (!length(nbin) == 2) stop("nbin must have length 2")
         if (!all(nbin %% 1 == 0)) stop("nbin must have integer values")
-    }
-    if (is.null(bw)) {
-        bw <- c(3,3/scale.factor)
-        message("bw: ", bw[1], ", ", bw[2])
+        if (!(vsmooth == 1 && hsmooth == 1)) warn("nbin is set; overriding v/hsmooth")
+    } else {
+        nbin <- c(vsmooth*heatmap@nseq, hsmooth*width(heatmap))
     }
 
-    message("\nCalculating density...")
+    if (is.null(bw)) {
+        bw <- c(3,3)
+    }
 
     sm <- as(heatmap@matrix, "sparseMatrix")
     total_value = sum(sm)
 
     df <- summary(sm)
-    map <- bkde2D(cbind(df$i, df$j), bandwidth=bw, gridsize=nbin, range.x=list(c(1, nrow(heatmap@matrix)), c(1, width)))
-    map$fhat <- sum(heatmap@matrix)*map$fhat
+    map <- bkde2D(cbind(df$i, df$j), bandwidth=bw, gridsize=nbin,
+                range.x=list(c(1, heatmap@nseq), c(1, width(heatmap))))
+
+    fhat <- sum(heatmap@matrix)*map$fhat
     heatmap@xm = map$x2
     heatmap@ym = map$x1
-    heatmap@matrix = map$fhat
-    heatmap@max_value = max(map$fhat)
+    heatmap@matrix = fhat
+    heatmap@max_value = max(fhat)
     return(heatmap)
 })
-
-log5 <- function(x) {
-    log10(x)/log10(5)
-}
 
