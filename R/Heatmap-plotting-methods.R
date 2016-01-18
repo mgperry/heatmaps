@@ -76,6 +76,7 @@ heatmapOptions = function(...) {
         legend=TRUE,
         legend.width=0.2,
         legend.ticks=5,
+        legend.pos='l',
         cex.legend=6,
         addReferenceLine=TRUE,
         transform=function(x) x)
@@ -131,8 +132,12 @@ plotHeatmapList = function(heatmap_list, groups=NULL, options=heatmapOptions(), 
 
     if (options$legend == TRUE) {
         widths = numeric(0)
-        for (grp in group_list) {
-            widths = c(widths, 0.2, rep(1, length(grp)))
+        for (i in 1:length(group_list)) {
+            if (group_options[[i]]$legend.pos == 'l') {
+                widths = c(widths, 0.2, rep(1, length(group_list[[i]])))
+            } else if (group_options[[i]]$legend.pos == 'r') {
+                widths = c(widths, rep(1, length(group_list[[i]])), 0.2)
+            }
         }
         mat = t(1:length(widths))
         widths = widths/sum(widths)
@@ -146,16 +151,20 @@ plotHeatmapList = function(heatmap_list, groups=NULL, options=heatmapOptions(), 
     for (i in 1:n_groups) {
         go = group_options[[i]]
         grp = group_list[[i]]
-        if(options$legend == TRUE) {
+        if(go$legend == TRUE && go$legend.pos == 'l') {
             message("plotting legend")
             par(mai=c(2, 2.8, 0.4, 0.1))
             plot_legend(heatmap_list[[grp[1]]]@max_value, go)
-
         }
         for (j in grp) {
             message("plotting heatmap")
             par(mai=c(2, 1.2, 0.4, 1.2))
             plotHeatmap(heatmap_list[[j]], go)
+        }
+        if(go$legend == TRUE && go$legend.pos == 'r') {
+            message("plotting legend")
+            par(mai=c(2, 2.8, 0.4, 0.1))
+            plot_legend(heatmap_list[[grp[1]]]@max_value, go)
         }
     }
 }
