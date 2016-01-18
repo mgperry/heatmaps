@@ -14,8 +14,8 @@ setMethod("plotHeatmap", signature="Heatmap",
 
     breaks <- seq(0, options$transform(heatmap@max_value), length.out=257) # could be option
 
-    xm <- 0:ncol(heatmap@matrix)
-    ym <- 0:nrow(heatmap@matrix)
+    xm <- heatmap@xm
+    ym <- heatmap@ym
     val <- options$transform(heatmap@matrix)
     val[val < 0] = 0
     val[val > heatmap@max_value] = heatmap@max_value

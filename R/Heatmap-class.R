@@ -1,5 +1,7 @@
 setClass("Heatmap",
          slots=c(
+            xm="numeric",
+            ym="numeric",
             matrix="matrix",
             max_value="numeric",
             coords="integer",
