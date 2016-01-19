@@ -15,6 +15,8 @@ setMethod("smooth", signature(heatmap="Heatmap"),
         nbin <- ceiling(c(heatmap@nseq/vsmooth, width(heatmap)/hsmooth))
     }
 
+    message("nbin: ", nbin)
+
     if (is.null(bw)) {
         bw <- c(3,3)
     }

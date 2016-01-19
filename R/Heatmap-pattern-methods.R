@@ -157,13 +157,13 @@ signature(windows = "GenomicRanges", track="RleList"),
     }
 )
 
-windowViews = function(gr, coverage) {
+windowViews = function(gr, cov) {
     ord = order(gr)
-    rev_ord = seq(1, length(gr))[ord]
+    rnk = rank(gr)
     gr = gr[ord]
-    chrs = intersect(names(coverage), as.character(seqlevels(gr)))
-    myViews = Views(coverage[chrs], as(gr, "RangesList")[chrs])
+    chrs = intersect(names(cov), as.character(seqlevels(gr)))
+    myViews = Views(cov[chrs], as(gr, "RangesList")[chrs])
     scores = unlist(lapply(myViews, as.list), recursive=FALSE)
-    return(scores[rev_ord])
+    return(scores[rnk])
 }
 
