@@ -5,11 +5,12 @@ Date: 18-01-2016
 Author: Malcolm Perry <mgperry32@gmail.com>
 Maintainer: Malcolm Perry <mgperry32@gmail.com>
 Imports: Biostrings, GenomicRanges, IRanges, KernSmooth, plotrix
-Depends: methods, R (>= 2.15.0)
+Depends: methods, R (>= 2.15.0), Matrix
 Suggests: RUnit, BiocGenerics, BiocStyle
 Description: I like heatmaps
 License: NA
 biocViews: Visualization, SequenceMatching
 Collate: PWM-class.R Heatmap-class.R Heatmap-plotting-methods.R 
-         MotifScanningMethods.R PatternOccurrenceMethods.R PlottingMethods.R
+         PlottingMethods.R Heatmap-motif-methods.R Heatmap-pattern-methods.R
+         Heatmap-smooth-methods.R plotMetaRegion.R plotMotifHeatmap.R
 NeedsCompilation: no

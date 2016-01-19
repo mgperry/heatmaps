@@ -21,31 +21,32 @@ function(seq, patterns, coords=NULL, options=heatmapOptions(), ...){
 
         heatmaps <- list()
         for (i in 1:length(patterns)) {
-            heatmaps[[i]] = smoothHeatmap( raw_hm[[i]], coords=coords, label = labels[i])
+            heatmaps[[i]] = smooth(raw_hm[[i]])
         }
 
         plotHeatmapList(heatmaps, groups=1, options)
     }
 )
 
-setGeneric(
-name="plotPatternDensityMeta",
-def=function(seq, patterns, ...) {
-        standardGeneric("plotPatternDensityMeta")
-    }
-)
+# setGeneric(
+# name="plotPatternDensityMeta",
+# def=function(seq, patterns, ...) {
+#         standardGeneric("plotPatternDensityMeta")
+#     }
+# )
 
-setMethod("plotPatternDensityMeta",
-signature(seq = "DNAStringSet"),
-function(seq, patterns, coords=NULL, options=metaplotOptions(), ...){
-        if (is.null(coords)) {
-            coords = c(-width(seq[1])/2, width(seq[1])/2)
-        }
+# setMethod("plotPatternDensityMeta",
+# signature(seq = "DNAStringSet"),
+# function(seq, patterns, coords=NULL, options=metaplotOptions(), ...){
+#         if (is.null(coords)) {
+#             coords = c(-width(seq[1])/2, width(seq[1])/2)
+#         }
 
-        message("\nGetting oligonucleotide occurrence matrix...")
-        heatmaps = lapply(patterns, getPatternOccurrence, seq=seq)
-        labels = sapply(patterns, function(x) if(class(x) == "PWM") x@name else x)
+#         message("\nGetting oligonucleotide occurrence matrix...")
+#         heatmaps = lapply(patterns, getPatternOccurrence, seq=seq)
+#         labels = sapply(patterns, function(x) if(class(x) == "PWM") x@name else x)
 
-        plotMetaRegion(heatmaps, groups=1, options)
-    }
-)
+#         plotMetaRegion(heatmaps, groups=1, options)
+#     }
+# )
+
