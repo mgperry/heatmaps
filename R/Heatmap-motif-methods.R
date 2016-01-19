@@ -1,13 +1,13 @@
 setGeneric(
 name="motifScanScores",
-def=function(seq, PWM, ...){
+def=function(seq, pwm, ...){
     standardGeneric("motifScanScores")
     }
 )
 
 setMethod("motifScanScores",
-signature(seq = "DNAStringSet", PWM = "matrix"),
-function(seq, PWM, coords=NULL, label=NULL){
+signature(seq = "DNAStringSet", pwm = "matrix"),
+function(seq, pwm, coords=NULL, label=NULL){
 
         if(!(length(unique(width(seq))) == 1)){
             stop("All sequences in the input DNAStringSet must have the same
@@ -16,18 +16,16 @@ function(seq, PWM, coords=NULL, label=NULL){
 
         if (is.null(coords)) coords = c(0, length(seq[1]))
 
-        if (is.null(label)) label=PWM@name
-
         scanning.score.list <- lapply(seq, function(x){
-            PWMscoreStartingAt(pwm = PWM@matrix, subject = x,
-                               starting.at = c(1:(length(seq[[1]]) - ncol(PWM@matrix) + 1)))
+           pwmscoreStartingAt(pwm = pwm, subject = x,
+                               starting.at = c(1:(length(seq[[1]]) - ncol(pwm + 1))))
         })
         mat <- do.call(rbind, scanning.score.list)
-        mat[mat < minScore(PWM)] <- minScore(PWM)
+        mat[mat < minScore(pwm)] <- minScore(pwm)
 
         # normalise to avoid < zero values
-        max.score <- maxScore(PWM)
-        min.score <- minScore(PWM)
+        max.score <- maxScore(pwm)
+        min.score <- minScore(pwm)
         mat = (mat-min.score)/(max.score-min.score)*100
 
         hm = new(

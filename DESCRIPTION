@@ -10,7 +10,7 @@ Suggests: RUnit, BiocGenerics, BiocStyle
 Description: I like heatmaps
 License: NA
 biocViews: Visualization, SequenceMatching
-Collate: PWM-class.R Heatmap-class.R Heatmap-plotting-methods.R 
+Collate: Heatmap-class.R Heatmap-plotting-methods.R 
          PlottingMethods.R Heatmap-motif-methods.R Heatmap-pattern-methods.R
          Heatmap-smooth-methods.R plotMetaRegion.R plotMotifHeatmap.R
 NeedsCompilation: no

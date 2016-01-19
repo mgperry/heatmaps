@@ -7,7 +7,7 @@ def=function(seq, pattern, ...){
 
 setMethod("getPatternOccurrence",
 signature(seq = "DNAStringSet", pattern="character"),
-    function(seq, pattern, coords=NULL) {
+    function(seq, pattern, coords=NULL, min.score=NULL, label=NULL) {
 
         if (!(length(unique(width(seq))) == 1)) {
             stop("All sequences in the input DNAStringSet must have the same
@@ -19,6 +19,7 @@ signature(seq = "DNAStringSet", pattern="character"),
         }
 
         if (is.null(coords)) coords = c(0, width(seq[1]))
+        if (is.null(label)) label = pattern
 
         seq <- DNAStringSet(gsub("N", "+", seq)) # avoid matching Ns
 
@@ -41,15 +42,15 @@ signature(seq = "DNAStringSet", pattern="character"),
             max_value=1,
             coords=as.integer(coords),
             nseq=length(seq),
-            label=pattern)
+            label=label)
 
         return(hm)
     }
 )
 
 setMethod("getPatternOccurrence",
-signature(seq = "DNAStringSet", pattern = "PWM"),
-function(seq, pattern, coords=NULL) {
+signature(seq = "DNAStringSet", pattern = "matrix"),
+function(seq, pattern, coords=NULL, min.score="80%", label=NULL) {
 
         if (!(length(unique(width(seq))) == 1)) {
             stop("All sequences in the input DNAStringSet must have the same
@@ -57,11 +58,12 @@ function(seq, pattern, coords=NULL) {
         }
 
         if (is.null(coords)) coords = c(0, width(seq[1]))
+        if (is.null(label)) label = "pwm"
 
         pattern.starts <- lapply(seq, function(x) {
-            start(matchPWM(subject=x, pwm=pattern@matrix, min.score=pattern@min.score))
+            start(matchPWM(subject=x, pwm=pattern, min.score=min.score))
         })
-        pattern.starts.ul <- unlist(pattern.starts) + floor(ncol(PWM@matrix)/2)
+        pattern.starts.ul <- unlist(pattern.starts) + floor(ncol(pattern)/2)
 
         sm = sparseMatrix(
             i = rep(1:length(pattern.starts), lengths(pattern.starts)),
@@ -74,11 +76,11 @@ function(seq, pattern, coords=NULL) {
             "Heatmap",
             xm=1:ncol(mat),
             ym=1:nrow(mat),
-            matrix=sm,
-            max_value=mat,
+            matrix=mat,
+            max_value=max(mat),
             coords=as.integer(coords),
             nseq=length(seq),
-            label=pattern)
+            label=label)
         return(hm)
     }
 )
