@@ -12,7 +12,7 @@ setMethod("smooth", signature(heatmap="Heatmap"),
         if (!all(nbin %% 1 == 0)) stop("nbin must have integer values")
         if (!(vsmooth == 1 && hsmooth == 1)) warn("nbin is set; overriding v/hsmooth")
     } else {
-        nbin <- c(vsmooth*heatmap@nseq, hsmooth*width(heatmap))
+        nbin <- ceiling(c(heatmap@nseq/vsmooth, width(heatmap)/hsmooth))
     }
 
     if (is.null(bw)) {
