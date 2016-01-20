@@ -7,7 +7,11 @@ setGeneric(
 
 setMethod("plotPatternDensityMap",
 signature(seq = "DNAStringSet"),
-    function(seq, patterns, coords=NULL, min.score="80%", nbin=NULL, vsmooth=1, hsmooth=1, options=heatmapOptions(), ...){
+    function(seq, patterns, coords=NULL, min.score="80%", nbin=NULL, vsmooth=1, hsmooth=1, options=NULL, ...){
+
+        if (is.null(options)) {
+            options = heatmapOptions(...)
+        }
 
         if (is.null(coords)) {
             coords = c(-width(seq[1])/2, width(seq[1])/2)
