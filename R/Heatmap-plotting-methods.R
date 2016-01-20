@@ -10,7 +10,11 @@ setMethod("plotHeatmap", signature="Heatmap",
         options = heatmapOptions(...)
     }
 
-    colramp = colorRampPalette(.myColorPalette(options$color)) # could check for function as input
+    if (is.function(options$color)) {
+        colramp = options$color
+    } else {
+        colramp = colorRampPalette(default_color(options$color)) # could check for function as input
+    }
 
     breaks <- seq(0, options$transform(heatmap@max_value), length.out=257) # could be option
 
@@ -121,7 +125,7 @@ plotHeatmapList = function(heatmap_list, groups=NULL, options=heatmapOptions(), 
         for (i in 1:n_groups) {
             opt = options
             extra_opts = opt[lengths(opt) == n_groups]
-            opt[names(extra_opts)] = lapply(extra_opts, function(x) unlist(x[i]))
+            opt[names(extra_opts)] = lapply(extra_opts, function(x) unlist(x[i])) # deals with functions
             group_options[[i]] = opt
         }
     } else {
@@ -173,7 +177,7 @@ plotHeatmapList = function(heatmap_list, groups=NULL, options=heatmapOptions(), 
 # additional functions
 
 plot_legend <- function(max_value, options) {
-        col_ramp <- colorRamp(.myColorPalette(options$color))
+        col_ramp <- colorRamp(default_color(options$color))
         ticks <- options$legend.ticks
         transf <- options$transform
         align <- ifelse(options$legend.pos=='l', 'lt', 'rb')
@@ -191,10 +195,10 @@ plot_legend <- function(max_value, options) {
                      align=align, gradient='y', cex=options$cex.legend)
 }
 
-.myColorPalette <- function(colorName){
-    colnames = c("green", "cyan", "blue", "purple", "pink", "red", "orange", "brown", "gray")
-        if(!(colorName %in% colnames)){
-            msg = paste("Colour", colorName, "not supported, must be one of", paste(colnames, collapse=', '))
+default_color <- function(color_name){
+    colors = c("green", "cyan", "blue", "purple", "pink", "red", "orange", "brown", "gray")
+        if(!(color_name %in% colors)){
+            msg = paste("Colour", color_name, "not supported, must be one of", paste(colors, collapse=', '))
             stop(msg)
         }
     colors.df <- data.frame(
@@ -203,8 +207,8 @@ plot_legend <- function(max_value, options) {
         highcol=c("darkgreen", "darkslategrey", "blue4", "purple4",
                   "deeppink4", "red4", "darkorange4", "salmon4", "black"),
         stringsAsFactors = FALSE)
-    rownames(colors.df) <- colnames
-    return(colors.df[colorName,])
+    rownames(colors.df) <- colors
+    return(c("white", colors.df[color_name,]))
 }
 
 log5 <- function(x) {
