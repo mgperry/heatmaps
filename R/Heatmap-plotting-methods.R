@@ -10,13 +10,13 @@ setMethod("plotHeatmap", signature="Heatmap",
         options = heatmapOptions(...)
     }
 
-    if (is.function(options$color)) {
-        colramp = options$color
+    if (length(options$color) == 1) {
+        col_palette = colorRampPalette(default_color(options$color))
     } else {
-        colramp = colorRampPalette(default_color(options$color)) # could check for function as input
+        col_palette = colorRampPalette(options$color)
     }
 
-    breaks <- seq(0, options$transform(heatmap@max_value), length.out=257) # could be option
+    breaks <- seq(0, options$transform(heatmap@max_value), length.out=257)
 
     xm <- heatmap@xm
     ym <- heatmap@ym
@@ -25,7 +25,7 @@ setMethod("plotHeatmap", signature="Heatmap",
     val[val > heatmap@max_value] = heatmap@max_value
 
     image(xm, ym, z=t(val),
-          col=colramp(256), breaks=breaks,
+          col=col_palette(256), breaks=breaks,
           xlim=c(0.5,width(heatmap)-0.5), # remove fluffy edges
           xlab="", ylab="",
           axes=FALSE)
@@ -129,7 +129,7 @@ plotHeatmapList = function(heatmap_list, groups=NULL, options=heatmapOptions(), 
             group_options[[i]] = opt
         }
     } else {
-        group_options[[1]] = options
+        group_options[[1]] = lapply(options, unlist)
     }
 
     group_list = split(1:n_plots, groups)
@@ -177,7 +177,11 @@ plotHeatmapList = function(heatmap_list, groups=NULL, options=heatmapOptions(), 
 # additional functions
 
 plot_legend <- function(max_value, options) {
-        col_ramp <- colorRamp(default_color(options$color))
+        if (length(options$color) == 1) {
+            col_ramp = colorRamp(default_color(options$color)) # could check for function as input
+        } else {
+            col_ramp = colorRamp(options$color) # could check for function as input
+        }
         ticks <- options$legend.ticks
         transf <- options$transform
         align <- ifelse(options$legend.pos=='l', 'lt', 'rb')
