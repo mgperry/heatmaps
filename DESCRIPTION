@@ -5,7 +5,7 @@ Date: 18-01-2016
 Author: Malcolm Perry <mgperry32@gmail.com>
 Maintainer: Malcolm Perry <mgperry32@gmail.com>
 Imports: Biostrings, GenomicRanges, IRanges, KernSmooth, plotrix
-Depends: methods, R (>= 2.15.0), Matrix
+Depends: methods, R (>= 2.15.0), Matrix, genomation
 Suggests: RUnit, BiocGenerics, BiocStyle
 Description: I like heatmaps
 License: NA
