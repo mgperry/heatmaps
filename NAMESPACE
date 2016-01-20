@@ -8,5 +8,6 @@ importFrom(plotrix, color.legend)
 importFrom(Matrix, sparseMatrix)
 
 export(plotHeatmapList)
+export(plotPatternDensityMap)
 exportMethods(plotHeatmap, smooth, getPatternOccurrence, CoverageHeatmap)
         
