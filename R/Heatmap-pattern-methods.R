@@ -161,6 +161,7 @@ windowViews = function(gr, cov) {
     chrs = intersect(names(cov), as.character(seqlevels(gr)))
     myViews = Views(cov[chrs], as(gr, "RangesList")[chrs])
     scores = unlist(lapply(myViews, as.list), recursive=FALSE)
+    scores = Map(function(x, s) if(s == "-") rev(x) else x, scores, as.vector(strand(gr)))
     return(scores[rnk])
 }
 
