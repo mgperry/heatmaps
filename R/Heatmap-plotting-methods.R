@@ -125,7 +125,14 @@ plotHeatmapList = function(heatmap_list, groups=NULL, options=heatmapOptions(), 
         for (i in 1:n_groups) {
             opt = options
             extra_opts = opt[lengths(opt) == n_groups]
-            opt[names(extra_opts)] = lapply(extra_opts, function(x) unlist(x[i])) # deals with functions
+            for (n in names(extra_opts)) {
+                # has to be manual because "unlist" cannot handle functions
+                if (class(extra_opts[[n]]) == "list") {
+                    opt[[n]] = extra_opts[[n]][[i]]
+                } else {
+                    opt[[n]] = extra_opts[[n]][i]
+                }
+            }
             group_options[[i]] = opt
         }
     } else {
@@ -183,7 +190,8 @@ plot_legend <- function(max_value, options) {
             col_ramp = colorRamp(options$color) # could check for function as input
         }
         ticks <- options$legend.ticks
-        transf <- options$transform
+        # transf <- options$transform
+        color_palette <- rgb(col_ramp(options$transform(seq(0, 1, length.out=256)))/256)
         align <- ifelse(options$legend.pos=='l', 'lt', 'rb')
         leg <- rep('', 256)
         leg[seq(1, 256, length.out=ticks)] <- formatC(seq(0, max_value, length.out=ticks), format='f', digits=2)
@@ -195,7 +203,7 @@ plot_legend <- function(max_value, options) {
              xlab='', ylab='')
         box(lwd = 6)
         color.legend(0, 0, 1, 7, legend=leg,
-                     rect.col=rgb(col_ramp(transf(seq(0, 1, length.out=256)))/256),
+                     rect.col=color_palette,
                      align=align, gradient='y', cex=options$cex.legend)
 }
 
