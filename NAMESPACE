@@ -10,5 +10,7 @@ importFrom(Matrix, sparseMatrix)
 export(plotHeatmapList)
 export(plotPatternDensityMap)
 export(Heatmap)
+export(heatmapOptions)
+
 exportMethods(plotHeatmap, smooth, getPatternOccurrence, CoverageHeatmap)
         
