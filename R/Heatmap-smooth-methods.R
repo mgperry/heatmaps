@@ -4,7 +4,7 @@ setGeneric("smooth", function(heatmap, ...) {
 })
 
 setMethod("smooth", signature(heatmap="Heatmap"),
-    function(heatmap, nbin=NULL, bw=NULL, vsmooth=1, hsmooth=1) {
+    function(heatmap, nbin=NULL, vsmooth=1, hsmooth=1, bw=NULL) {
     message("\nCalculating density...")
 
     if (!is.null(nbin)) {
@@ -15,7 +15,7 @@ setMethod("smooth", signature(heatmap="Heatmap"),
         nbin <- ceiling(c(heatmap@nseq/vsmooth, width(heatmap)/hsmooth))
     }
 
-    message("nbin: ", nbin)
+    message("nbin: ", paste(nbin, collapse=" "))
 
     if (is.null(bw)) {
         bw <- c(3,3)
