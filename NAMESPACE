@@ -3,9 +3,11 @@ import(Biostrings)
 import(GenomicRanges)
 import(IRanges)
 import(KernSmooth)
+import(data.table)
 
 importFrom(plotrix, color.legend)
 importFrom(Matrix, sparseMatrix)
+importFrom(genomation, ScoreMatrixBin)
 
 export(plotHeatmapList)
 export(plotPatternDensityMap)
