@@ -10,13 +10,17 @@ plotHeatmapMeta = function(hm_list, binsize, colors, addReferenceLine=FALSE) {
     bin_sums = lapply(hm_list, bin_heatmap, breaks=breaks)
     occurrence = lapply(bin_sums, function(x) x/(hm_list[[1]]@nseq*binsize))
     max_value = max(vapply(occurrence, max, numeric(1)))
-    plot(0, 0, xlim=coords, ylim=c(0, max_value), axes=FALSE, type="n")
+    plot(0, 0, xlim=coords, ylim=c(0, max_value), axes=FALSE, type="n", xlab="", ylab="")
     axis(1)
     axis(2)
+    mtext("Relative Position", side = 1, line = 3, cex = 1.5, font = 2)
+    mtext("Frequency", side = 2, line = 2.5, cex = 1.5, font = 2)
     for (i in seq_along(occurrence)) {
         x_coord = breaks[1:(length(breaks)-1)] + binsize/2 + coords[1]
         lines(x_coord, occurrence[[i]], col = colors[i], type='l', lwd=2)
     }
+    labels = vapply(hm_list, function(x) x@label, character(1))
+    legend('topright', labels, bty="n", lty=1, lwd=2, col=colors)
 }
 
 bin_heatmap = function(hm, breaks) {
@@ -35,8 +39,8 @@ plotHeatmapMetaSmooth = function(hm_list, colors, span=0.1, addReferenceLine=FAL
     pred = list()
     for (i in seq_along(hm_list)) {
         hm = hm_list[[i]]
-        col_sums = colSums(hm@matrix)
-        lo = loess(col_sums ~ hm@xm, span=span)
+        col_means = colSums(hm@matrix)/hm@nseq
+        lo = loess(col_means ~ hm@xm, span=span)
         pred[[i]] = predict(lo)
     }
     max_value = max(vapply(pred, max, numeric(1)))
@@ -46,5 +50,9 @@ plotHeatmapMetaSmooth = function(hm_list, colors, span=0.1, addReferenceLine=FAL
     for (i in seq_along(occurrence)) {
         lines(hm_list[[i]]@xm + coords[1], pred[[i]], col = colors[i], type='l', lwd=2)
     }
+    mtext("Relative Position", side = 1, line = 3, cex = 1.5, font = 2)
+    mtext("Frequency", side = 2, line = 2.5, cex = 1.5, font = 2)
+    labels = vapply(hm_list, function(x) x@label, character(1))
+    legend('topright', labels, bty="n", lty=1, lwd=2, col=colors)
 }
 
