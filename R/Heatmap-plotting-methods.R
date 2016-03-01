@@ -16,11 +16,15 @@ setMethod("plotHeatmap", signature="Heatmap",
         col_palette = colorRampPalette(options$color)
     }
 
-    breaks <- seq(0, options$transform(heatmap@max_value), length.out=257)
+    breaks = seq(0, options$transform(heatmap@max_value), length.out=257)
 
-    xm <- heatmap@xm
-    ym <- heatmap@ym
-    val <- options$transform(heatmap@matrix)
+    xm = heatmap@xm
+    ym = heatmap@ym
+    if (!is.null(options$transform)) {
+        val = options$transform(heatmap@matrix)
+    } else {
+        val = heatmap@matrix
+    }
     val[val < 0] = 0
     val[val > heatmap@max_value] = heatmap@max_value
 
@@ -66,7 +70,7 @@ setMethod("plotHeatmap", signature="Heatmap",
 })
 
 heatmapOptions = function(...) {
-    usr = list(...)
+    opts = list(...)
     def = list(
         color='blue',
         box.width=6,
@@ -83,8 +87,8 @@ heatmapOptions = function(...) {
         legend.pos='l',
         cex.legend=6,
         addReferenceLine=TRUE,
-        transform=function(x) x)
-    def[names(usr)] = usr
+        transform=NULL)
+    def[names(opts)] = opts
     return(def)
 }
 
@@ -189,19 +193,22 @@ plot_legend <- function(max_value, options) {
         } else {
             col_ramp = colorRamp(options$color) # could check for function as input
         }
-        ticks <- options$legend.ticks
-        # transf <- options$transform
-        color_palette <- rgb(col_ramp(options$transform(seq(0, 1, length.out=256)))/256)
-        align <- ifelse(options$legend.pos=='l', 'lt', 'rb')
-        leg <- rep('', 256)
-        leg[seq(1, 256, length.out=ticks)] <- formatC(seq(0, max_value, length.out=ticks), format='f', digits=2)
+        ticks = options$legend.ticks
+        values = seq(0, 1, length.out=256)
+        if (!is.null(options$transform)) {
+            values = options$transform(values)
+        }
+        color_palette = rgb(col_ramp(values)/256)
+        align = ifelse(options$legend.pos=='l', 'lt', 'rb')
+        leg = rep('', 256)
+        leg[seq(1, 256, length.out=ticks)] = formatC(seq(0, max_value, length.out=ticks), format='f', digits=2)
         plot(1, 1,
              type='n', bty='n',
              xaxt='n', yaxt='n',
              xlim=c(0,1), ylim=c(0,7),
              xaxs="i", yaxs="i",
              xlab='', ylab='')
-        box(lwd = 6)
+        box(lwd = options$box.width)
         color.legend(0, 0, 1, 7, legend=leg,
                      rect.col=color_palette,
                      align=align, gradient='y', cex=options$cex.legend)
@@ -221,10 +228,6 @@ default_color <- function(color_name){
         stringsAsFactors = FALSE)
     rownames(colors.df) <- colors
     return(c("white", colors.df[color_name,]))
-}
-
-log5 <- function(x) {
-    log10(x)/log10(5)
 }
 
 make_x_ticks = function(coord) {
