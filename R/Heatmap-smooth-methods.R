@@ -15,6 +15,8 @@ setMethod("smooth", signature(heatmap="Heatmap"),
         nbin <- ceiling(c(heatmap@nseq/vsmooth, width(heatmap)/hsmooth))
     }
 
+    if (!all(heatmap@matrix %in% c(0,1))) warn("smooth expects a binary matrix")
+
     message("nbin: ", paste(nbin, collapse=" "))
 
     if (is.null(bw)) {
