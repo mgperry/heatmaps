@@ -1,11 +1,11 @@
 setGeneric(
-name="motifScanScores",
+name="PWMScanHeatmap",
 def=function(seq, pwm, ...){
     standardGeneric("motifScanScores")
     }
 )
 
-setMethod("motifScanScores",
+setMethod("PWMScanHeatmap",
 signature(seq = "DNAStringSet", pwm = "matrix"),
 function(seq, pwm, coords=NULL, label=NULL){
 
