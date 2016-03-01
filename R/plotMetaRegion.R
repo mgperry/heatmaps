@@ -1,63 +1,50 @@
-#######################################
-# Function for plotting average signal
+plotHeatmapMeta = function(hm_list, binsize, colors, addReferenceLine=FALSE) {
+    if (!length(unique(lapply(hm_list, function(x) x@coords))) == 1)
+        stop("heatmaps must have the same coordinates")
 
+    if (!length(unique(lapply(hm_list, function(x) x@coords))) == 1)
+        stop("heatmaps must have the same number of sequences")
 
-plotMetaRegion <- function(occurence.melted.list, nr.seq,
-pattern.widths, flankUp = NULL, flankDown = NULL, smoothingWindow = 3,
-color = rainbow(length(occurence.melted.list)), xLabel =
-"Distance to reference point (bp)", yLabel = "Relative frequency", cexAxis = 2,
-addReferenceLine = TRUE, plotLegend = TRUE, cexLegend = 2, add = FALSE, ...){
-
-    message("\nPlotting average signal...\n")
-    patterns.avg.signal<-lapply(c(1:length(occurence.melted.list)),
-    function(i) {
-        x <- occurence.melted.list[[i]]
-        a.s <- table(x$position)/nr.seq
-        avg.signal <- rep(0, times =
-        flankUp+flankDown-pattern.widths[i]+1)
-        names(avg.signal) <- c(1:length(avg.signal))
-        avg.signal[names(a.s)] <- a.s
-        return(avg.signal)
-    })
-
-    starts <- lapply(patterns.avg.signal, function(x) {
-        seq(1, length(x), by = smoothingWindow)
-    })
-    ends <- lapply(starts, function(x) {x + smoothingWindow - 1})
-    ends <- lapply(1:length(ends), function(x) {
-        ends[[x]][length(ends[[x]])] <- min(ends[[x]][length(ends[[x]])],
-        length(patterns.avg.signal[[x]])); return(ends[[x]])
-    })
-
-    patterns.avg.signal.windowed <- lapply(c(1:length(patterns.avg.signal)),
-    function(x){
-        a.s <- sapply(seq(1:length(starts[[x]])), function(y) {
-            mean(patterns.avg.signal[[x]][starts[[x]][y]:ends[[x]][y]])})
-        x.coor <- (starts[[x]]+ends[[x]])/2 - flankUp - 1
-        return(list(x.coor, a.s))
-    })
-
-    if(!(add)){
-        plot(1, 1, xlim = c(-flankUp, flankDown), ylim = c(0,
-        1.05*max(unlist(lapply(patterns.avg.signal.windowed, function(x) {
-            max(x[[2]])})))), type = "n", xlab = xLabel, ylab = yLabel,
-        cex.axis = cexAxis, cex.lab = cexAxis, ...)
+    coords = hm_list[[1]]@coords
+    breaks = seq(0, width(hm_list[[1]]), by=binsize)
+    bin_sums = lapply(hm_list, bin_heatmap, breaks=breaks)
+    occurrence = lapply(bin_sums, function(x) x/(hm_list[[1]]@nseq*binsize))
+    max_value = max(vapply(occurrence, max, numeric(1)))
+    plot(0, 0, xlim=coords, ylim=c(0, max_value), axes=FALSE, type="n")
+    axis(1)
+    axis(2)
+    for (i in seq_along(occurrence)) {
+        x_coord = breaks[1:(length(breaks)-1)] + binsize/2 + coords[1]
+        lines(x_coord, occurrence[[i]], col = colors[i], type='l', lwd=2)
     }
+}
 
-    a.s <- lapply(c(1:length(patterns.avg.signal.windowed)), function(i){
-        lines(x = patterns.avg.signal.windowed[[i]][[1]],
-        y = patterns.avg.signal.windowed[[i]][[2]], type = "l",
-        col = color[i], ...)
-    })
+bin_heatmap = function(hm, breaks) {
+    partition = data.table(pos=hm@xm, value=colSums(hm@matrix), bin=cut(hm@xm, breaks))
+    partition[, list(sum=sum(value)), by=bin][,sum]
+}
 
-    if(plotLegend){
-        legend("top", legend = names(pattern.widths), bty = "n", horiz = TRUE,
-        lwd = 1, col = color, cex = cexLegend)
+plotHeatmapMetaSmooth = function(hm_list, colors, span=0.1, addReferenceLine=FALSE) {
+    if (!length(unique(lapply(hm_list, function(x) x@coords))) == 1)
+        stop("heatmaps must have the same coordinates")
+
+    if (!length(unique(lapply(hm_list, function(x) x@coords))) == 1)
+        stop("heatmaps must have the same number of sequences")
+
+    coords = hm_list[[1]]@coords
+    pred = list()
+    for (i in seq_along(hm_list)) {
+        hm = hm_list[[i]]
+        col_sums = colSums(hm@matrix)
+        lo = loess(col_sums ~ hm@xm, span=span)
+        pred[[i]] = predict(lo)
     }
-    if(addReferenceLine){
-        abline(v = 0, lty = "dashed")
+    max_value = max(vapply(pred, max, numeric(1)))
+    plot(0, 0, xlim=coords, ylim=c(0, max_value), axes=FALSE, type="n", xlab=NULL, ylab=NULL)
+    axis(1)
+    axis(2)
+    for (i in seq_along(occurrence)) {
+        lines(hm_list[[i]]@xm + coords[1], pred[[i]], col = colors[i], type='l', lwd=2)
     }
-
-
 }
 
