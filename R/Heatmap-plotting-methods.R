@@ -16,14 +16,14 @@ setMethod("plotHeatmap", signature="Heatmap",
         col_palette = colorRampPalette(options$color)
     }
 
-    breaks = seq(0, options$transform(heatmap@max_value), length.out=257)
-
     xm = heatmap@xm
     ym = heatmap@ym
-    if (!is.null(options$transform)) {
+    if (!is.na(options$transform)) {
         val = options$transform(heatmap@matrix)
+        breaks = seq(0, options$transform(heatmap@max_value), length.out=257)
     } else {
         val = heatmap@matrix
+        breaks = seq(0, heatmap@max_value, length.out=257)
     }
     val[val < 0] = 0
     val[val > heatmap@max_value] = heatmap@max_value
@@ -87,7 +87,7 @@ heatmapOptions = function(...) {
         legend.pos='l',
         cex.legend=6,
         addReferenceLine=TRUE,
-        transform=NULL)
+        transform=NA)
     def[names(opts)] = opts
     return(def)
 }
@@ -195,7 +195,7 @@ plot_legend <- function(max_value, options) {
         }
         ticks = options$legend.ticks
         values = seq(0, 1, length.out=256)
-        if (!is.null(options$transform)) {
+        if (!is.na(options$transform)) {
             values = options$transform(values)
         }
         color_palette = rgb(col_ramp(values)/256)
