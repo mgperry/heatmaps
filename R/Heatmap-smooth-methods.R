@@ -16,6 +16,7 @@ setMethod("smooth", signature(heatmap="Heatmap"),
     }
 
     if (!all(heatmap@matrix %in% c(0,1))) warn("smooth expects a binary matrix")
+    if (all(heatmap@matrix == 0)) warn("no patterns detected")
 
     message("nbin: ", paste(nbin, collapse=" "))
 
@@ -24,7 +25,6 @@ setMethod("smooth", signature(heatmap="Heatmap"),
     }
 
     sm <- as(heatmap@matrix, "sparseMatrix")
-    total_value = sum(sm)
 
     df <- summary(sm)
     map <- bkde2D(cbind(df$i, df$j), bandwidth=bw, gridsize=nbin,

@@ -109,12 +109,12 @@ plotHeatmapList = function(heatmap_list, groups=NULL, options=heatmapOptions(), 
     n_groups = max(groups)
     # message(paste("groups:", paste(groups, collapse=', '), "\ntotal:", n_groups, "groups"))
 
-    if (all(groups != 1:n_plots)) {
+    if (!all(groups != 1:n_plots)) {
         for (i in 1:max(groups)) {
             group = which(groups == i)
-            max_d = sum(vapply(heatmaps_list[group], function(x) max(x@value), integer(1)))
+            max_d = max(vapply(heatmap_list[group], function(x) max(x@matrix), numeric(1)))
             for (index in group) {
-                heatmaps_list[[index]]@max_value = max_d
+                heatmap_list[[index]]@max_value = max_d
             }
         }
     }
