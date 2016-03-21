@@ -1,4 +1,4 @@
-plotHeatmapMeta = function(hm_list, binsize, colors, addReferenceLine=FALSE) {
+plotHeatmapMeta = function(hm_list, binsize=1, colors=gg_col(length(hm_list)), addReferenceLine=FALSE) {
     if (!length(unique(lapply(hm_list, function(x) x@coords))) == 1)
         stop("heatmaps must have the same coordinates")
 
@@ -28,7 +28,7 @@ bin_heatmap = function(hm, breaks) {
     partition[, list(sum=sum(value)), by=bin][,sum]
 }
 
-plotHeatmapMetaSmooth = function(hm_list, colors, span=0.1, addReferenceLine=FALSE) {
+plotHeatmapMetaSmooth = function(hm_list, span=0.1, colors=gg_col(length(hm_list)), addReferenceLine=FALSE) {
     if (!length(unique(lapply(hm_list, function(x) x@coords))) == 1)
         stop("heatmaps must have the same coordinates")
 
@@ -55,4 +55,10 @@ plotHeatmapMetaSmooth = function(hm_list, colors, span=0.1, addReferenceLine=FAL
     labels = vapply(hm_list, function(x) x@label, character(1))
     legend('topright', labels, bty="n", lty=1, lwd=2, col=colors)
 }
+
+gg_col = function(n) {
+    hues = seq(15, 375, length=n+1)
+    hcl(h=hues, l=65, c=100)[1:n]
+}
+
 
