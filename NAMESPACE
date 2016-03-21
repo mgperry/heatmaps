@@ -9,10 +9,11 @@ importFrom(plotrix, color.legend)
 importFrom(Matrix, sparseMatrix)
 importFrom(genomation, ScoreMatrixBin)
 
-export(plotHeatmapList)
-export(plotPatternDensityMap)
 export(Heatmap)
 export(heatmapOptions)
+export(plotHeatmapMeta)
+export(plotHeatmapList)
+export(plotPatternDensityMap)
 
 exportMethods(plotHeatmap, smooth, getPatternOccurrence, CoverageHeatmap)
         

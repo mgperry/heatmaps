@@ -12,5 +12,5 @@ Description: I like heatmaps
 biocViews: Visualization, SequenceMatching
 Collate: Heatmap-class.R Heatmap-plotting-methods.R 
          PlottingMethods.R Heatmap-motif-methods.R Heatmap-pattern-methods.R
-         Heatmap-smooth-methods.R plotMetaRegion.R plotMotifHeatmap.R
+         Heatmap-smooth-methods.R plotHeatmapMeta.R plotMotifHeatmap.R
 NeedsCompilation: no
