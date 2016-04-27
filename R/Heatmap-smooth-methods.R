@@ -10,13 +10,13 @@ setMethod("smooth", signature(heatmap="Heatmap"),
     if (!is.null(nbin)) {
         if (!length(nbin) == 2) stop("nbin must have length 2")
         if (!all(nbin %% 1 == 0)) stop("nbin must have integer values")
-        if (!(vsmooth == 1 && hsmooth == 1)) warn("nbin is set; overriding v/hsmooth")
+        if (!(vsmooth == 1 && hsmooth == 1)) warning("nbin is set; overriding v/hsmooth")
     } else {
         nbin <- ceiling(c(heatmap@nseq/vsmooth, width(heatmap)/hsmooth))
     }
 
-    if (!all(heatmap@matrix %in% c(0,1))) warn("smooth expects a binary matrix")
-    if (all(heatmap@matrix == 0)) warn("no patterns detected")
+    if (!all(heatmap@matrix %in% c(0,1))) warning("smooth expects a binary matrix")
+    if (all(heatmap@matrix == 0)) warning("no patterns detected")
 
     message("nbin: ", paste(nbin, collapse=" "))
 
