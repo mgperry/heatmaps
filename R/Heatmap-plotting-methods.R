@@ -112,7 +112,7 @@ plotHeatmapList = function(heatmap_list, groups=NULL, options=heatmapOptions(), 
     if (!all(groups != 1:n_plots)) {
         for (i in 1:max(groups)) {
             group = which(groups == i)
-            max_d = max(vapply(heatmap_list[group], function(x) max(x@matrix), numeric(1)))
+            max_d = max(vapply(heatmap_list[group], function(x) x@max_value, numeric(1)))
             for (index in group) {
                 heatmap_list[[index]]@max_value = max_d
             }
