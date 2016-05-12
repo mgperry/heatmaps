@@ -44,19 +44,13 @@ signature(windows = "GenomicRanges", track="RleList"),
         if (nbin==0) {
             list_of_rle = windowViews(windows, track)
             mat = do.call(rbind, lapply(list_of_rle, as.vector))
-            xm=1:ncol(mat)
-            ym=1:nrow(mat)
         } else if (nbin > 0) {
             sm = ScoreMatrixBin(track, windows, nbin)
             mat = as(sm, "matrix")
-            xm=seq(1, coords[2] - coords[1], length.out=nbin)
-            ym=1:nrow(mat)
         }
 
         hm = new(
             "Heatmap",
-            xm=xm,
-            ym=ym,
             matrix=mat,
             max_value=max(mat),
             coords=as.integer(coords),

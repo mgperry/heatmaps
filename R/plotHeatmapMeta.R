@@ -24,7 +24,7 @@ plotHeatmapMeta = function(hm_list, binsize=1, colors=gg_col(length(hm_list)), a
 }
 
 bin_heatmap = function(hm, breaks) {
-    partition = data.table(pos=hm@xm, value=colSums(hm@matrix), bin=cut(hm@xm, breaks))
+    partition = data.table(pos=xm(hm), value=colSums(hm@matrix), bin=cut(xm(hm), breaks))
     partition[, list(sum=sum(value)), by=bin][,sum]
 }
 
@@ -40,7 +40,7 @@ plotHeatmapMetaSmooth = function(hm_list, span=0.1, colors=gg_col(length(hm_list
     for (i in seq_along(hm_list)) {
         hm = hm_list[[i]]
         col_means = colSums(hm@matrix)/hm@nseq
-        lo = loess(col_means ~ hm@xm, span=span)
+        lo = loess(col_means ~ xm(hm), span=span)
         pred[[i]] = predict(lo)
     }
     max_value = max(vapply(pred, max, numeric(1)))
@@ -48,7 +48,7 @@ plotHeatmapMetaSmooth = function(hm_list, span=0.1, colors=gg_col(length(hm_list
     axis(1)
     axis(2)
     for (i in seq_along(occurrence)) {
-        lines(hm_list[[i]]@xm + coords[1], pred[[i]], col = colors[i], type='l', lwd=2)
+        lines(xm(hm_list[[i]]) + coords[1], pred[[i]], col = colors[i], type='l', lwd=2)
     }
     mtext("Relative Position", side = 1, line = 3, cex = 1.5, font = 2)
     mtext("Frequency", side = 2, line = 2.5, cex = 1.5, font = 2)

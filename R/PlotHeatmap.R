@@ -16,8 +16,6 @@ setMethod("plotHeatmap", signature="Heatmap",
         col_palette = colorRampPalette(options$color)
     }
 
-    xm = heatmap@xm
-    ym = heatmap@ym
     if (!is.na(options$transform)) {
         val = options$transform(heatmap@matrix)
         breaks = seq(0, options$transform(heatmap@max_value), length.out=257)
@@ -28,7 +26,7 @@ setMethod("plotHeatmap", signature="Heatmap",
     val[val < 0] = 0
     val[val > heatmap@max_value] = heatmap@max_value
 
-    image(xm, ym, z=t(val),
+    image(xm(heatmap), ym(heatmap), z=t(val),
           col=col_palette(256), breaks=breaks,
           xlim=c(0.5,width(heatmap)-0.5), # remove fluffy edges
           xlab="", ylab="",

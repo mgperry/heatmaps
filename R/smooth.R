@@ -28,11 +28,9 @@ setMethod("smooth", signature(heatmap="Heatmap"),
 
     df <- summary(sm)
     map <- bkde2D(cbind(df$i, df$j), bandwidth=bw, gridsize=nbin,
-                range.x=list(c(1, heatmap@nseq), c(1, width(heatmap))))
+                range.x=list(range(xm(heatmap)), range(ym(heatmap))))
 
     fhat <- sum(heatmap@matrix)*map$fhat
-    heatmap@xm = map$x2
-    heatmap@ym = map$x1
     heatmap@matrix = fhat
     heatmap@max_value = max(fhat)
     return(heatmap)

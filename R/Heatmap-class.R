@@ -1,7 +1,5 @@
 setClass("Heatmap",
          slots=c(
-            xm="numeric",
-            ym="numeric",
             matrix="matrix",
             max_value="numeric",
             coords="integer",
@@ -9,8 +7,6 @@ setClass("Heatmap",
             label="character",
             metadata="list"),
         prototype=list(
-            xm=numeric(0),
-            ym=numeric(0),
             matrix=matrix(0, ncol=0, nrow=0),
             max_value=0,
             coords=c(0L,0L),
@@ -44,6 +40,18 @@ setMethod("rev", signature="Heatmap", function(x) {
     x
 })
 
+setGeneric("xm", def=function(x) standardGeneric("xm"))
+
+setMethod("xm", signature="Heatmap", function(x) {
+    seq(1, width(x), length.out=ncol(x@matrix))
+})
+
+setGeneric("ym", def=function(x) standardGeneric("ym"))
+
+setMethod("ym", signature="Heatmap", function(x) {
+    seq(1, x@nseq, length.out=nrow(x@matrix))
+})
+
 Heatmap = function(mat, coords=NULL, label="", nseq=NULL, max_value=max(mat), metadata=list()) {
     if (is.null(coords)) {
         coords = c(0L, ncol(mat))
@@ -55,12 +63,8 @@ Heatmap = function(mat, coords=NULL, label="", nseq=NULL, max_value=max(mat), me
     } else {
         nseq = as.integer(nseq)
     }
-    xm = seq(1, coords[2] - coords[1], length.out=ncol(mat))
-    ym = 1:nrow(mat)
     hm = new(
         "Heatmap",
-        xm=xm,
-        ym=ym,
         matrix=mat,
         max_value=max_value,
         coords=coords,
