@@ -17,7 +17,7 @@ signature(seq = "DNAStringSet"),
             coords = c(-width(seq[1])/2, width(seq[1])/2)
         }
 
-        raw_hm = lapply(patterns, getPatternOccurrence, seq=seq, min.score=min.score, coords=coords)
+        raw_hm = lapply(patterns, PatternHeatmap, seq=seq, min.score=min.score, coords=coords)
         if (!is.null(names(patterns))) {
             labels = ifelse(names(patterns) == "" | is.null(names(patterns)),
                             as.character(patterns),
@@ -52,7 +52,7 @@ signature(seq = "DNAStringSet"),
 #         }
 
 #         message("\nGetting oligonucleotide occurrence matrix...")
-#         heatmaps = lapply(patterns, getPatternOccurrence, seq=seq)
+#         heatmaps = lapply(patterns, PatternHeatmap, seq=seq)
 #         labels = sapply(patterns, function(x) if(class(x) == "PWM") x@name else x)
 
 #         plotMetaRegion(heatmaps, groups=1, options)

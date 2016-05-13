@@ -1,7 +1,7 @@
 setGeneric(
 name="PatternHeatmap",
 def=function(seq, pattern, ...){
-        standardGeneric("getPatternOccurrence")
+        standardGeneric("PatternHeatmap")
     }
 )
 
