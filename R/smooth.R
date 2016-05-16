@@ -3,36 +3,66 @@ setGeneric("smooth", function(heatmap, ...) {
     StandardGeneric("smooth")
 })
 
+#! @importFrom spatstat blur
+#! @importFrom EBImage resize
+#! @importFrom KernSmooth bkde2D
 setMethod("smooth", signature(heatmap="Heatmap"),
-    function(heatmap, nbin=NULL, vsmooth=1, hsmooth=1, bw=NULL) {
-    message("\nCalculating density...")
+    function(heatmap, sigma=c(3,3), output.ratio=c(1,1), output.size=NULL,
+             method=c("auto", "kernel", "blur")) {
 
-    if (!is.null(nbin)) {
-        if (!length(nbin) == 2) stop("nbin must have length 2")
-        if (!all(nbin %% 1 == 0)) stop("nbin must have integer values")
-        if (!(vsmooth == 1 && hsmooth == 1)) warning("nbin is set; overriding v/hsmooth")
+    if(!is.null(output.size)) {
+        if (!length(output.size) == 2) stop("output.size must have length 2")
+        if (!all(output.size %% 1 == 0)) stop("output.size must have integer values")
+    }
+
+    method = match.arg(method)
+    is_binary = all(heatmap@matrix %in% c(0,1))
+
+    if (method=="auto") {
+        if (is_binary) {
+            method = "kernel"
+        } else {
+            method = "blur"
+        }
+    }
+
+    if (method == "kernel" && !is_binary) {
+        warning("kernel method expects a binary matrix: non-binary values will be coerced to 1 or 0")
+    }
+
+    if (!all(output.ratio == c(1,1))) {
+        if(length(output.ratio) != 2) stop("output.ratio must have length 2")
+        if (!is.null(output.size)) warning("output.ratio is set, overiding output.size")
+        output.size = rev(dim(heatmap@matrix)/output.ratio)
+        resize = 1
     } else {
-        nbin <- ceiling(c(heatmap@nseq/vsmooth, width(heatmap)/hsmooth))
+        if (is.null(output.size)) {
+            resize = 0
+            output.size = rev(dim(heatmap@matrix))
+        } else {
+            resize = 1
+        }
     }
 
-    if (!all(heatmap@matrix %in% c(0,1))) warning("smooth expects a binary matrix")
-    if (all(heatmap@matrix == 0)) warning("no patterns detected")
-
-    message("nbin: ", paste(nbin, collapse=" "))
-
-    if (is.null(bw)) {
-        bw <- c(3,3)
+    if (method=="kernel") {
+        message("\nCalculating kernel density...")
+        sm = as(heatmap@matrix, "sparseMatrix")
+        df = summary(sm)
+        map = bkde2D(cbind(df$i, df$j), bandwidth=sigma, gridsize=output.size,
+                    range.x=list(range(ym(heatmap)), range(xm(heatmap))))
+        mat.new = sum(heatmap@matrix)*map$fhat
+        max_value = max(mat.new)
+    } else if (method=="blur") {
+        message("\nApplying Gaussian blur...")
+        mat.new = as.matrix.im(blur(im(heatmap@matrix), sigma=sigma))
+        if (resize == 1) {
+            mat.new = resize(mat.new, output.size[1], output.size[2])
+        }
+        max_value = max(mat.new)
     }
 
-    sm <- as(heatmap@matrix, "sparseMatrix")
-
-    df <- summary(sm)
-    map <- bkde2D(cbind(df$i, df$j), bandwidth=bw, gridsize=nbin,
-                range.x=list(range(xm(heatmap)), range(ym(heatmap))))
-
-    fhat <- sum(heatmap@matrix)*map$fhat
-    heatmap@matrix = fhat
-    heatmap@max_value = max(fhat)
+    heatmap@matrix = mat.new
+    heatmap@max_value = max_value
     return(heatmap)
 })
 

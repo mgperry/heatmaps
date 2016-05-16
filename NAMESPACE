@@ -8,6 +8,8 @@ import(data.table)
 importFrom(plotrix, color.legend)
 importFrom(Matrix, sparseMatrix)
 importFrom(genomation, ScoreMatrixBin)
+importFrom(spatstat, blur)
+importFrom(EBImage, resize)
 
 export(Heatmap)
 export(heatmapOptions)
