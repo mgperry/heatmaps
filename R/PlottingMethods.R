@@ -7,7 +7,7 @@ setGeneric(
 
 setMethod("plotPatternDensityMap",
 signature(seq = "DNAStringSet"),
-    function(seq, patterns, coords=NULL, min.score="80%", nbin=NULL, vsmooth=NULL, hsmooth=NULL, bw=NULL, options=NULL, ...){
+    function(seq, patterns, coords=NULL, min.score="80%", sigma=c(3, 3), output.ratio=c(1, 1), output.size=NULL, options=NULL, ...){
 
         if (is.null(options)) {
             options = heatmapOptions(...)
@@ -28,7 +28,7 @@ signature(seq = "DNAStringSet"),
 
         heatmaps <- list()
         for (i in 1:length(patterns)) {
-            sm_hm = smooth(raw_hm[[i]], nbin, vsmooth, hsmooth, bw)
+            sm_hm = smooth(raw_hm[[i]], sigma=sigma, output.ratio=output.ratio, output.size=output.size, method="kernel")
             sm_hm@label = labels[i]
             heatmaps[[i]] = sm_hm
         }
