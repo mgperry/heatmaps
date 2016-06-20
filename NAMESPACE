@@ -17,5 +17,5 @@ export(plotHeatmapMeta)
 export(plotHeatmapList)
 export(plotPatternDensityMap)
 
-exportMethods(plotHeatmap, smooth, PatternHeatmap, CoverageHeatmap)
+exportMethods(plotHeatmap, smooth, PatternHeatmap, CoverageHeatmap, PWMScanHeatmap)
         

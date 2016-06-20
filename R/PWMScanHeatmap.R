@@ -1,7 +1,7 @@
 setGeneric(
 name="PWMScanHeatmap",
 def=function(seq, pwm, ...){
-    standardGeneric("motifScanScores")
+    standardGeneric("PWMScanHeatmap")
     }
 )
 
@@ -17,7 +17,7 @@ function(seq, pwm, coords=NULL, label=NULL){
         if (is.null(coords)) coords = c(0, length(seq[1]))
 
         scanning.score.list <- lapply(seq, function(x){
-           pwmscoreStartingAt(pwm = pwm, subject = x,
+           PWMscoreStartingAt(pwm = pwm, subject = x,
                                starting.at = c(1:(length(seq[[1]]) - ncol(pwm + 1))))
         })
         mat <- do.call(rbind, scanning.score.list)
