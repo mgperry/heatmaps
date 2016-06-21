@@ -11,7 +11,7 @@ setMethod("plotHeatmap", signature="Heatmap",
     }
 
     if (length(options$color) == 1) {
-        col_palette = colorRampPalette(default_color(options$color))
+        col_palette = colorRampPalette(brewer.pal(options$color, 9))
     } else {
         col_palette = colorRampPalette(options$color)
     }
@@ -70,7 +70,7 @@ setMethod("plotHeatmap", signature="Heatmap",
 heatmapOptions = function(...) {
     opts = list(...)
     def = list(
-        color='blue',
+        color='Blues',
         box.width=6,
         x_ticks=TRUE,
         scale=TRUE,
@@ -88,22 +88,6 @@ heatmapOptions = function(...) {
         transform=NA)
     def[names(opts)] = opts
     return(def)
-}
-
-default_color <- function(color_name){
-    colors = c("green", "cyan", "blue", "purple", "pink", "red", "orange", "brown", "gray")
-        if(!(color_name %in% colors)){
-            msg = paste("Colour", color_name, "not supported, must be one of", paste(colors, collapse=', '))
-            stop(msg)
-        }
-    colors.df <- data.frame(
-        midcol=c("palegreen", "aquamarine", "lightblue", "lavender",
-                 "mistyrose", "peachpuff", "lightgoldenrod2", "wheat2", "lightgray"),
-        highcol=c("darkgreen", "darkslategrey", "blue4", "purple4",
-                  "deeppink4", "red4", "darkorange4", "salmon4", "black"),
-        stringsAsFactors = FALSE)
-    rownames(colors.df) <- colors
-    return(c("white", colors.df[color_name,]))
 }
 
 make_x_ticks = function(coord) {

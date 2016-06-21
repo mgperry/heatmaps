@@ -6,7 +6,8 @@ Author: Malcolm Perry <mgperry32@gmail.com>
 Maintainer: Malcolm Perry <mgperry32@gmail.com>
 Depends: R (>= 2.15.0) 
 Imports: Biostrings, GenomicRanges, IRanges, KernSmooth, plotrix,
-         methods, Matrix, genomation, data.table, EBImage, spatstat
+         methods, Matrix, genomation, data.table, EBImage, spatstat,
+         RColorBrewer
 Suggests: RUnit, BiocGenerics, BiocStyle
 License: NA
 Description: I like heatmaps
