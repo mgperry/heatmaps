@@ -31,23 +31,15 @@ plotHeatmapList = function(heatmap_list, groups=NULL, options=heatmapOptions(), 
     opt_lengths = lengths(options)
     if (!all(opt_lengths %in% c(1, n_groups))) stop("supplied options must be length 1 or #groups")
     group_options = list()
-    if (n_groups > 1) {
-        for (i in 1:n_groups) {
-            opt = options
-            extra_opts = opt[lengths(opt) == n_groups]
-            for (n in names(extra_opts)) {
-                # has to be manual because "unlist" cannot handle functions
-                if (class(extra_opts[[n]]) == "list") {
-                    opt[[n]] = extra_opts[[n]][[i]]
-                } else {
-                    opt[[n]] = extra_opts[[n]][i]
-                }
-            }
-            group_options[[i]] = opt
+    for (i in 1:n_groups) {
+        opt = options
+        extra_opts = opt[lengths(opt) == n_groups]
+        for (n in names(extra_opts)) {
+            opt[[n]] = extra_opts[[n]][i]
         }
-    } else {
-        group_options[[1]] = lapply(options, unlist)
+        group_options[[i]] = lapply(opt, unlist)
     }
+
 
     group_list = split(1:n_plots, groups)
 
