@@ -34,16 +34,16 @@ setMethod("plotHeatmap", signature="Heatmap",
 
     if (options$box.width > 0) box(lwd = options$box.width)
 
-    if(options$x_ticks == TRUE) {
-        x_ticks = make_x_ticks(heatmap@coords)
-        axis(1, at=x_ticks, labels=names(x_ticks), cex.axis=options$cex.axis, padj=1, lwd=6, tcl=-1)
+    if(options$x.ticks == TRUE) {
+        x.ticks = make_x_ticks(heatmap@coords)
+        axis(1, at=x.ticks, labels=names(x.ticks), cex.axis=options$cex.axis, padj=1, lwd=options$box.width, tcl=options$tcl)
     }
 
     if(options$scale){
         scale.length = width(heatmap)/5
-        x.start.in = grconvertX(0, from="user", to="inches") + 0.8
+        x.start.in = grconvertX(0, from="user", to="inches") + options$label.xpos
         x.start = grconvertX(x.start.in, from="inches", to="user")
-        y.start.in = grconvertY(0, from="user", to="inches") + 0.8
+        y.start.in = grconvertY(0, from="user", to="inches") + options$label.ypos
         y.start = grconvertY(y.start.in, from="inches", to="user")
         lines(c(x.start, x.start + scale.length),
               c(y.start, y.start),
@@ -54,16 +54,16 @@ setMethod("plotHeatmap", signature="Heatmap",
     }
 
     if(options$label){
-        x.start.in = grconvertX(0, from="user", to="inches") + 0.8
+        x.start.in = grconvertX(0, from="user", to="inches") + options$label.xpos
         x.start = grconvertX(x.start.in, from="inches", to="user")
-        y.start.in = grconvertY(0, from="user", to="inches") + 0.8
+        y.start.in = grconvertY(0, from="user", to="inches") + options$label.ypos
         y.start = grconvertY(y.start.in, from="inches", to="user")
         text(x=x.start, y=length(heatmap)-y.start,
         labels=heatmap@label, cex=options$cex.label, adj=c(0,1), col=options$label.col, font=2)
     }
 
-    if(options$addReferenceLine){
-        abline(v=(-heatmap@coords[1])+0.5, lty="dashed", lwd=6)
+    if(options$refline){
+        abline(v=(-heatmap@coords[1])+0.5, lty="dashed", lwd=options$refline.width)
     }
 })
 
@@ -72,9 +72,11 @@ heatmapOptions = function(...) {
     def = list(
         color='Blues',
         box.width=6,
-        x_ticks=TRUE,
+        x.ticks=TRUE,
         scale=TRUE,
         scale.lwd=15,
+        label.xpos=0.8,
+        label.ypos=0.8,
         cex.axis=6,
         label=TRUE,
         cex.label=8,
@@ -84,8 +86,40 @@ heatmapOptions = function(...) {
         legend.ticks=5,
         legend.pos='l',
         cex.legend=6,
-        addReferenceLine=TRUE,
-        transform=NA)
+        refline=TRUE,
+        refline.with=2,
+        transform=NA,
+        plot.mai=list(c(2, 1.2, 0.4, 1.2)), # best units to use?
+        legend.mai=list(c(2, 2.8, 0.4, 0.1)))
+    def[names(opts)] = opts
+    return(def)
+}
+
+heatmapOptionsSmall = function(...) {
+    opts = list(...)
+    def = list(
+        color='blue',
+        box.width=1.5,
+        x.ticks=TRUE,
+        tcl=-0.25,
+        scale=TRUE,
+        scale.lwd=3,
+        label.xpos=0.15,
+        label.ypos=0.15,
+        cex.axis=1,
+        label=TRUE,
+        cex.label=1.2,
+        label.col='black',
+        legend=TRUE,
+        legend.width=0.2,
+        legend.ticks=5,
+        legend.pos='l',
+        cex.legend=1,
+        refline=TRUE,
+        refline.with=0.5,
+        transform=NA,
+        plot.mai=list(c(0.4, 0.25, 0.08, 0.25)),
+        legend.mai=list(c(0.4, 0.56, 0.1, 0.02)))
     def[names(opts)] = opts
     return(def)
 }

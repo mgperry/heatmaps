@@ -74,17 +74,17 @@ plotHeatmapList = function(heatmap_list, groups=NULL, options=heatmapOptions(), 
         grp = group_list[[i]]
         if(go$legend == TRUE && go$legend.pos == 'l') {
             message("plotting legend")
-            par(mai=c(2, 2.8, 0.4, 0.1))
+            par(mai=go$legend.mai)
             plot_legend(heatmap_list[[grp[1]]]@max_value, go)
         }
         for (j in grp) {
             message("plotting heatmap")
-            par(mai=c(2, 1.2, 0.4, 1.2))
+            par(mai=go$plot.mai)
             plotHeatmap(heatmap_list[[j]], go)
         }
         if(go$legend == TRUE && go$legend.pos == 'r') {
             message("plotting legend")
-            par(mai=c(2, 0.1, 0.4, 2.8))
+            par(mai=go$legend.mai)
             plot_legend(heatmap_list[[grp[1]]]@max_value, go)
         }
     }
