@@ -37,9 +37,8 @@ plotHeatmapList = function(heatmap_list, groups=NULL, options=heatmapOptions(), 
         for (n in names(extra_opts)) {
             opt[[n]] = extra_opts[[n]][i]
         }
-        group_options[[i]] = lapply(opt, unlist)
+        group_options[[i]] = lapply(opt, safe_unlist)
     }
-
 
     group_list = split(1:n_plots, groups)
 
@@ -66,22 +65,31 @@ plotHeatmapList = function(heatmap_list, groups=NULL, options=heatmapOptions(), 
         grp = group_list[[i]]
         if(go$legend == TRUE && go$legend.pos == 'l') {
             message("plotting legend")
-            par(mai=go$legend.mai)
+            par(mai=go$legend.mai[[1]])
             plot_legend(heatmap_list[[grp[1]]]@max_value, go)
         }
         for (j in grp) {
             message("plotting heatmap")
-            par(mai=go$plot.mai)
+            par(mai=go$plot.mai[[1]])
             plotHeatmap(heatmap_list[[j]], go)
         }
         if(go$legend == TRUE && go$legend.pos == 'r') {
             message("plotting legend")
-            par(mai=go$legend.mai)
+            par(mai=go$legend.mai[[1]])
             plot_legend(heatmap_list[[grp[1]]]@max_value, go)
         }
     }
 }
 
+# unlist() will not work on lists of functions
+safe_unlist = function(x) {
+    for (i in seq_along(x)) {
+        if (is.list(x[[i]])) {
+            x[[i]] = x[[i]][[1]]
+        }
+    }
+    x
+}
 
 # additional functions
 
