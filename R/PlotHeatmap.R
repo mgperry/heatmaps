@@ -11,7 +11,7 @@ setMethod("plotHeatmap", signature="Heatmap",
     }
 
     if (length(options$color) == 1) {
-        col_palette = colorRampPalette(brewer.pal(options$color, 9))
+        col_palette = colorRampPalette(default_color(options$color))
     } else {
         col_palette = colorRampPalette(options$color)
     }
@@ -97,4 +97,16 @@ make_x_ticks = function(coord) {
     names(xTicksAt) = xTicks
     return(xTicksAt)
 }
+
+default_color = function(col) {
+    if (col == "rainbow") {
+        palette = rev(rainbow(9, start=0, end=4/6))
+    } else {
+       palette = tryCatch(brewer.pal(9, col), error=color_error)
+    }
+    palette
+}
+
+color_error = function(e) "Incorrect color specification: refer to ?default_color"
+
 
