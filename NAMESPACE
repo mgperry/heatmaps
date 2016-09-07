@@ -3,7 +3,7 @@ import(Biostrings)
 import(GenomicRanges)
 import(IRanges)
 import(KernSmooth)
-import(data.table)
+import(RColorbrewer)
 
 importFrom(plotrix, color.legend)
 importFrom(Matrix, sparseMatrix)

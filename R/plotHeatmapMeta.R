@@ -24,7 +24,7 @@ plotHeatmapMeta = function(hm_list, binsize=1, colors=gg_col(length(hm_list)), a
 }
 
 bin_heatmap = function(hm, breaks) {
-    partition = data.table(pos=xm(hm), value=colSums(hm@matrix), bin=cut(xm(hm), breaks))
+    partition = data.frame(pos=xm(hm), value=colSums(hm@matrix), bin=cut(xm(hm), breaks))
     partition[, list(sum=sum(value)), by=bin][,sum]
 }
 
