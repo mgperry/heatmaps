@@ -64,17 +64,15 @@ plotHeatmapList = function(heatmap_list, groups=NULL, options=heatmapOptions(), 
         go = group_options[[i]]
         grp = group_list[[i]]
         if(go$legend == TRUE && go$legend.pos == 'l') {
-            message("plotting legend")
             par(mai=go$legend.mai[[1]])
             plot_legend(heatmap_list[[grp[1]]]@max_value, go)
         }
         for (j in grp) {
-            message("plotting heatmap")
+            message(paste("plotting heatmap", go$label))
             par(mai=go$plot.mai[[1]])
             plotHeatmap(heatmap_list[[j]], go)
         }
         if(go$legend == TRUE && go$legend.pos == 'r') {
-            message("plotting legend")
             par(mai=go$legend.mai[[1]])
             plot_legend(heatmap_list[[grp[1]]]@max_value, go)
         }
