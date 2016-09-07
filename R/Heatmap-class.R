@@ -52,6 +52,17 @@ setMethod("ym", signature="Heatmap", function(x) {
     seq(1, x@nseq, length.out=nrow(x@matrix))
 })
 
+setMethod("image", signature="Heatmap", function(x) {
+    x@matrix
+})
+
+setGeneric("image<-", def=function(x, value, ...) standardGeneric("image<-"))
+
+setMethod("image<-", signature="Heatmap", function(x, value) {
+    x@matrix = value
+    x
+})
+
 Heatmap = function(mat, coords=NULL, label="", nseq=NULL, max_value=max(mat), metadata=list()) {
     if (is.null(coords)) {
         coords = c(0L, ncol(mat))
