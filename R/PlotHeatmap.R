@@ -35,7 +35,7 @@ setMethod("plotHeatmap", signature="Heatmap",
     if (options$box.width > 0) box(lwd = options$box.width)
 
     if(options$x.ticks == TRUE) {
-        x.ticks = make_x_ticks(heatmap@coords, options$x.midpoints)
+        x.ticks = make_x_ticks(heatmap@coords)
         axis(1, at=x.ticks, labels=names(x.ticks), cex.axis=options$cex.axis, lwd=options$box.width, tcl=options$tcl, padj=options$padj)
     }
 
@@ -69,53 +69,21 @@ setMethod("plotHeatmap", signature="Heatmap",
 
 heatmapOptions = function(...) {
     opts = list(...)
-    def = list(
+    default = list(
         color='Blues',
-        box.width=6,
+        box.width=1.25,
         x.ticks=TRUE,
-        tcl=-1,
-        padj=1,
-        scale=TRUE,
-        scale.lwd=15,
-        cex.scale=8,
-        label.xpos=0.8,
-        label.ypos=0.8,
-        cex.axis=6,
-        label=TRUE,
-        cex.label=8,
-        label.col='black',
-        legend=TRUE,
-        legend.width=0.2,
-        legend.ticks=5,
-        legend.pos='l',
-        cex.legend=6,
-        refline=TRUE,
-        refline.width=2,
-        transform=NA,
-        plot.mai=list(c(2, 1.2, 0.4, 1.2)), # best units to use?
-        legend.mai=list(c(2, 2.8, 0.4, 0.1)))
-    def[names(opts)] = opts
-    return(def)
-}
-
-heatmapOptionsSmall = function(...) {
-    opts = list(...)
-    def = list(
-        color='blue',
-        box.width=1.5,
-        x.ticks=TRUE,
-        x.midpoints=TRUE,
         tcl=-0.25,
-        padj=0,
-        scale=TRUE,
+        padj=-1.8,
+        scale=FALSE,
         scale.lwd=3,
-        label.xpos=0.15,
-        label.ypos=0.15,
-        cex.axis=1,
+        label.xpos=0.1,
+        label.ypos=0.1,
+        cex.axis=0.8,
         label=TRUE,
         cex.label=1.2,
         label.col='black',
-        legend=TRUE,
+        legend=FALSE,
         legend.width=0.2,
         legend.ticks=5,
         legend.pos='l',
@@ -123,24 +91,18 @@ heatmapOptionsSmall = function(...) {
         refline=TRUE,
         refline.width=0.5,
         transform=NA,
-        plot.mai=list(c(0.4, 0.25, 0.08, 0.25)),
-        legend.mai=list(c(0.4, 0.56, 0.1, 0.02)))
-    def[names(opts)] = opts
-    return(def)
+        plot.mai=list(c(0.3, 0.15, 0.05, 0.15)),
+        legend.mai=list(c(0.3, 0.3, 0.05, 0.01))
+    )
+    default[names(opts)] = opts
+    return(default)
 }
 
-make_x_ticks = function(coord, midpoint=TRUE) {
-    if (midpoint == TRUE) {
-        xTicks = c(1*coord[1], 1*coord[1]/2, 0, coord[2]/2, coord[2])
-        xTicksAt = cumsum(c(0.5, -coord[1]/2, -coord[1]/2, coord[2]/2-1,
-            coord[2]/2))
-        names(xTicksAt) = xTicks
-    } else {
-        xTicks = c(1*coord[1], "", 0, "", coord[2])
-        xTicksAt = cumsum(c(0.5, -coord[1]/2, -coord[1]/2, coord[2]/2-1, coord[2]/2))
-        names(xTicksAt) = xTicks
-    }
-    return(xTicksAt)
+make_x_ticks = function(coord) {
+    xTicks = c(1*coord[1], "", 0, "", coord[2])
+    xTicksAt = cumsum(c(0.5, -coord[1]/2, -coord[1]/2, coord[2]/2-1, coord[2]/2))
+    names(xTicksAt) = xTicks
+    xTicksAt
 }
 
 default_color = function(col) {
