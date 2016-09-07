@@ -31,7 +31,7 @@ function(seq, pwm, coords=NULL, label=NULL){
         hm = new(
             "Heatmap",
             matrix=mat,
-            max_value=max(mat),
+            scale=c(0, 100),
             coords=as.integer(coords),
             nseq=length(seq),
             label=label)

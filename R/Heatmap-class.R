@@ -1,14 +1,14 @@
 setClass("Heatmap",
          slots=c(
             matrix="matrix",
-            max_value="numeric",
+            scale="numeric",
             coords="integer",
             nseq="integer",
             label="character",
             metadata="list"),
         prototype=list(
             matrix=matrix(0, ncol=0, nrow=0),
-            max_value=0,
+            scale=c(0,0),
             coords=c(0L,0L),
             nseq=0L,
             label="",
@@ -23,7 +23,7 @@ setMethod("show", signature="Heatmap", function(object) {
     cat("coords:", object@coords, "\n")
     cat("nseq:", object@nseq, "\n")
     cat("obs:", length(object@matrix), "\n")
-    cat("max_value:", object@max_value, "\n")
+    cat("scale:", object@scale, "\n")
     cat("label:", object@label, "\n")
 })
 
@@ -52,16 +52,16 @@ setMethod("ym", signature="Heatmap", function(x) {
     seq(1, x@nseq, length.out=nrow(image(x)))
 })
 
-setGeneric("max_value", def=function(x) standardGeneric("max_value"))
+setGeneric("scale", def=function(x) standardGeneric("scale"))
 
-setMethod("max_value", signature="Heatmap", function(x) {
-    x@max_value
+setMethod("scale", signature="Heatmap", function(x) {
+    x@scale
 })
 
-setGeneric("max_value<-", def=function(x, value, ...) standardGeneric("max_value<-"))
+setGeneric("scale<-", def=function(x, value, ...) standardGeneric("scale<-"))
 
-setMethod("max_value<-", signature="Heatmap", function(x, value) {
-    x@max_value = value
+setMethod("scale<-", signature="Heatmap", function(x, value) {
+    x@scale = value
     x
 })
 
@@ -76,7 +76,7 @@ setMethod("image<-", signature="Heatmap", function(x, value) {
     x
 })
 
-Heatmap = function(mat, coords=NULL, label="", nseq=NULL, max_value=max(mat), metadata=list()) {
+Heatmap = function(mat, coords=NULL, label="", nseq=NULL, scale=max(mat), metadata=list()) {
     if (is.null(coords)) {
         coords = c(0L, ncol(mat))
     } else {
@@ -90,7 +90,7 @@ Heatmap = function(mat, coords=NULL, label="", nseq=NULL, max_value=max(mat), me
     hm = new(
         "Heatmap",
         matrix=mat,
-        max_value=max_value,
+        scale=scale,
         coords=coords,
         nseq=nseq,
         label=label,

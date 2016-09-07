@@ -15,12 +15,13 @@ plotHeatmapList = function(heatmap_list, groups=NULL, options=heatmapOptions(), 
     n_groups = max(groups)
     # message(paste("groups:", paste(groups, collapse=', '), "\ntotal:", n_groups, "groups"))
 
-    if (!all(groups != 1:n_plots)) {
-        for (i in 1:max(groups)) {
-            group = which(groups == i)
-            max_d = max(vapply(heatmap_list[group], function(x) max_value(x), numeric(1)))
+    for (i in 1:max(groups)) {
+        group = which(groups == i)
+        # test if scales are equal
+        scales = vapply(heatmap_list[group], function(x) scale(x), numeric(2))
+        if (!(length(unique(scales[1,])) == 1) && (length(unique(scales[2,])) == 1)) {
             for (index in group) {
-                max_value(heatmap_list[[index]]) = max_d
+                scale(heatmap_list[[index]]) = get_scale(min(scales), max(scales))
             }
         }
     }
@@ -65,7 +66,7 @@ plotHeatmapList = function(heatmap_list, groups=NULL, options=heatmapOptions(), 
         grp = group_list[[i]]
         if(go$legend == TRUE && go$legend.pos == 'l') {
             par(mai=go$legend.mai[[1]])
-            plot_legend(max_value(heatmap_list[[grp[1]]]), go)
+            plot_legend(scale(heatmap_list[[grp[1]]]), go)
         }
         for (j in grp) {
             message(paste("plotting heatmap", go$label))
@@ -74,7 +75,7 @@ plotHeatmapList = function(heatmap_list, groups=NULL, options=heatmapOptions(), 
         }
         if(go$legend == TRUE && go$legend.pos == 'r') {
             par(mai=go$legend.mai[[1]])
-            plot_legend(max_value(heatmap_list[[grp[1]]]), go)
+            plot_legend(scale(heatmap_list[[grp[1]]]), go)
         }
     }
 }
@@ -91,7 +92,7 @@ safe_unlist = function(x) {
 
 # additional functions
 
-plot_legend <- function(max_value, options) {
+plot_legend <- function(scale, options) {
         if (length(options$color) == 1) {
             col_ramp = colorRamp(default_color(options$color)) # could check for function as input
         } else {
@@ -105,7 +106,7 @@ plot_legend <- function(max_value, options) {
         color_palette = rgb(col_ramp(values)/256)
         align = ifelse(options$legend.pos=='l', 'lt', 'rb')
         leg = rep('', 256)
-        leg[seq(1, 256, length.out=ticks)] = formatC(seq(0, max_value, length.out=ticks), format='f', digits=2)
+        leg[seq(1, 256, length.out=ticks)] = formatC(seq(scale[1], scale[2], length.out=ticks), format='f', digits=2)
         plot(1, 1,
              type='n', bty='n',
              xaxt='n', yaxt='n',

@@ -37,7 +37,7 @@ signature(seq = "DNAStringSet", pattern="character"),
         hm = new(
             "Heatmap",
             matrix=mat,
-            max_value=1,
+            scale=c(0,1),
             coords=as.integer(coords),
             nseq=length(seq),
             label=label)
@@ -73,7 +73,7 @@ function(seq, pattern, coords=NULL, min.score="80%", label=NULL) {
         hm = new(
             "Heatmap",
             matrix=mat,
-            max_value=max(mat),
+            scale=c(0,max(mat)),
             coords=as.integer(coords),
             nseq=length(seq),
             label=label)

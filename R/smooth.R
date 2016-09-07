@@ -51,18 +51,30 @@ setMethod("smooth", signature(heatmap="Heatmap"),
         map = bkde2D(cbind(df$i, df$j), bandwidth=sigma, gridsize=output.size,
                     range.x=list(range(ym(heatmap)), range(xm(heatmap))))
         mat.new = sum(image(heatmap))*map$fhat
-        max_value = max(mat.new)
+        scale = get_scale(min(mat.new), max(mat.new))
     } else if (method=="blur") {
         message("\nApplying Gaussian blur...")
         mat.new = as.matrix(blur(im(image(heatmap)), sigma=sigma))
         if (resize_img == TRUE) {
             mat.new = resize(mat.new, output.size[1], output.size[2])
         }
-        max_value = max(mat.new)
+        scale = get_scale(min(mat.new), max(mat.new))
     }
 
     image(heatmap) = mat.new
-    max_value(heatmap) = max_value
+    scale(heatmap) = scale
     return(heatmap)
 })
+
+get_scale = function(x, y) {
+    if (x >= 0 && y >=0) {
+        scale = c(0, max(x, y))
+    } else if (x <= 0 && y <= 0) {
+        scale = c(min(x, y), 0)
+    } else {
+        max_abs = max(abs(c(x, y)))
+        scale = c(-max_abs, max_abs)
+    }
+    scale
+}
 

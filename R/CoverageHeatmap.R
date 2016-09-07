@@ -52,7 +52,7 @@ signature(windows = "GenomicRanges", track="RleList"),
         hm = new(
             "Heatmap",
             matrix=mat,
-            max_value=max(mat),
+            scale=c(0,max(mat)),
             coords=as.integer(coords),
             nseq=length(windows),
             label=label)

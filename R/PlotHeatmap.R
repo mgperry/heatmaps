@@ -18,13 +18,15 @@ setMethod("plotHeatmap", signature="Heatmap",
 
     if (!is.na(options$transform)) {
         val = options$transform(image(heatmap))
-        breaks = seq(0, options$transform(max_value(heatmap)), length.out=257)
+        scale_t = options$transform(scale(heatmap))
+        breaks = seq(scale_t[1], scale_t[2], length.out=257)
     } else {
         val = image(heatmap)
-        breaks = seq(0, max_value(heatmap), length.out=257)
+        breaks = seq(scale(heatmap)[1], scale(heatmap)[2], length.out=257)
     }
-    val[val < 0] = 0
-    val[val > max_value(heatmap)] = max_value(heatmap)
+
+    val[val < scale(heatmap)[1]] = scale(heatmap)[1]
+    val[val > scale(heatmap)[2]] = scale(heatmap)[2]
 
     image(xm(heatmap), ym(heatmap), z=t(val),
           col=col_palette(256), breaks=breaks,
