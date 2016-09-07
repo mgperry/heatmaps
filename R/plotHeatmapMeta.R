@@ -24,7 +24,7 @@ plotHeatmapMeta = function(hm_list, binsize=1, colors=gg_col(length(hm_list)), a
 }
 
 bin_heatmap = function(hm, breaks) {
-    partition = data.frame(pos=xm(hm), value=colSums(hm@matrix), bin=cut(xm(hm), breaks))
+    partition = data.frame(pos=xm(hm), value=colSums(image(hm)), bin=cut(xm(hm), breaks))
     partition[, list(sum=sum(value)), by=bin][,sum]
 }
 
@@ -39,7 +39,7 @@ plotHeatmapMetaSmooth = function(hm_list, span=0.1, colors=gg_col(length(hm_list
     pred = list()
     for (i in seq_along(hm_list)) {
         hm = hm_list[[i]]
-        col_means = colSums(hm@matrix)/hm@nseq
+        col_means = colSums(image(hm))/hm@nseq
         lo = loess(col_means ~ xm(hm), span=span)
         pred[[i]] = predict(lo)
     }

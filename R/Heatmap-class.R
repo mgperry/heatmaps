@@ -30,26 +30,39 @@ setMethod("show", signature="Heatmap", function(object) {
 setGeneric("mirror", def=function(x) standardGeneric("mirror"))
 
 setMethod("mirror", signature="Heatmap", function(x) {
-    x@matrix = t(apply(x@matrix, 1, rev))
+    image(x) = t(apply(image(x), 1, rev))
     x@coords = -rev(x@coords)
     x
 })
 
 setMethod("rev", signature="Heatmap", function(x) {
-    x@matrix = apply(x@matrix, 2, rev)
+    image(x) = apply(image(x), 2, rev)
     x
 })
 
 setGeneric("xm", def=function(x) standardGeneric("xm"))
 
 setMethod("xm", signature="Heatmap", function(x) {
-    seq(1, width(x), length.out=ncol(x@matrix))
+    seq(1, width(x), length.out=ncol(image(x)))
 })
 
 setGeneric("ym", def=function(x) standardGeneric("ym"))
 
 setMethod("ym", signature="Heatmap", function(x) {
-    seq(1, x@nseq, length.out=nrow(x@matrix))
+    seq(1, x@nseq, length.out=nrow(image(x)))
+})
+
+setGeneric("max_value", def=function(x) standardGeneric("max_value"))
+
+setMethod("max_value", signature="Heatmap", function(x) {
+    x@max_value
+})
+
+setGeneric("max_value<-", def=function(x, value, ...) standardGeneric("max_value<-"))
+
+setMethod("max_value<-", signature="Heatmap", function(x, value) {
+    x@max_value = value
+    x
 })
 
 setMethod("image", signature="Heatmap", function(x) {

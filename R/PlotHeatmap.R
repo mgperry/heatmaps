@@ -17,14 +17,14 @@ setMethod("plotHeatmap", signature="Heatmap",
     }
 
     if (!is.na(options$transform)) {
-        val = options$transform(heatmap@matrix)
-        breaks = seq(0, options$transform(heatmap@max_value), length.out=257)
+        val = options$transform(image(heatmap))
+        breaks = seq(0, options$transform(max_value(heatmap)), length.out=257)
     } else {
-        val = heatmap@matrix
-        breaks = seq(0, heatmap@max_value, length.out=257)
+        val = image(heatmap)
+        breaks = seq(0, max_value(heatmap), length.out=257)
     }
     val[val < 0] = 0
-    val[val > heatmap@max_value] = heatmap@max_value
+    val[val > max_value(heatmap)] = max_value(heatmap)
 
     image(xm(heatmap), ym(heatmap), z=t(val),
           col=col_palette(256), breaks=breaks,

@@ -16,7 +16,7 @@ setMethod("smooth", signature(heatmap="Heatmap"),
     }
 
     method = match.arg(method)
-    is_binary = all(heatmap@matrix %in% c(0,1))
+    is_binary = all(image(heatmap) %in% c(0,1))
 
     if (method=="auto") {
         if (is_binary) {
@@ -33,12 +33,12 @@ setMethod("smooth", signature(heatmap="Heatmap"),
     if (!all(output.ratio == c(1,1))) {
         if(length(output.ratio) != 2) stop("output.ratio must have length 2")
         if (!is.null(output.size)) warning("output.ratio is set, overiding output.size")
-        output.size = rev(dim(heatmap@matrix)/output.ratio)
+        output.size = rev(dim(image(heatmap))/output.ratio)
         resize_img = TRUE
     } else {
         if (is.null(output.size)) {
             resize_img = FALSE
-            output.size = rev(dim(heatmap@matrix))
+            output.size = rev(dim(image(heatmap)))
         } else {
             resize_img = TRUE
         }
@@ -46,23 +46,23 @@ setMethod("smooth", signature(heatmap="Heatmap"),
 
     if (method=="kernel") {
         message("\nCalculating kernel density...")
-        sm = as(heatmap@matrix, "sparseMatrix")
+        sm = as(image(heatmap), "sparseMatrix")
         df = summary(sm)
         map = bkde2D(cbind(df$i, df$j), bandwidth=sigma, gridsize=output.size,
                     range.x=list(range(ym(heatmap)), range(xm(heatmap))))
-        mat.new = sum(heatmap@matrix)*map$fhat
+        mat.new = sum(image(heatmap))*map$fhat
         max_value = max(mat.new)
     } else if (method=="blur") {
         message("\nApplying Gaussian blur...")
-        mat.new = as.matrix(blur(im(heatmap@matrix), sigma=sigma))
+        mat.new = as.matrix(blur(im(image(heatmap)), sigma=sigma))
         if (resize_img == TRUE) {
             mat.new = resize(mat.new, output.size[1], output.size[2])
         }
         max_value = max(mat.new)
     }
 
-    heatmap@matrix = mat.new
-    heatmap@max_value = max_value
+    image(heatmap) = mat.new
+    max_value(heatmap) = max_value
     return(heatmap)
 })
 

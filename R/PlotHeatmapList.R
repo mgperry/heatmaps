@@ -18,9 +18,9 @@ plotHeatmapList = function(heatmap_list, groups=NULL, options=heatmapOptions(), 
     if (!all(groups != 1:n_plots)) {
         for (i in 1:max(groups)) {
             group = which(groups == i)
-            max_d = max(vapply(heatmap_list[group], function(x) x@max_value, numeric(1)))
+            max_d = max(vapply(heatmap_list[group], function(x) max_value(x), numeric(1)))
             for (index in group) {
-                heatmap_list[[index]]@max_value = max_d
+                max_value(heatmap_list[[index]]) = max_d
             }
         }
     }
@@ -65,7 +65,7 @@ plotHeatmapList = function(heatmap_list, groups=NULL, options=heatmapOptions(), 
         grp = group_list[[i]]
         if(go$legend == TRUE && go$legend.pos == 'l') {
             par(mai=go$legend.mai[[1]])
-            plot_legend(heatmap_list[[grp[1]]]@max_value, go)
+            plot_legend(max_value(heatmap_list[[grp[1]]]), go)
         }
         for (j in grp) {
             message(paste("plotting heatmap", go$label))
@@ -74,7 +74,7 @@ plotHeatmapList = function(heatmap_list, groups=NULL, options=heatmapOptions(), 
         }
         if(go$legend == TRUE && go$legend.pos == 'r') {
             par(mai=go$legend.mai[[1]])
-            plot_legend(heatmap_list[[grp[1]]]@max_value, go)
+            plot_legend(max_value(heatmap_list[[grp[1]]]), go)
         }
     }
 }
