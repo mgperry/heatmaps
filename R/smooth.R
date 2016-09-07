@@ -34,13 +34,13 @@ setMethod("smooth", signature(heatmap="Heatmap"),
         if(length(output.ratio) != 2) stop("output.ratio must have length 2")
         if (!is.null(output.size)) warning("output.ratio is set, overiding output.size")
         output.size = rev(dim(heatmap@matrix)/output.ratio)
-        resize = 1
+        resize_img = TRUE
     } else {
         if (is.null(output.size)) {
-            resize = 0
+            resize_img = FALSE
             output.size = rev(dim(heatmap@matrix))
         } else {
-            resize = 1
+            resize_img = TRUE
         }
     }
 
@@ -54,8 +54,8 @@ setMethod("smooth", signature(heatmap="Heatmap"),
         max_value = max(mat.new)
     } else if (method=="blur") {
         message("\nApplying Gaussian blur...")
-        mat.new = as.matrix.im(blur(im(heatmap@matrix), sigma=sigma))
-        if (resize == 1) {
+        mat.new = as.matrix(blur(im(heatmap@matrix), sigma=sigma))
+        if (resize_img == TRUE) {
             mat.new = resize(mat.new, output.size[1], output.size[2])
         }
         max_value = max(mat.new)

@@ -9,6 +9,7 @@ importFrom(plotrix, color.legend)
 importFrom(Matrix, sparseMatrix)
 importFrom(genomation, ScoreMatrixBin)
 importFrom(spatstat, blur)
+importFrom(spatstat, im)
 importFrom(EBImage, resize)
 
 export(Heatmap)
