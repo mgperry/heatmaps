@@ -4,15 +4,37 @@ Version: 1.2.0
 Date: 18-01-2016
 Author: Malcolm Perry <mgperry32@gmail.com>
 Maintainer: Malcolm Perry <mgperry32@gmail.com>
-Depends: R (>= 2.15.0) 
-Imports: Biostrings, GenomicRanges, IRanges, KernSmooth, plotrix,
-         methods, Matrix, genomation, EBImage, spatstat,
-         RColorBrewer
-Suggests: RUnit, BiocGenerics, BiocStyle
+Depends:
+    R (>= 2.15.0)
+Imports:
+    Biostrings,
+    GenomicRanges,
+    IRanges,
+    KernSmooth,
+    plotrix,
+    methods,
+    Matrix,
+    genomation,
+    EBImage,
+    spatstat,
+    RColorBrewer
+Suggests:
+    RUnit,
+    BiocGenerics,
+    BiocStyle
 License: NA
 Description: I like heatmaps
 biocViews: Visualization, SequenceMatching
-Collate: Heatmap-class.R PlotHeatmap.R PlotHeatmapList.R
-         PlottingMethods.R PWMScanHeatmap.R PatternHeatmap.R CoverageHeatmap.R
-         smooth.R plotHeatmapMeta.R plotMotifHeatmap.R
+Collate:
+    Heatmap-class.R
+    PlotHeatmap.R
+    PlotHeatmapList.R
+    PlottingMethods.R
+    PWMScanHeatmap.R
+    PatternHeatmap.R
+    CoverageHeatmap.R
+    smooth.R
+    plotHeatmapMeta.R
+    plotMotifHeatmap.R
 NeedsCompilation: no
+RoxygenNote: 5.0.1
