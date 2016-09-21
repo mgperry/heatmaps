@@ -1,3 +1,28 @@
+#' Generate a Heatmap of patterns in DNA sequence
+#'
+#' @param seq A DNAString of equal length
+#' @param pattern A nucleotide pattern or PWM
+#' @param coords Co-ordinates for the heatmap, defaults to c(0, width(windows))
+#' @param min.score Minimum score for PWM match
+#' @param label Label for the heatmap
+#'
+#' This function creates a Heatmap from a set of DNA sequences. The resulting
+#' heatmap will be binary, with 1 representing a match and 0 otherwise. Patterns
+#' can be specified as a character vectore, eg. "CTCCC", or as a PWM. These
+#' arguments are passed to Biostrings functions, `vmatchPattern` and `matchPWM`.
+#' Character arguments can contain standard ambiguity codes. PWMs must be 4 by n
+#' matricies with columns names ACGT. "min.score" is specified either as an absolute
+#' value, or more commonly as a percentage e.g. "80%". Refer to Biostrings documentation
+#' for details.
+#'
+#' PatternHeatmaps often look much better after smoothing.
+#'
+#' @seealso smooth
+#' @export
+#' @examples
+#' library(HeatmapsExamples)
+#' PatternHeatmap(seq, "TA", coords=c(-500, 500), label="TA")
+#' PatternHeatmap(seq, tata_pwm, coords=c(-500, 500), min.score="80%", label="TATA PWM")
 setGeneric(
 name="PatternHeatmap",
 def=function(seq, pattern, ...){
@@ -5,6 +30,9 @@ def=function(seq, pattern, ...){
     }
 )
 
+#' @describeIn PatternHeatmap Heatmap of sequence patterns from sequence and character
+#' @importFrom Biostrings vmatchPattern startIndex DNAStringSet
+#' @export
 setMethod("PatternHeatmap",
 signature(seq = "DNAStringSet", pattern="character"),
     function(seq, pattern, coords=NULL, min.score=NULL, label=NULL) {
@@ -46,6 +74,9 @@ signature(seq = "DNAStringSet", pattern="character"),
     }
 )
 
+#' @describeIn PatternHeatmap Heatmap of sequence patterns from sequence and matrix
+#' @importFrom Biostrings matchPWM
+#' @export
 setMethod("PatternHeatmap",
 signature(seq = "DNAStringSet", pattern = "matrix"),
 function(seq, pattern, coords=NULL, min.score="80%", label=NULL) {

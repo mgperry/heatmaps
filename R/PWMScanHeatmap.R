@@ -1,3 +1,19 @@
+#' Generate a Heatmap of PWM Scores in DNA sequnce
+#'
+#' @param seq A DNAString of equal length
+#' @param pwm A PWM
+#' @param coords Co-ordinates for the heatmap, defaults to c(0, width(windows))
+#' @param label Label for the heatmap
+#'
+#' This function creates a heatmap where each point is the score of a PWM match
+#' starting from that position, which can visualise regions of enrichment or exclusion
+#' of certain motifs
+#'
+#' @seealso PatternHeatmap
+#' @export
+#' @examples
+#' library(HeatmapsExamples)
+#' PatternHeatmap(seq, tata_pwm, coords=c(-500, 500), label="TATA Scan")
 setGeneric(
 name="PWMScanHeatmap",
 def=function(seq, pwm, ...){
@@ -5,6 +21,9 @@ def=function(seq, pwm, ...){
     }
 )
 
+#' @describeIn PWMScanHeatmap Heatmap of PWM Scores
+#' @importFrom Biostrings PWMscoreStartAt minScore maxScore
+#' @export
 setMethod("PWMScanHeatmap",
 signature(seq = "DNAStringSet", pwm = "matrix"),
 function(seq, pwm, coords=NULL, label=NULL){

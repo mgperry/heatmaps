@@ -1,3 +1,24 @@
+#' Generate a Heatmap of coverage
+#'
+#' @param windows A set of GRanges of equal length
+#' @param track A GRanges or RleList object specifying coverage
+#' @param coords Co-ordinates for the heatmap, defaults to c(0, width(windows))
+#' @param weight Passed to coverage(track) constructor if class(track) == "GRanges"
+#' @param label Label for the heatmap
+#' @param nbin If set, number of bins to use across each window
+#'
+#' This function generates a Heatmap object from a set of windows and an
+#' object containing genome-wide information about coverage. Either a GRanges
+#' or an RleList can be used. In the former case, the "weight" paramter is
+#' passed directly to the `coverage` function. If nbin is set, binned coverage
+#' is calculated which will save memory and time when plotting and average out
+#' varible data.
+#'
+#' @importFrom GenomicRanges coverage
+#' @export
+#' @examples
+#' library(HeatmapsExamples)
+#' CoverageHeatmap(windows, rle_list, coords=c(-500, 500), label="Example")
 setGeneric(
 name="CoverageHeatmap",
 def=function(windows, track, ...){
@@ -6,6 +27,8 @@ def=function(windows, track, ...){
 )
 
 
+#' @describeIn CoverageHeatmap Heatmap of Coverage from 2 GRanges
+#' @export
 setMethod("CoverageHeatmap",
 signature(windows = "GenomicRanges", track="GenomicRanges"),
     function(windows, track, coords=NULL, weight=1, label=NULL, nbin=0) {
@@ -27,6 +50,8 @@ signature(windows = "GenomicRanges", track="GenomicRanges"),
     }
 )
 
+#' @describeIn CoverageHeatmap Heatmap of Coverage from GRanges + RleList
+#' @export
 setMethod("CoverageHeatmap",
 signature(windows = "GenomicRanges", track="RleList"),
     function(windows, track, coords=NULL, label=NULL, nbin=0) {
