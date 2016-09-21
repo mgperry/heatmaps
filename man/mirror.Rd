@@ -20,4 +20,9 @@ Reflect a heatmap in the y axis
 \itemize{
 \item \code{Heatmap}: Heatmap method
 }}
+\examples{
+
+data(HeatmapExamples)
+mirror(hm)
+}
 

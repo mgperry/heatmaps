@@ -10,8 +10,22 @@
 #' A class used to represent a heatmap in a simple, self-contained way
 #'
 #' @export
-#'
 #' @seealso CoverageHeatmap PatternHeatmap plotHeatmap plotHeatmapMeta
+#'
+#' @examples
+#'
+#' data(HeatmapExamples)
+#'
+#' hm = new("Hetamap",
+#'          image=example_matrix,
+#'          scale=c(0,max(example_matrix),
+#'          coords=c(-500, 500),
+#'          nseq=1000,
+#'          label="Test",
+#'          metadata=list()),
+#'
+#' # or use the constructor:
+#' hm = Heatmap(example_matrix, coords=c(-500, 500), label="Test")
 setClass("Heatmap",
          slots=c(
             image="matrix",
@@ -53,6 +67,10 @@ setMethod("show", signature="Heatmap", function(object) {
 #'
 #' @param x A heatmap
 #' @export
+#' @examples
+#'
+#' data(HeatmapExamples)
+#' mirror(hm)
 setGeneric("mirror", def=function(x) standardGeneric("mirror"))
 
 #' @describeIn mirror Heatmap method
@@ -75,6 +93,10 @@ setMethod("rev", signature="Heatmap", function(x) {
 #' Generate co-ordinates for each row of the image matrix of a Heatmap
 #' @param x A Heatmap
 #' @export
+#' @examples
+#'
+#' data(HeatmapExamples)
+#' xm(hm)
 setGeneric("xm", def=function(x) standardGeneric("xm"))
 
 #' @describeIn xm Generate co-ordinates for each frow of the image matrix of a Heatmap
@@ -86,6 +108,10 @@ setMethod("xm", signature="Heatmap", function(x) {
 #' Generate co-ordinates for each column of the image matrix of a Heatmap
 #' @param x A Heatmap
 #' @export
+#' @examples
+#'
+#' data(HeatmapExamples)
+#' ym(hm)
 setGeneric("ym", def=function(x) standardGeneric("ym"))
 
 #' @describeIn ym Generate co-ordinates for each column of the matrix
@@ -100,6 +126,10 @@ NULL
 
 #' @rdname scale
 #' @export
+#' @examples
+#'
+#' data(HeatmapExamples)
+#' scale(hm) = c(-1000, 1000)
 setGeneric("scale", def=function(x) standardGeneric("scale"))
 
 #' @rdname scale
@@ -131,6 +161,11 @@ setMethod("image", signature="Heatmap", function(x) {
 
 #' @rdname image
 #' @export
+#' @examples
+#'
+#' data(HeatmapExamples)
+#' image(hm = log(image(hm)
+#' scale(hm) = c(0, max(image(hm)))
 setGeneric("image<-", def=function(x, value, ...) standardGeneric("image<-"))
 
 #' @rdname image
@@ -155,6 +190,11 @@ setMethod("image<-", signature="Heatmap", function(x, value) {
 #'
 #' @seealso PatternHeatmap CoverageHeatmap PWMScanHeatmap
 #' @export
+#'
+#' @examples
+#'
+#' library(HeatmapExamples)
+#' hm = Heatmap(example_matrix, coords=c(-500, 500), label="Test")
 Heatmap = function(mat, coords=NULL, label="", nseq=NULL, scale=max(mat), metadata=list()) {
     if (is.null(coords)) {
         coords = c(0L, ncol(mat))

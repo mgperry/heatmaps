@@ -37,6 +37,21 @@ An S4 class to represent a heatmap
 
 A class used to represent a heatmap in a simple, self-contained way}
 }}
+\examples{
+
+data(HeatmapExamples)
+
+hm = new("Hetamap",
+         image=example_matrix,
+         scale=c(0,max(example_matrix),
+         coords=c(-500, 500),
+         nseq=1000,
+         label="Test",
+         metadata=list()),
+
+# or use the constructor:
+hm = Heatmap(example_matrix, coords=c(-500, 500), label="Test")
+}
 \seealso{
 CoverageHeatmap PatternHeatmap plotHeatmap plotHeatmapMeta
 }

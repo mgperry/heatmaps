@@ -19,4 +19,9 @@ scale(x, ...) <- value
 \description{
 Return or set the scale in a Heatmap
 }
+\examples{
+
+data(HeatmapExamples)
+scale(hm) = c(-1000, 1000)
+}
 

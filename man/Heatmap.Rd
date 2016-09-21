@@ -27,6 +27,11 @@ than a raw matrix.}
 \description{
 Function to create a heatmap object
 }
+\examples{
+
+library(HeatmapExamples)
+hm = Heatmap(example_matrix, coords=c(-500, 500), label="Test")
+}
 \seealso{
 PatternHeatmap CoverageHeatmap PWMScanHeatmap
 }

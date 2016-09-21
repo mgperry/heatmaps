@@ -17,4 +17,10 @@ image(x, ...) <- value
 \description{
 Return or set the image in a Heatmap
 }
+\examples{
+
+data(HeatmapExamples)
+image(hm = log(image(hm)
+scale(hm) = c(0, max(image(hm)))
+}
 

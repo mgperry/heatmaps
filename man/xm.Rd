@@ -20,4 +20,9 @@ Generate co-ordinates for each row of the image matrix of a Heatmap
 \itemize{
 \item \code{Heatmap}: Generate co-ordinates for each frow of the image matrix of a Heatmap
 }}
+\examples{
+
+data(HeatmapExamples)
+xm(hm)
+}
 
