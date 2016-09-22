@@ -104,7 +104,7 @@ function(seq, pattern, coords=NULL, min.score="80%", label=NULL) {
         hm = new(
             "Heatmap",
             matrix=mat,
-            scale=c(0,max(mat)),
+            scale=c(0,1),
             coords=as.integer(coords),
             nseq=length(seq),
             label=label)

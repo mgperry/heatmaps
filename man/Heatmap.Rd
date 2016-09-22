@@ -4,7 +4,7 @@
 \alias{Heatmap}
 \title{Function to create a heatmap object}
 \usage{
-Heatmap(mat, coords = NULL, label = "", nseq = NULL, scale = max(mat),
+Heatmap(mat, coords = NULL, label = "", nseq = NULL, scale = NULL,
   metadata = list())
 }
 \arguments{

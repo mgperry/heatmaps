@@ -29,7 +29,7 @@ Collate:
     Heatmap-class.R
     PlotHeatmap.R
     PlotHeatmapList.R
-    PlottingMethods.R
+    PlotPatternDensityMap.R
     PWMScanHeatmap.R
     PatternHeatmap.R
     CoverageHeatmap.R

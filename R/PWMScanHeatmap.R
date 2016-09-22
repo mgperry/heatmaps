@@ -22,7 +22,7 @@ def=function(seq, pwm, ...){
 )
 
 #' @describeIn PWMScanHeatmap Heatmap of PWM Scores
-#' @importFrom Biostrings PWMscoreStartAt minScore maxScore
+#' @importFrom Biostrings PWMscoreStartingAt minScore maxScore
 #' @export
 setMethod("PWMScanHeatmap",
 signature(seq = "DNAStringSet", pwm = "matrix"),

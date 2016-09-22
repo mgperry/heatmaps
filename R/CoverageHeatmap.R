@@ -14,6 +14,13 @@
 #' is calculated which will save memory and time when plotting and average out
 #' varible data.
 #'
+#' If the coverage track contains negative values, then the scale will be
+#' centered on zero, ie. c(-max(abs(image(hm))), max(abs(image(hm)))). This
+#' makes more sense for most color schemes which are centered on zero, and
+#' avoids misleading plots where either positive or negative values are
+#' over-emphasised. See ?getScale for details. The scale can be manually reset
+#' if desired using the "scale" method.
+#'
 #' @importFrom GenomicRanges coverage
 #' @export
 #' @examples
@@ -77,7 +84,7 @@ signature(windows = "GenomicRanges", track="RleList"),
         hm = new(
             "Heatmap",
             matrix=mat,
-            scale=c(0,max(mat)),
+            scale=getScale(min(mat), max(mat)),
             coords=as.integer(coords),
             nseq=length(windows),
             label=label)

@@ -1,3 +1,36 @@
+#' PLot a list of Heatmaps
+#'
+#' @param heatmap_list A list of Heatmaps
+#' @param groups Optionally group heatmaps together
+#' @param options Heatmap options
+#' @param ... Additional options
+#'
+#' This function takes a list of one or more heatmaps and plots
+#' them to a single image tiled horizontally.
+#'
+#' The "groups" argument specifies heatmaps to be grouped together and
+#' plotted using the same display parameters and a unified scale. plotHeatmapList
+#' will try to guess the best scale, either starting or finishing at zero, or symetrical
+#' aronud zero - if this is not the desired behaviour, make sure the scales are
+#' identical before the heatmaps are passed to the function.
+#'
+#' Options are specified as for plotHeatmap, but can be specified per group.
+#' Some parameters can be passed as vectors, but care must be taken for parameters
+#' which are themselves vectors of length > 1, for example color palettes, which must
+#' be specified as lists. Examples of this are documented in the vignette.
+#'
+#' These are generally large, complex plots, so it can better to plot
+#' straight to a file. PNG is preferred since pdf files generated can be
+#' if the images are not downsized. The default settings are designed for plots
+#' of about 5cm x 10cm per heatmap, but all of the relevant settigns can be tweaked
+#' using the options. For display-quality images, it helps to increase the resolution
+#' at to at least 150ppi, double the default of 72ppi on most systems.
+#'
+#' @seealso plotHeatmap heatmapOptions plot_legend
+#' @export
+#' @examples
+#' data(HeatmapExamples)
+#' plotHeatmapList(list(hm, hm2), groups=c(1,2), color=list("Reds", "Blues"))
 plotHeatmapList = function(heatmap_list, groups=NULL, options=heatmapOptions(), ...) {
     if (class(heatmap_list) == "Heatmap") heatmap_list = list(heatmap_list) # allow single heatmap argument
     n_plots = length(heatmap_list)
@@ -80,7 +113,6 @@ plotHeatmapList = function(heatmap_list, groups=NULL, options=heatmapOptions(), 
     }
 }
 
-# unlist() will not work on lists of functions
 safe_unlist = function(x) {
     for (i in seq_along(x)) {
         if (is.list(x[[i]])) {
@@ -90,8 +122,23 @@ safe_unlist = function(x) {
     x
 }
 
-# additional functions
-
+#' Plot a color legend for a heatmap
+#'
+#' @param scale Numeric vector contain min and max for the scale
+#' @param options heatmapOptions passed as a list
+#'
+#' This function plots a vertical color scale (or legend). With the default parameters,
+#' it looks good at about 1/5 the width of a heatmap, about 1cm x 10cm. This
+#' function only plots the legend, it does not set margin parameters.
+#'
+#' @seealso plotHeatmapList
+#' @importFrom plotrix color.legend
+#' @examples
+#' data(HeatmapExamples)
+#' opts = heatmapOptions
+#' opts$color = "Rainbow"
+#' par(mai=opts$legend.mai)
+#' plot_legend(c(0,1), opts)
 plot_legend <- function(scale, options) {
         if (length(options$color) == 1) {
             col_ramp = colorRamp(default_color(options$color)) # could check for function as input

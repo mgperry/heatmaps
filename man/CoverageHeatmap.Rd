@@ -33,7 +33,14 @@ object containing genome-wide information about coverage. Either a GRanges
 or an RleList can be used. In the former case, the "weight" paramter is
 passed directly to the `coverage` function. If nbin is set, binned coverage
 is calculated which will save memory and time when plotting and average out
-varible data.}
+varible data.
+
+If the coverage track contains negative values, then the scale will be
+centered on zero, ie. c(-max(abs(image(hm))), max(abs(image(hm)))). This
+makes more sense for most color schemes which are centered on zero, and
+avoids misleading plots where either positive or negative values are
+over-emphasised. See ?getScale for details. The scale can be manually reset
+if desired using the "scale" method.}
 }
 \description{
 Generate a Heatmap of coverage

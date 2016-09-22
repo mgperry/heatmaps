@@ -1,3 +1,26 @@
+#' Plot a Heatmap object to the device
+#'
+#' @param heatmap A heatmap object
+#' @param options A list containing plotting options
+#' @param ... Used for passing individual options
+#'
+#' This function will take a heatmap and plot it to the device with
+#' the specified options. Options can be passed together in a list
+#' or individually as additional arguments. If passing options as a list,
+#' it's best to first create a list containing the default settings using
+#' heatmapOptions() and then setting options individually.
+#'
+#' plotHeatmap() does not control device settings at all, these can be
+#' set using plotHeatmapList() and the relevant options in heatmapOptions()
+#'
+#' See ?heatmapOptions for a full list of options.
+#'
+#' @export
+#' @seealso heatmapOptions plotHeatmapList
+#' @examples
+#'
+#' data(HeatmapExamples)
+#' plotHeatmap(hm, color="Blues")
 setGeneric(name="plotHeatmap",
            def=function(heatmap, options=NULL, ...) {
     standardGeneric("plotHeatmap")
@@ -69,6 +92,87 @@ setMethod("plotHeatmap", signature="Heatmap",
     }
 })
 
+#' Generate default options for a Heatmap
+#'
+#' @param color A vector of colors (character)
+#' @param box.width Numeric
+#' @param x.ticks Logical
+#' @param tcl Numeric
+#' @param padj Numeric
+#' @param cex.axis Numeric
+#' @param scale Logical
+#' @param scale.lwd Numeric
+#' @param label.xpos Numeric
+#' @param label.ypos Numeric
+#' @param cex.label Numeric
+#' @param label.col A Color (character)
+#' @param legend Logical
+#' @param legend.width Numeric
+#' @param legend.pos 'l' or 'r'
+#' @param cex.legend Numeric
+#' @param refline Logical
+#' @param refline.width Numeric
+#' @param transform Function or NA
+#' @param plot.mai Numeric length 4
+#' @param legend.mai Numeric length 4
+#'
+#' Guide to Heatmap options
+#'
+#' This is an reference to all the possible options for plotting heatmaps.
+#' Some options are handled by heatmaps functions (either plotHeatmap or plotHeatmapList),
+#' others are passed directly to plotting functions. Further explanation is available in the
+#' vignette.
+#'
+#' color: A vector of colors or a default color, see ?default_color. plotHeatmap will
+#'        interpolate between these colors to form a scale.
+#'
+#' box.width: The width of box around the heatmap, passed to box()
+#'
+#' x.ticks: plot x axis ticks
+#'
+#' tcl: Length of x axis ticks
+#'
+#' padj: Vertical adjustment of x axis labels
+#'
+#' cex.axis: cex for axis labels
+#'
+#' scale: Plot scale or not
+#'
+#' scale.lwd: Width for line around scale
+#'
+#' label.xpos: x position for label, from left
+#'
+#' label.ypos: y position for label, from top
+#'
+#' cex.label: cex for axis labels
+#'
+#' label.col: Color for label, white is often useful for dark plots
+#'
+#' legend: Plot legend (scale indicating values for colors)
+#'
+#' legend: Color for label, white is often useful for dark plots
+#'
+#' legend.pos: Position of legend relative to heatmap: 'l' for left, 'r' for right
+#'
+#' cex.legend: cex to use for legend marks
+#'
+#' refline: Draw dashed line a coords = 0
+#'
+#' refline.width: Width of reference line
+#'
+#' transform: Transform values before plotting
+#'
+#' plot.mai: Margins around plot
+#'
+#' legend.mai: Margins around legend
+#'
+#' @seealso plotHeatmap plotHeatmapList
+#' @export
+#' @examples
+#'
+#' myOptions = heatmapOptions()
+#' myOptions$color = "Reds"
+#' # plotHeatmap(hm, options=myOptions)
 heatmapOptions = function(...) {
     opts = list(...)
     default = list(
@@ -77,17 +181,15 @@ heatmapOptions = function(...) {
         x.ticks=TRUE,
         tcl=-0.5,
         padj=0,
+        cex.axis=1.5,
         scale=FALSE,
         scale.lwd=6,
         label.xpos=0.1,
         label.ypos=0.1,
-        cex.axis=1.5,
-        label=TRUE,
         cex.label=2.5,
         label.col='black',
         legend=FALSE,
         legend.width=0.2,
-        legend.ticks=5,
         legend.pos='l',
         cex.legend=2,
         refline=TRUE,
@@ -107,8 +209,21 @@ make_x_ticks = function(coord) {
     xTicksAt
 }
 
+#' Predifined color palettes from RColorBrewer + Rainbow
+#'
+#' @param col Character, RColorBrewer colorscheme or "Rainbow"
+#'
+#' This function provides a convenient function to all color palettes from
+#' RColorBrewer, and a better version of R's rainbow function (specifically
+#' rev(rainbow(9, start=0, end=4/6)), so it starts blue and ends with red).
+#'
+#' @importFrom RColorBrewer brewer.pal
+#' @export
+#' @examples
+#' default_color("Blues")
+#' default_color("Rainbow")
 default_color = function(col) {
-    if (col == "rainbow") {
+    if (col == "Rainbow") {
         palette = rev(rainbow(9, start=0, end=4/6))
     } else {
        palette = tryCatch(brewer.pal(9, col), error=color_error)

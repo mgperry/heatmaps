@@ -1,3 +1,19 @@
+#' Plot a Meta-region plot from heatmaps
+#'
+#' @param hm_list A list of heatmaps
+#' @param binsize Integer, size of bins to use in plot
+#' @param colors Color to use for each heatmap
+#' @param addReferenceLine Logical, add reference line at zero or not
+#'
+#' This function creates a meta-region plot from 1 or more heatmaps with the same
+#' coordinates. A meta-region plot graphs the sum of the signal at each position in
+#' each heatmap rather than visualising the signal in two dimensions. Often binning
+#' is required to smooth noisy signal.
+#'
+#' @export
+#' @examples
+#' data(HeatmapExamples)
+#' plotHeatmapMeta(hm, colors="steelblue")
 plotHeatmapMeta = function(hm_list, binsize=1, colors=gg_col(length(hm_list)), addReferenceLine=FALSE) {
     if (!length(unique(lapply(hm_list, function(x) x@coords))) == 1)
         stop("heatmaps must have the same coordinates")
@@ -26,34 +42,6 @@ plotHeatmapMeta = function(hm_list, binsize=1, colors=gg_col(length(hm_list)), a
 bin_heatmap = function(hm, breaks) {
     partition = data.frame(pos=xm(hm), value=colSums(image(hm)), bin=cut(xm(hm), breaks))
     partition[, list(sum=sum(value)), by=bin][,sum]
-}
-
-plotHeatmapMetaSmooth = function(hm_list, span=0.1, colors=gg_col(length(hm_list)), addReferenceLine=FALSE) {
-    if (!length(unique(lapply(hm_list, function(x) x@coords))) == 1)
-        stop("heatmaps must have the same coordinates")
-
-    if (!length(unique(lapply(hm_list, function(x) x@coords))) == 1)
-        stop("heatmaps must have the same number of sequences")
-
-    coords = hm_list[[1]]@coords
-    pred = list()
-    for (i in seq_along(hm_list)) {
-        hm = hm_list[[i]]
-        col_means = colSums(image(hm))/hm@nseq
-        lo = loess(col_means ~ xm(hm), span=span)
-        pred[[i]] = predict(lo)
-    }
-    max_value = max(vapply(pred, max, numeric(1)))
-    plot(0, 0, xlim=coords, ylim=c(0, max_value), axes=FALSE, type="n", xlab=NULL, ylab=NULL)
-    axis(1)
-    axis(2)
-    for (i in seq_along(occurrence)) {
-        lines(xm(hm_list[[i]]) + coords[1], pred[[i]], col = colors[i], type='l', lwd=2)
-    }
-    mtext("Relative Position", side = 1, line = 3, cex = 1.5, font = 2)
-    mtext("Frequency", side = 2, line = 2.5, cex = 1.5, font = 2)
-    labels = vapply(hm_list, function(x) x@label, character(1))
-    legend('topright', labels, bty="n", lty=1, lwd=2, col=colors)
 }
 
 gg_col = function(n) {

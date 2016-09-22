@@ -195,7 +195,7 @@ setMethod("image<-", signature="Heatmap", function(x, value) {
 #'
 #' library(HeatmapExamples)
 #' hm = Heatmap(example_matrix, coords=c(-500, 500), label="Test")
-Heatmap = function(mat, coords=NULL, label="", nseq=NULL, scale=max(mat), metadata=list()) {
+Heatmap = function(mat, coords=NULL, label="", nseq=NULL, scale=NULL, metadata=list()) {
     if (is.null(coords)) {
         coords = c(0L, ncol(mat))
     } else {
@@ -205,6 +205,9 @@ Heatmap = function(mat, coords=NULL, label="", nseq=NULL, scale=max(mat), metada
         nseq = nrow(mat)
     } else {
         nseq = as.integer(nseq)
+    }
+    if (is.null(scale)) {
+        scale = getScale(min(mat), max(mat))
     }
     hm = new(
         "Heatmap",

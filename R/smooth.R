@@ -1,11 +1,48 @@
-#takes a sparse matrix
+#' Smooth a heatmap
+#'
+#' @param heatmap A heatmap object
+#' @param sigma Numeric, length 2
+#' @param output.ratio  Numeric, length 2
+#' @param output.size  Numeric, length 2
+#' @param method One of "auto", "kernel" or "blur"
+#'
+#' This function smooths a heatmap using either binned kernel density
+#' (more efficient for binary heatmaps) or gaussian blur.
+#'
+#' Sigma controls
+#' the SD of the kernel in both cases, defined in terms of pixels. This means
+#' that if you have very diffirent x and y dimensions (eg. a 200bp heatmap around
+#' 10000 promoters) you will need to compensate by setting sigma[2] higher to get
+#' the same visual effect in both dimensions
+#'
+#' The output size can be determined by output.ratio or output.size. "output.ratio"
+#' specifies the size of the output as a negative scaling factor, so c(2, 4) would
+#' result in an image half as wide and a quarter as high. "output.size" specifies
+#' the dimensions of the output matrix explicitly. One or the other should be used:
+#' if they are in conflict output.ratio will override output.size and there will be
+#' a warning.
+#'
+#' Smoothing can use either a kernel density estimate or a blurring function.
+#' The methods implemented are KernSmooth:bkde2D and spatstat::blur. The kernel
+#' based method assumes we are smoothing individual points so the value of these points
+#' are ignored. This is most useful for smoothing PatternHeatmaps where each cell in
+#' the matrix is either 1 or 0. For non-binary heatmaps, blur is most appropriate. The
+#' "auto" method will choose "kernel" for binary heatmaps and "blur" for any others.
+#'
+#' Scaling the output heatmap is handled as in CoverageHeatmap.
+#'
+#' @export
+#' @examples
+#' hm_smoothed = smooth(hm, sigma=c(5,5), output.ratio=c(2,2), method="blur")
 setGeneric("smooth", function(heatmap, ...) {
     StandardGeneric("smooth")
 })
 
-#! @importFrom spatstat blur
-#! @importFrom EBImage resize
-#! @importFrom KernSmooth bkde2D
+#' @describeIn smooth Smooth a heatmap
+#' @export
+#' @importFrom spatstat blur
+#' @importFrom EBImage resize
+#' @importFrom KernSmooth bkde2D
 setMethod("smooth", signature(heatmap="Heatmap"),
     function(heatmap, sigma=c(3,3), output.ratio=c(1,1), output.size=NULL,
              method=c("auto", "kernel", "blur")) {
