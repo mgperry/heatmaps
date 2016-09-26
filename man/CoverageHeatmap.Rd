@@ -52,7 +52,7 @@ Generate a Heatmap of coverage
 \item \code{windows = GenomicRanges,track = RleList}: Heatmap of Coverage from GRanges + RleList
 }}
 \examples{
-library(HeatmapsExamples)
-CoverageHeatmap(windows, rle_list, coords=c(-500, 500), label="Example")
+data(HeatmapExamples)
+CoverageHeatmap(windows, rle_list, coords=c(-100, 100), label="Example")
 }
 

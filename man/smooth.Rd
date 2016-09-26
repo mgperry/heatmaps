@@ -55,6 +55,7 @@ Smooth a heatmap
 \item \code{Heatmap}: Smooth a heatmap
 }}
 \examples{
+data(HeatmapExamples)
 hm_smoothed = smooth(hm, sigma=c(5,5), output.ratio=c(2,2), method="blur")
 }
 

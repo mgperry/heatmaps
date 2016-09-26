@@ -13,8 +13,10 @@
 #' @export
 #' @examples
 #' data(HeatmapExamples)
-#' plotHeatmapMeta(hm, colors="steelblue")
+#' plotHeatmapMeta(hm, color="steelblue")
 plotHeatmapMeta = function(hm_list, binsize=1, colors=gg_col(length(hm_list)), addReferenceLine=FALSE) {
+    if (class(hm_list) == "Heatmap") hm_list = list(hm_list) # allow single heatmap argument
+
     if (!length(unique(lapply(hm_list, function(x) x@coords))) == 1)
         stop("heatmaps must have the same coordinates")
 
@@ -41,7 +43,7 @@ plotHeatmapMeta = function(hm_list, binsize=1, colors=gg_col(length(hm_list)), a
 
 bin_heatmap = function(hm, breaks) {
     partition = data.frame(pos=xm(hm), value=colSums(image(hm)), bin=cut(xm(hm), breaks))
-    partition[, list(sum=sum(value)), by=bin][,sum]
+    aggregate(partition$value, sum, by=list(bin=partition$bin))$x
 }
 
 gg_col = function(n) {

@@ -32,8 +32,8 @@ Generate a Heatmap of PWM Scores in DNA sequnce
 \item \code{seq = DNAStringSet,pwm = matrix}: Heatmap of PWM Scores
 }}
 \examples{
-library(HeatmapsExamples)
-PatternHeatmap(seq, tata_pwm, coords=c(-500, 500), label="TATA Scan")
+data(HeatmapExamples)
+PatternHeatmap(string_set, tata_pwm, coords=c(-100, 100), label="TATA Scan")
 }
 \seealso{
 PatternHeatmap

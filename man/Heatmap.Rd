@@ -29,8 +29,8 @@ Function to create a heatmap object
 }
 \examples{
 
-library(HeatmapExamples)
-hm = Heatmap(example_matrix, coords=c(-500, 500), label="Test")
+data(HeatmapExamples)
+hm = Heatmap(mat, coords=c(-100, 100), label="Test")
 }
 \seealso{
 PatternHeatmap CoverageHeatmap PWMScanHeatmap

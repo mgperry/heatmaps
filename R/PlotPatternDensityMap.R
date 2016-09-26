@@ -21,7 +21,8 @@
 #' @seealso PatternHeatmap plotHeatmapList smooth
 #' @export
 #' @examples
-#' plotPatternDensityMap(seq, c("AT", "CG"), coords=c(-500, 500))
+#' data(HeatmapExamples)
+#' plotPatternDensityMap(string_set, c("AT", "CG"), coords=c(-200, 200))
 setGeneric(
     name="plotPatternDensityMap",
     def=function(seq, patterns, ...) {

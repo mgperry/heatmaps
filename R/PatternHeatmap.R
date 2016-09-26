@@ -20,9 +20,9 @@
 #' @seealso smooth
 #' @export
 #' @examples
-#' library(HeatmapsExamples)
-#' PatternHeatmap(seq, "TA", coords=c(-500, 500), label="TA")
-#' PatternHeatmap(seq, tata_pwm, coords=c(-500, 500), min.score="80%", label="TATA PWM")
+#' data(HeatmapExamples)
+#' PatternHeatmap(string_set, "TA", coords=c(-100, 100), label="TA")
+#' PatternHeatmap(string_set, tata_pwm, coords=c(-100, 100), min.score="80%", label="TATA PWM")
 setGeneric(
 name="PatternHeatmap",
 def=function(seq, pattern, ...){
@@ -32,6 +32,7 @@ def=function(seq, pattern, ...){
 
 #' @describeIn PatternHeatmap Heatmap of sequence patterns from sequence and character
 #' @importFrom Biostrings vmatchPattern startIndex DNAStringSet
+#' @importFrom Matrix sparseMatrix
 #' @export
 setMethod("PatternHeatmap",
 signature(seq = "DNAStringSet", pattern="character"),
@@ -64,7 +65,7 @@ signature(seq = "DNAStringSet", pattern="character"),
 
         hm = new(
             "Heatmap",
-            matrix=mat,
+            image=mat,
             scale=c(0,1),
             coords=as.integer(coords),
             nseq=length(seq),
@@ -103,7 +104,7 @@ function(seq, pattern, coords=NULL, min.score="80%", label=NULL) {
 
         hm = new(
             "Heatmap",
-            matrix=mat,
+            image=mat,
             scale=c(0,1),
             coords=as.integer(coords),
             nseq=length(seq),

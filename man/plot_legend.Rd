@@ -20,7 +20,7 @@ Plot a color legend for a heatmap
 }
 \examples{
 data(HeatmapExamples)
-opts = heatmapOptions
+opts = heatmapOptions()
 opts$color = "Rainbow"
 par(mai=opts$legend.mai)
 plot_legend(c(0,1), opts)

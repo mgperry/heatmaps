@@ -10,7 +10,7 @@
 \usage{
 \S4method{image}{Heatmap}(x)
 
-image(x, ...) <- value
+image(x) <- value
 
 \S4method{image}{Heatmap}(x) <- value
 }
@@ -20,7 +20,7 @@ Return or set the image in a Heatmap
 \examples{
 
 data(HeatmapExamples)
-image(hm = log(image(hm)
+image(hm) = log(image(hm))
 scale(hm) = c(0, max(image(hm)))
 }
 

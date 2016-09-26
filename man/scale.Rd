@@ -12,7 +12,7 @@ scale(x)
 
 \S4method{scale}{Heatmap}(x)
 
-scale(x, ...) <- value
+scale(x) <- value
 
 \S4method{scale}{Heatmap}(x) <- value
 }

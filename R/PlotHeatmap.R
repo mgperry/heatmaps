@@ -102,12 +102,14 @@ setMethod("plotHeatmap", signature="Heatmap",
 #' @param cex.axis Numeric
 #' @param scale Logical
 #' @param scale.lwd Numeric
+#' @param label Logical
 #' @param label.xpos Numeric
 #' @param label.ypos Numeric
 #' @param cex.label Numeric
 #' @param label.col A Color (character)
 #' @param legend Logical
 #' @param legend.width Numeric
+#' @param legend.ticks Integer
 #' @param legend.pos 'l' or 'r'
 #' @param cex.legend Numeric
 #' @param refline Logical
@@ -140,6 +142,8 @@ setMethod("plotHeatmap", signature="Heatmap",
 #'
 #' scale.lwd: Width for line around scale
 #'
+#' label: Plot label or not
+#'
 #' label.xpos: x position for label, from left
 #'
 #' label.ypos: y position for label, from top
@@ -153,6 +157,8 @@ setMethod("plotHeatmap", signature="Heatmap",
 #' legend: Color for label, white is often useful for dark plots
 #'
 #' legend.pos: Position of legend relative to heatmap: 'l' for left, 'r' for right
+#'
+#' legend.ticks: Number of ticks to use in legend
 #'
 #' cex.legend: cex to use for legend marks
 #'
@@ -184,12 +190,14 @@ heatmapOptions = function(...) {
         cex.axis=1.5,
         scale=FALSE,
         scale.lwd=6,
+        label=TRUE,
         label.xpos=0.1,
         label.ypos=0.1,
         cex.label=2.5,
         label.col='black',
         legend=FALSE,
         legend.width=0.2,
+        legend.ticks=5,
         legend.pos='l',
         cex.legend=2,
         refline=TRUE,

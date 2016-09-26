@@ -17,11 +17,9 @@ Imports:
     genomation,
     EBImage,
     spatstat,
-    RColorBrewer
-Suggests:
-    RUnit,
+    RColorBrewer,
     BiocGenerics,
-    BiocStyle
+    GenomeInfoDb
 License: NA
 Description: I like heatmaps
 biocViews: Visualization, SequenceMatching
@@ -35,6 +33,6 @@ Collate:
     CoverageHeatmap.R
     smooth.R
     plotHeatmapMeta.R
-    plotMotifHeatmap.R
+    Data.R
 NeedsCompilation: no
 RoxygenNote: 5.0.1

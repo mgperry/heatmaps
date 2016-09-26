@@ -12,8 +12,8 @@
 #' @seealso PatternHeatmap
 #' @export
 #' @examples
-#' library(HeatmapsExamples)
-#' PatternHeatmap(seq, tata_pwm, coords=c(-500, 500), label="TATA Scan")
+#' data(HeatmapExamples)
+#' PatternHeatmap(string_set, tata_pwm, coords=c(-100, 100), label="TATA Scan")
 setGeneric(
 name="PWMScanHeatmap",
 def=function(seq, pwm, ...){
@@ -49,7 +49,7 @@ function(seq, pwm, coords=NULL, label=NULL){
 
         hm = new(
             "Heatmap",
-            matrix=mat,
+            image=mat,
             scale=c(0, 100),
             coords=as.integer(coords),
             nseq=length(seq),

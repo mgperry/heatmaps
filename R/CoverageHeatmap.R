@@ -21,11 +21,14 @@
 #' over-emphasised. See ?getScale for details. The scale can be manually reset
 #' if desired using the "scale" method.
 #'
-#' @importFrom GenomicRanges coverage
+#' @importFrom GenomicRanges coverage strand
+#' @importFrom GenomeInfoDb seqlevels
+#' @importFrom IRanges Views
+#' @importFrom genomation ScoreMatrixBin
 #' @export
 #' @examples
-#' library(HeatmapsExamples)
-#' CoverageHeatmap(windows, rle_list, coords=c(-500, 500), label="Example")
+#' data(HeatmapExamples)
+#' CoverageHeatmap(windows, rle_list, coords=c(-100, 100), label="Example")
 setGeneric(
 name="CoverageHeatmap",
 def=function(windows, track, ...){
@@ -83,7 +86,7 @@ signature(windows = "GenomicRanges", track="RleList"),
 
         hm = new(
             "Heatmap",
-            matrix=mat,
+            image=mat,
             scale=getScale(min(mat), max(mat)),
             coords=as.integer(coords),
             nseq=length(windows),

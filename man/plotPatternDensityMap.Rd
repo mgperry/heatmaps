@@ -47,7 +47,8 @@ Plot heatmaps for several patterns in DNA sequence
 \item \code{DNAStringSet}: Plot heatmaps for several patterns in DNA sequence
 }}
 \examples{
-plotPatternDensityMap(seq, c("AT", "CG"), coords=c(-500, 500))
+data(HeatmapExamples)
+plotPatternDensityMap(string_set, c("AT", "CG"), coords=c(-200, 200))
 }
 \seealso{
 PatternHeatmap plotHeatmapList smooth

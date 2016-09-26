@@ -9,6 +9,8 @@
 #'
 #' A class used to represent a heatmap in a simple, self-contained way
 #'
+#' Slots can be accessed and set using getters and setters with the same name.
+#'
 #' @export
 #' @seealso CoverageHeatmap PatternHeatmap plotHeatmap plotHeatmapMeta
 #'
@@ -16,16 +18,16 @@
 #'
 #' data(HeatmapExamples)
 #'
-#' hm = new("Hetamap",
-#'          image=example_matrix,
-#'          scale=c(0,max(example_matrix),
-#'          coords=c(-500, 500),
-#'          nseq=1000,
+#' hm = new("Heatmap",
+#'          image=mat,
+#'          scale=c(0,max(mat)),
+#'          coords=c(-100L, 100L),
+#'          nseq=1000L,
 #'          label="Test",
-#'          metadata=list()),
+#'          metadata=list())
 #'
 #' # or use the constructor:
-#' hm = Heatmap(example_matrix, coords=c(-500, 500), label="Test")
+#' hm = Heatmap(mat, coords=c(-100, 100), label="Test")
 setClass("Heatmap",
          slots=c(
             image="matrix",
@@ -40,7 +42,7 @@ setClass("Heatmap",
             coords=c(0L,0L),
             nseq=0L,
             label="",
-            metadata=list()),
+            metadata=list())
 )
 
 #' @describeIn Heatmap Return the number of sequences in a heatmap
@@ -56,11 +58,11 @@ NULL
 setMethod("width", signature="Heatmap", function(x) x@coords[2] - x@coords[1])
 
 setMethod("show", signature="Heatmap", function(object) {
-    cat("coords:", object@coords, "\n")
-    cat("nseq:", object@nseq, "\n")
-    cat("obs:", length(object@matrix), "\n")
-    cat("scale:", object@scale, "\n")
-    cat("label:", object@label, "\n")
+cat("coords:", coords(object), "\n")
+cat("nseq:", nseq(object), "\n")
+cat("obs:", length(image(object)), "\n")
+cat("scale:", scale(object), "\n")
+cat("label:", label(object), "\n")
 })
 
 #' Reflect a heatmap in the y axis
@@ -76,9 +78,9 @@ setGeneric("mirror", def=function(x) standardGeneric("mirror"))
 #' @describeIn mirror Heatmap method
 #' @export
 setMethod("mirror", signature="Heatmap", function(x) {
-    image(x) = t(apply(image(x), 1, rev))
-    x@coords = -rev(x@coords)
-    x
+image(x) = t(apply(image(x), 1, rev))
+x@coords = -rev(x@coords)
+x
 })
 
 #' Reflect a heatmap in the x axis
@@ -86,8 +88,8 @@ setMethod("mirror", signature="Heatmap", function(x) {
 #' @param x A heatmap
 #' @export
 setMethod("rev", signature="Heatmap", function(x) {
-    image(x) = apply(image(x), 2, rev)
-    x
+image(x) = apply(image(x), 2, rev)
+x
 })
 
 #' Generate co-ordinates for each row of the image matrix of a Heatmap
@@ -102,7 +104,7 @@ setGeneric("xm", def=function(x) standardGeneric("xm"))
 #' @describeIn xm Generate co-ordinates for each frow of the image matrix of a Heatmap
 #' @export
 setMethod("xm", signature="Heatmap", function(x) {
-    seq(1, width(x), length.out=ncol(image(x)))
+seq(1, width(x), length.out=ncol(image(x)))
 })
 
 #' Generate co-ordinates for each column of the image matrix of a Heatmap
@@ -117,7 +119,7 @@ setGeneric("ym", def=function(x) standardGeneric("ym"))
 #' @describeIn ym Generate co-ordinates for each column of the matrix
 #' @export
 setMethod("ym", signature="Heatmap", function(x) {
-    seq(1, x@nseq, length.out=nrow(image(x)))
+seq(1, x@nseq, length.out=nrow(image(x)))
 })
 
 #' Return or set the scale in a Heatmap
@@ -135,12 +137,12 @@ setGeneric("scale", def=function(x) standardGeneric("scale"))
 #' @rdname scale
 #' @export
 setMethod("scale", signature="Heatmap", function(x) {
-    x@scale
+x@scale
 })
 
 #' @rdname scale
 #' @export
-setGeneric("scale<-", def=function(x, value, ...) standardGeneric("scale<-"))
+setGeneric("scale<-", def=function(x, value) standardGeneric("scale<-"))
 
 #' @rdname scale
 #' @export
@@ -156,7 +158,7 @@ NULL
 #' @rdname image
 #' @export
 setMethod("image", signature="Heatmap", function(x) {
-    x@matrix
+    x@image
 })
 
 #' @rdname image
@@ -164,14 +166,102 @@ setMethod("image", signature="Heatmap", function(x) {
 #' @examples
 #'
 #' data(HeatmapExamples)
-#' image(hm = log(image(hm)
+#' image(hm) = log(image(hm))
 #' scale(hm) = c(0, max(image(hm)))
-setGeneric("image<-", def=function(x, value, ...) standardGeneric("image<-"))
+setGeneric("image<-", def=function(x, value) standardGeneric("image<-"))
 
 #' @rdname image
 #' @export
 setMethod("image<-", signature="Heatmap", function(x, value) {
-    x@matrix = value
+    x@image = value
+    x
+})
+
+#' Return or set the coords in a Heatmap
+#' @name coords
+NULL
+
+#' @rdname coords
+#' @export
+#' @examples
+#'
+#' data(HeatmapExamples)
+#' coords(hm) = c(-100, 100)
+setGeneric("coords", def=function(x) standardGeneric("coords"))
+
+#' @rdname coords
+#' @export
+setMethod("coords", signature="Heatmap", function(x) {
+    x@coords
+})
+
+#' @rdname coords
+#' @export
+setGeneric("coords<-", def=function(x, value) standardGeneric("coords<-"))
+
+#' @rdname coords
+#' @export
+setMethod("coords<-", signature="Heatmap", function(x, value) {
+    x@coords = as.integer(value)
+    x
+})
+
+#' Return or set the label in a Heatmap
+#' @name label
+NULL
+
+#' @rdname label
+#' @export
+#' @examples
+#'
+#' data(HeatmapExamples)
+#' label(hm) = "NewLabel"
+#' label(hm) # "NewLabel"
+setGeneric("label", def=function(x) standardGeneric("label"))
+
+#' @rdname label
+#' @export
+setMethod("label", signature="Heatmap", function(x) {
+    x@label
+})
+
+#' @rdname label
+#' @export
+setGeneric("label<-", def=function(x, value) standardGeneric("label<-"))
+
+#' @rdname label
+#' @export
+setMethod("label<-", signature="Heatmap", function(x, value) {
+    x@label = value
+    x
+})
+
+#' Return or set nseq in a Heatmap
+#' @name nseq
+NULL
+
+#' @rdname nseq
+#' @export
+#' @examples
+#'
+#' data(HeatmapExamples)
+#' nseq(hm) = 1000
+setGeneric("nseq", def=function(x) standardGeneric("nseq"))
+
+#' @rdname nseq
+#' @export
+setMethod("nseq", signature="Heatmap", function(x) {
+    x@nseq
+})
+
+#' @rdname nseq
+#' @export
+setGeneric("nseq<-", def=function(x, value) standardGeneric("nseq<-"))
+
+#' @rdname nseq
+#' @export
+setMethod("nseq<-", signature="Heatmap", function(x, value) {
+    x@nseq = as.integer(value)
     x
 })
 
@@ -193,8 +283,8 @@ setMethod("image<-", signature="Heatmap", function(x, value) {
 #'
 #' @examples
 #'
-#' library(HeatmapExamples)
-#' hm = Heatmap(example_matrix, coords=c(-500, 500), label="Test")
+#' data(HeatmapExamples)
+#' hm = Heatmap(mat, coords=c(-100, 100), label="Test")
 Heatmap = function(mat, coords=NULL, label="", nseq=NULL, scale=NULL, metadata=list()) {
     if (is.null(coords)) {
         coords = c(0L, ncol(mat))
@@ -211,7 +301,7 @@ Heatmap = function(mat, coords=NULL, label="", nseq=NULL, scale=NULL, metadata=l
     }
     hm = new(
         "Heatmap",
-        matrix=mat,
+        image=mat,
         scale=scale,
         coords=coords,
         nseq=nseq,

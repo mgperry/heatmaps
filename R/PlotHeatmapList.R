@@ -30,7 +30,7 @@
 #' @export
 #' @examples
 #' data(HeatmapExamples)
-#' plotHeatmapList(list(hm, hm2), groups=c(1,2), color=list("Reds", "Blues"))
+#' plotHeatmapList(list(hm, hm2), groups=c(1,2), color=c("Reds", "Blues"))
 plotHeatmapList = function(heatmap_list, groups=NULL, options=heatmapOptions(), ...) {
     if (class(heatmap_list) == "Heatmap") heatmap_list = list(heatmap_list) # allow single heatmap argument
     n_plots = length(heatmap_list)
@@ -54,7 +54,7 @@ plotHeatmapList = function(heatmap_list, groups=NULL, options=heatmapOptions(), 
         scales = vapply(heatmap_list[group], function(x) scale(x), numeric(2))
         if (!(length(unique(scales[1,])) == 1) && (length(unique(scales[2,])) == 1)) {
             for (index in group) {
-                scale(heatmap_list[[index]]) = get_scale(min(scales), max(scales))
+                scale(heatmap_list[[index]]) = getScale(min(scales), max(scales))
             }
         }
     }
@@ -133,9 +133,10 @@ safe_unlist = function(x) {
 #'
 #' @seealso plotHeatmapList
 #' @importFrom plotrix color.legend
+#' @export
 #' @examples
 #' data(HeatmapExamples)
-#' opts = heatmapOptions
+#' opts = heatmapOptions()
 #' opts$color = "Rainbow"
 #' par(mai=opts$legend.mai)
 #' plot_legend(c(0,1), opts)

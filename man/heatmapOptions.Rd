@@ -23,6 +23,8 @@ heatmapOptions(...)
 
 \item{scale.lwd}{Numeric}
 
+\item{label}{Logical}
+
 \item{label.xpos}{Numeric}
 
 \item{label.ypos}{Numeric}
@@ -34,6 +36,8 @@ heatmapOptions(...)
 \item{legend}{Logical}
 
 \item{legend.width}{Numeric}
+
+\item{legend.ticks}{Integer}
 
 \item{legend.pos}{'l' or 'r'}
 
@@ -73,6 +77,8 @@ scale: Plot scale or not
 
 scale.lwd: Width for line around scale
 
+label: Plot label or not
+
 label.xpos: x position for label, from left
 
 label.ypos: y position for label, from top
@@ -86,6 +92,8 @@ legend: Plot legend (scale indicating values for colors)
 legend: Color for label, white is often useful for dark plots
 
 legend.pos: Position of legend relative to heatmap: 'l' for left, 'r' for right
+
+legend.ticks: Number of ticks to use in legend
 
 cex.legend: cex to use for legend marks
 

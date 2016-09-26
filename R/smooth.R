@@ -33,6 +33,7 @@
 #'
 #' @export
 #' @examples
+#' data(HeatmapExamples)
 #' hm_smoothed = smooth(hm, sigma=c(5,5), output.ratio=c(2,2), method="blur")
 setGeneric("smooth", function(heatmap, ...) {
     StandardGeneric("smooth")
@@ -40,9 +41,11 @@ setGeneric("smooth", function(heatmap, ...) {
 
 #' @describeIn smooth Smooth a heatmap
 #' @export
-#' @importFrom spatstat blur
+#' @importFrom spatstat blur im
 #' @importFrom EBImage resize
 #' @importFrom KernSmooth bkde2D
+#' @importClassesFrom Matrix sparseMatrix
+#' @importMethodsFrom Matrix summary
 setMethod("smooth", signature(heatmap="Heatmap"),
     function(heatmap, sigma=c(3,3), output.ratio=c(1,1), output.size=NULL,
              method=c("auto", "kernel", "blur")) {
@@ -88,14 +91,14 @@ setMethod("smooth", signature(heatmap="Heatmap"),
         map = bkde2D(cbind(df$i, df$j), bandwidth=sigma, gridsize=output.size,
                     range.x=list(range(ym(heatmap)), range(xm(heatmap))))
         mat.new = sum(image(heatmap))*map$fhat
-        scale = get_scale(min(mat.new), max(mat.new))
+        scale = getScale(min(mat.new), max(mat.new))
     } else if (method=="blur") {
         message("\nApplying Gaussian blur...")
         mat.new = as.matrix(blur(im(image(heatmap)), sigma=sigma))
         if (resize_img == TRUE) {
             mat.new = resize(mat.new, output.size[1], output.size[2])
         }
-        scale = get_scale(min(mat.new), max(mat.new))
+        scale = getScale(min(mat.new), max(mat.new))
     }
 
     image(heatmap) = mat.new
@@ -103,7 +106,20 @@ setMethod("smooth", signature(heatmap="Heatmap"),
     return(heatmap)
 })
 
-get_scale = function(x, y) {
+#' Make an appropriate scale for a heatmap
+#'
+#' @param x, y Min and max values for the heatmap
+#'
+#' This function takes min/max values for a heatmap and
+#' generates a scale either starting, ending or centered on
+#' zero.
+#'
+#' @export
+#' @examples
+#' getScale(0.5, 5) # c(0, 5)
+#' getScale(-6, -2) # c(-6, 5)
+#' getScale(-6, 2) # c(-6, 6)
+getScale = function(x, y) {
     if (x >= 0 && y >=0) {
         scale = c(0, max(x, y))
     } else if (x <= 0 && y <= 0) {

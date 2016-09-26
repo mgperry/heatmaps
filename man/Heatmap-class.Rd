@@ -35,22 +35,24 @@ An S4 class to represent a heatmap
 
 \item{\code{metadata}}{A list containing arbitrary metadata
 
-A class used to represent a heatmap in a simple, self-contained way}
+A class used to represent a heatmap in a simple, self-contained way
+
+Slots can be accessed and set using getters and setters with the same name.}
 }}
 \examples{
 
 data(HeatmapExamples)
 
-hm = new("Hetamap",
-         image=example_matrix,
-         scale=c(0,max(example_matrix),
-         coords=c(-500, 500),
-         nseq=1000,
+hm = new("Heatmap",
+         image=mat,
+         scale=c(0,max(mat)),
+         coords=c(-100L, 100L),
+         nseq=1000L,
          label="Test",
-         metadata=list()),
+         metadata=list())
 
 # or use the constructor:
-hm = Heatmap(example_matrix, coords=c(-500, 500), label="Test")
+hm = Heatmap(mat, coords=c(-100, 100), label="Test")
 }
 \seealso{
 CoverageHeatmap PatternHeatmap plotHeatmap plotHeatmapMeta

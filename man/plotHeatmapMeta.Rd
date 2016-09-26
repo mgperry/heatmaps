@@ -26,6 +26,6 @@ Plot a Meta-region plot from heatmaps
 }
 \examples{
 data(HeatmapExamples)
-plotHeatmapMeta(hm, colors="steelblue")
+plotHeatmapMeta(hm, color="steelblue")
 }
 

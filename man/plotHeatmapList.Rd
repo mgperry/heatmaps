@@ -42,7 +42,7 @@ PLot a list of Heatmaps
 }
 \examples{
 data(HeatmapExamples)
-plotHeatmapList(list(hm, hm2), groups=c(1,2), color=list("Reds", "Blues"))
+plotHeatmapList(list(hm, hm2), groups=c(1,2), color=c("Reds", "Blues"))
 }
 \seealso{
 plotHeatmap heatmapOptions plot_legend
