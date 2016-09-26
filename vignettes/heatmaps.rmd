@@ -1,0 +1,16 @@
+# heatmaps
+
+## Flexible plotting of Functional Genomics data + Sequence features
+
+This package provides simple functions for plotting heatmaps over sets 
+of genomic windows. It provides simple functions for common operations while
+still allowing the user full control over plotting options.
+
+## Will be here very shortly!
+
+```{r}
+stop("Vignette in progress")
+```
+
+
+
