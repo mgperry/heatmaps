@@ -18,7 +18,7 @@ Make an appropriate scale for a heatmap
 }
 \examples{
 getScale(0.5, 5) # c(0, 5)
-getScale(-6, -2) # c(-6, 5)
+getScale(-6, -2) # c(-6, 6)
 getScale(-6, 2) # c(-6, 6)
 }
 

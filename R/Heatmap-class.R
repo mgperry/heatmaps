@@ -285,23 +285,23 @@ setMethod("nseq<-", signature="Heatmap", function(x, value) {
 #'
 #' data(HeatmapExamples)
 #' hm = Heatmap(mat, coords=c(-100, 100), label="Test")
-Heatmap = function(mat, coords=NULL, label="", nseq=NULL, scale=NULL, metadata=list()) {
+Heatmap = function(image, coords=NULL, label="", nseq=NULL, scale=NULL, metadata=list()) {
     if (is.null(coords)) {
-        coords = c(0L, ncol(mat))
+        coords = c(0L, ncol(image))
     } else {
         coords = as.integer(coords)
     }
     if (is.null(nseq)) {
-        nseq = nrow(mat)
+        nseq = nrow(image)
     } else {
         nseq = as.integer(nseq)
     }
     if (is.null(scale)) {
-        scale = getScale(min(mat), max(mat))
+        scale = getScale(min(image), max(image))
     }
     hm = new(
         "Heatmap",
-        image=mat,
+        image=image,
         scale=scale,
         coords=coords,
         nseq=nseq,

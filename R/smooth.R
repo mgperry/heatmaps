@@ -117,7 +117,7 @@ setMethod("smooth", signature(heatmap="Heatmap"),
 #' @export
 #' @examples
 #' getScale(0.5, 5) # c(0, 5)
-#' getScale(-6, -2) # c(-6, 5)
+#' getScale(-6, -2) # c(-6, 6)
 #' getScale(-6, 2) # c(-6, 6)
 getScale = function(x, y) {
     if (x >= 0 && y >=0) {

@@ -4,10 +4,12 @@
 \alias{Heatmap}
 \title{Function to create a heatmap object}
 \usage{
-Heatmap(mat, coords = NULL, label = "", nseq = NULL, scale = NULL,
+Heatmap(image, coords = NULL, label = "", nseq = NULL, scale = NULL,
   metadata = list())
 }
 \arguments{
+\item{image}{A numeric Matrix}
+
 \item{coords}{A length-2 integer vector}
 
 \item{label}{A character vector}
@@ -21,8 +23,6 @@ Heatmap(mat, coords = NULL, label = "", nseq = NULL, scale = NULL,
 Using this function avoids calling 'new' directly or manually setting coords and
 nseq to integers. Other constructors exist for creating heatmaps from data, rather
 than a raw matrix.}
-
-\item{image}{A numeric Matrix}
 }
 \description{
 Function to create a heatmap object
