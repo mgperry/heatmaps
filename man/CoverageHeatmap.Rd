@@ -20,13 +20,7 @@ CoverageHeatmap(windows, track, ...)
 
 \item{track}{A GRanges or RleList object specifying coverage}
 
-\item{coords}{Co-ordinates for the heatmap, defaults to c(0, width(windows))}
-
-\item{weight}{Passed to coverage(track) constructor if class(track) == "GRanges"}
-
-\item{label}{Label for the heatmap}
-
-\item{nbin}{If set, number of bins to use across each window
+\item{...}{additional arguments used by methods
 
 This function generates a Heatmap object from a set of windows and an
 object containing genome-wide information about coverage. Either a GRanges
@@ -41,6 +35,14 @@ makes more sense for most color schemes which are centered on zero, and
 avoids misleading plots where either positive or negative values are
 over-emphasised. See ?getScale for details. The scale can be manually reset
 if desired using the "scale" method.}
+
+\item{coords}{Co-ordinates for the heatmap, defaults to c(0, width(windows))}
+
+\item{weight}{Passed to coverage(track) constructor if class(track) == "GRanges"}
+
+\item{label}{Label for the heatmap}
+
+\item{nbin}{If set, number of bins to use across each window}
 }
 \description{
 Generate a Heatmap of coverage

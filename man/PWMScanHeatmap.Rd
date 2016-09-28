@@ -16,13 +16,15 @@ PWMScanHeatmap(seq, pwm, ...)
 
 \item{pwm}{A PWM}
 
-\item{coords}{Co-ordinates for the heatmap, defaults to c(0, width(windows))}
-
-\item{label}{Label for the heatmap
+\item{...}{additional arguments used by methods
 
 This function creates a heatmap where each point is the score of a PWM match
 starting from that position, which can visualise regions of enrichment or exclusion
 of certain motifs}
+
+\item{coords}{Co-ordinates for the heatmap, defaults to c(0, width(windows))}
+
+\item{label}{Label for the heatmap}
 }
 \description{
 Generate a Heatmap of PWM Scores in DNA sequnce

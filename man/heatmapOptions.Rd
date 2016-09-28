@@ -7,65 +7,21 @@
 heatmapOptions(...)
 }
 \arguments{
-\item{color}{A vector of colors (character)}
-
-\item{box.width}{Numeric}
-
-\item{x.ticks}{Logical}
-
-\item{tcl}{Numeric}
-
-\item{padj}{Numeric}
-
-\item{cex.axis}{Numeric}
-
-\item{scale}{Logical}
-
-\item{scale.lwd}{Numeric}
-
-\item{label}{Logical}
-
-\item{label.xpos}{Numeric}
-
-\item{label.ypos}{Numeric}
-
-\item{cex.label}{Numeric}
-
-\item{label.col}{A Color (character)}
-
-\item{legend}{Logical}
-
-\item{legend.width}{Numeric}
-
-\item{legend.ticks}{Integer}
-
-\item{legend.pos}{'l' or 'r'}
-
-\item{cex.legend}{Numeric}
-
-\item{refline}{Logical}
-
-\item{refline.width}{Numeric}
-
-\item{transform}{Function or NA}
-
-\item{plot.mai}{Numeric length 4}
-
-\item{legend.mai}{Numeric length 4
+\item{...}{options to set manually
 
 Guide to Heatmap options
 
 This is an reference to all the possible options for plotting heatmaps.
 Some options are handled by heatmaps functions (either plotHeatmap or plotHeatmapList),
 others are passed directly to plotting functions. Further explanation is available in the
-vignette.
+vignette. Arguments are numeric if not otherwise stated.
 
 color: A vector of colors or a default color, see ?default_color. plotHeatmap will
        interpolate between these colors to form a scale.
 
-box.width: The width of box around the heatmap, passed to box()
+box.width: width of box around the heatmap, passed to box()
 
-x.ticks: plot x axis ticks
+x.ticks: Logical, plot x axis ticks
 
 tcl: Length of x axis ticks
 
@@ -73,11 +29,11 @@ padj: Vertical adjustment of x axis labels
 
 cex.axis: cex for axis labels
 
-scale: Plot scale or not
+scale: Logical, Plot scale or not
 
 scale.lwd: Width for line around scale
 
-label: Plot label or not
+label: Logical, plot label or not
 
 label.xpos: x position for label, from left
 
@@ -87,25 +43,25 @@ cex.label: cex for axis labels
 
 label.col: Color for label, white is often useful for dark plots
 
-legend: Plot legend (scale indicating values for colors)
+legend: Logical, plot legend (scale indicating values for colors)
 
 legend: Color for label, white is often useful for dark plots
 
-legend.pos: Position of legend relative to heatmap: 'l' for left, 'r' for right
+legend.pos: Character, position of legend relative to heatmap: 'l' for left, 'r' for right
 
-legend.ticks: Number of ticks to use in legend
+legend.ticks: Number of ticks to use on legend.
 
 cex.legend: cex to use for legend marks
 
-refline: Draw dashed line a coords = 0
+refline: Logical, Draw dashed line at coords = 0
 
 refline.width: Width of reference line
 
-transform: Transform values before plotting
+transform: Function to transform values before plotting
 
-plot.mai: Margins around plot
+plot.mai: Length-4 numeric, margins around plot
 
-legend.mai: Margins around legend}
+legend.mai: Length-4 numeric, margins around legend}
 }
 \description{
 Generate default options for a Heatmap

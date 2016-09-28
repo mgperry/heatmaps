@@ -3,23 +3,10 @@
 \docType{class}
 \name{Heatmap-class}
 \alias{Heatmap-class}
-\alias{length,Heatmap-method}
-\alias{width,Heatmap-method}
 \title{An S4 class to represent a heatmap}
-\usage{
-\S4method{length}{Heatmap}(x)
-
-\S4method{width}{Heatmap}(x)
-}
 \description{
 An S4 class to represent a heatmap
 }
-\section{Methods (by generic)}{
-\itemize{
-\item \code{length}: Return the number of sequences in a heatmap
-
-\item \code{width}: Return the width of sequence represented in a heatmap
-}}
 \section{Slots}{
 
 \describe{

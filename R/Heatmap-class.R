@@ -45,14 +45,16 @@ setClass("Heatmap",
             metadata=list())
 )
 
-#' @describeIn Heatmap Return the number of sequences in a heatmap
+#' Return the number of sequences in a heatmap
+#' @param x A heatmap
 #' @export
 setMethod("length", signature="Heatmap", function(x) x@nseq)
 
 #' @importMethodsFrom BiocGenerics width
 NULL
 
-#' @describeIn Heatmap Return the width of sequence represented in a heatmap
+#' Return the width of sequence represented in a heatmap
+#' @param x A heatmap
 #' @importMethodsFrom BiocGenerics width
 #' @export
 setMethod("width", signature="Heatmap", function(x) x@coords[2] - x@coords[1])
@@ -105,6 +107,8 @@ seq(1, x@nseq, length.out=nrow(image(x)))
 })
 
 #' Return or set the scale in a Heatmap
+#' @param x A heatmap
+#' @param value Replacement value
 #' @name scale
 NULL
 
@@ -134,6 +138,8 @@ setMethod("scale<-", signature="Heatmap", function(x, value) {
 })
 
 #' Return or set the image in a Heatmap
+#' @param x A heatmap
+#' @param value Replacement value
 #' @name image
 NULL
 
@@ -160,6 +166,8 @@ setMethod("image<-", signature="Heatmap", function(x, value) {
 })
 
 #' Return or set the coords in a Heatmap
+#' @param x A heatmap
+#' @param value Replacement value
 #' @name coords
 NULL
 
@@ -189,6 +197,8 @@ setMethod("coords<-", signature="Heatmap", function(x, value) {
 })
 
 #' Return or set the label in a Heatmap
+#' @param x A heatmap
+#' @param value Replacement value
 #' @name label
 NULL
 
@@ -219,6 +229,8 @@ setMethod("label<-", signature="Heatmap", function(x, value) {
 })
 
 #' Return or set nseq in a Heatmap
+#' @param x A heatmap
+#' @param value Replacement value
 #' @name nseq
 NULL
 
@@ -244,6 +256,41 @@ setGeneric("nseq<-", def=function(x, value) standardGeneric("nseq<-"))
 #' @export
 setMethod("nseq<-", signature="Heatmap", function(x, value) {
     x@nseq = as.integer(value)
+    x
+})
+
+#' Return or set the metadata in a Heatmap
+#'
+#' This function can store arbitrary metadata in a list, if desired.
+#'
+#' @param x A heatmap
+#' @param value Replacement value
+#' @name metadata
+NULL
+
+#' @rdname metadata
+#' @export
+#' @examples
+#'
+#' data(HeatmapExamples)
+#' metadata(hm) = list(replicate=1, cell_line="ESC")
+#' metadata(hm)$replicate == 1
+setGeneric("metadata", def=function(x) standardGeneric("metadata"))
+
+#' @rdname metadata
+#' @export
+setMethod("metadata", signature="Heatmap", function(x) {
+    x@metadata
+})
+
+#' @rdname metadata
+#' @export
+setGeneric("metadata<-", def=function(x, value) standardGeneric("metadata<-"))
+
+#' @rdname metadata
+#' @export
+setMethod("metadata<-", signature="Heatmap", function(x, value) {
+    x@metadata = value
     x
 })
 

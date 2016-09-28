@@ -6,6 +6,7 @@
 #' @param weight Passed to coverage(track) constructor if class(track) == "GRanges"
 #' @param label Label for the heatmap
 #' @param nbin If set, number of bins to use across each window
+#' @param ... additional arguments used by methods
 #'
 #' This function generates a Heatmap object from a set of windows and an
 #' object containing genome-wide information about coverage. Either a GRanges

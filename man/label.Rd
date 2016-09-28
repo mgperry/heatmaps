@@ -16,6 +16,11 @@ label(x) <- value
 
 \S4method{label}{Heatmap}(x) <- value
 }
+\arguments{
+\item{x}{A heatmap}
+
+\item{value}{Replacement value}
+}
 \description{
 Return or set the label in a Heatmap
 }

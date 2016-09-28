@@ -14,6 +14,11 @@ image(x) <- value
 
 \S4method{image}{Heatmap}(x) <- value
 }
+\arguments{
+\item{x}{A heatmap}
+
+\item{value}{Replacement value}
+}
 \description{
 Return or set the image in a Heatmap
 }

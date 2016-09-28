@@ -16,6 +16,11 @@ coords(x) <- value
 
 \S4method{coords}{Heatmap}(x) <- value
 }
+\arguments{
+\item{x}{A heatmap}
+
+\item{value}{Replacement value}
+}
 \description{
 Return or set the coords in a Heatmap
 }

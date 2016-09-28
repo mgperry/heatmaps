@@ -28,6 +28,7 @@
 #' at to at least 150ppi, double the default of 72ppi on most systems.
 #'
 #' @seealso plotHeatmap heatmapOptions plot_legend
+#' @importFrom graphics layout par
 #' @export
 #' @examples
 #' data(HeatmapExamples)
@@ -119,6 +120,8 @@ plotHeatmapList = function(heatmap_list, groups=NULL, options=heatmapOptions(), 
 #'
 #' @seealso plotHeatmapList
 #' @importFrom plotrix color.legend
+#' @importFrom grDevices colorRamp rgb
+#' @importFrom graphics box
 #' @export
 #' @examples
 #' data(HeatmapExamples)

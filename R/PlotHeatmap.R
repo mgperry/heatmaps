@@ -17,6 +17,8 @@
 #'
 #' @export
 #' @seealso heatmapOptions plotHeatmapList
+#' @importFrom grDevices colorRamp colorRampPalette
+#' @importFrom graphics abline axis box grconvertX grconvertY lines text
 #' @examples
 #'
 #' data(HeatmapExamples)
@@ -25,6 +27,8 @@ setGeneric(name="plotHeatmap",
            def=function(heatmap, options=NULL, ...) standardGeneric("plotHeatmap")
 )
 
+#' @describeIn plotHeatmap Plot a Heatmap object to the device
+#' @export
 setMethod("plotHeatmap", signature="Heatmap",
     function(heatmap, options=NULL, ...) {
 
@@ -93,43 +97,21 @@ setMethod("plotHeatmap", signature="Heatmap",
 
 #' Generate default options for a Heatmap
 #'
-#' @param color A vector of colors (character)
-#' @param box.width Numeric
-#' @param x.ticks Logical
-#' @param tcl Numeric
-#' @param padj Numeric
-#' @param cex.axis Numeric
-#' @param scale Logical
-#' @param scale.lwd Numeric
-#' @param label Logical
-#' @param label.xpos Numeric
-#' @param label.ypos Numeric
-#' @param cex.label Numeric
-#' @param label.col A Color (character)
-#' @param legend Logical
-#' @param legend.width Numeric
-#' @param legend.ticks Integer
-#' @param legend.pos 'l' or 'r'
-#' @param cex.legend Numeric
-#' @param refline Logical
-#' @param refline.width Numeric
-#' @param transform Function or NA
-#' @param plot.mai Numeric length 4
-#' @param legend.mai Numeric length 4
+#' @param ... options to set manually
 #'
 #' Guide to Heatmap options
 #'
 #' This is an reference to all the possible options for plotting heatmaps.
 #' Some options are handled by heatmaps functions (either plotHeatmap or plotHeatmapList),
 #' others are passed directly to plotting functions. Further explanation is available in the
-#' vignette.
+#' vignette. Arguments are numeric if not otherwise stated.
 #'
 #' color: A vector of colors or a default color, see ?default_color. plotHeatmap will
 #'        interpolate between these colors to form a scale.
 #'
-#' box.width: The width of box around the heatmap, passed to box()
+#' box.width: width of box around the heatmap, passed to box()
 #'
-#' x.ticks: plot x axis ticks
+#' x.ticks: Logical, plot x axis ticks
 #'
 #' tcl: Length of x axis ticks
 #'
@@ -137,11 +119,11 @@ setMethod("plotHeatmap", signature="Heatmap",
 #'
 #' cex.axis: cex for axis labels
 #'
-#' scale: Plot scale or not
+#' scale: Logical, Plot scale or not
 #'
 #' scale.lwd: Width for line around scale
 #'
-#' label: Plot label or not
+#' label: Logical, plot label or not
 #'
 #' label.xpos: x position for label, from left
 #'
@@ -151,25 +133,25 @@ setMethod("plotHeatmap", signature="Heatmap",
 #'
 #' label.col: Color for label, white is often useful for dark plots
 #'
-#' legend: Plot legend (scale indicating values for colors)
+#' legend: Logical, plot legend (scale indicating values for colors)
 #'
 #' legend: Color for label, white is often useful for dark plots
 #'
-#' legend.pos: Position of legend relative to heatmap: 'l' for left, 'r' for right
+#' legend.pos: Character, position of legend relative to heatmap: 'l' for left, 'r' for right
 #'
-#' legend.ticks: Number of ticks to use in legend
+#' legend.ticks: Number of ticks to use on legend.
 #'
 #' cex.legend: cex to use for legend marks
 #'
-#' refline: Draw dashed line a coords = 0
+#' refline: Logical, Draw dashed line at coords = 0
 #'
 #' refline.width: Width of reference line
 #'
-#' transform: Transform values before plotting
+#' transform: Function to transform values before plotting
 #'
-#' plot.mai: Margins around plot
+#' plot.mai: Length-4 numeric, margins around plot
 #'
-#' legend.mai: Margins around legend
+#' legend.mai: Length-4 numeric, margins around legend
 #'
 #' @seealso plotHeatmap plotHeatmapList
 #' @export
@@ -196,8 +178,8 @@ heatmapOptions = function(...) {
         label.col='black',
         legend=FALSE,
         legend.width=0.2,
-        legend.ticks=5,
         legend.pos='l',
+        legend.ticks=5,
         cex.legend=2,
         refline=TRUE,
         refline.width=1,
@@ -205,6 +187,8 @@ heatmapOptions = function(...) {
         plot.mai=c(0.6, 0.3, 0.1, 0.3),
         legend.mai=c(0.6, 0.6, 0.1, 0.05)
     )
+    bad_names = names(opts)[!names(opts) %in% names(default)]
+    warning(paste("Arguments", bad_names, "are not heatmap options"))
     default[names(opts)] = opts
     return(default)
 }
@@ -225,6 +209,7 @@ make_x_ticks = function(coord) {
 #' rev(rainbow(9, start=0, end=4/6)), so it starts blue and ends with red).
 #'
 #' @importFrom RColorBrewer brewer.pal
+#' @importFrom grDevices rainbow
 #' @export
 #' @examples
 #' default_color("Blues")

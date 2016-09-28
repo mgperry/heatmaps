@@ -7,7 +7,9 @@
 getScale(x, y)
 }
 \arguments{
-\item{x, }{y Min and max values for the heatmap
+\item{x}{Min/max values for the heatmap}
+
+\item{y}{Min/max values for the heatmap
 
 This function takes min/max values for a heatmap and
 generates a scale either starting, ending or centered on

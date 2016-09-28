@@ -14,13 +14,7 @@ smooth(heatmap, ...)
 \arguments{
 \item{heatmap}{A heatmap object}
 
-\item{sigma}{Numeric, length 2}
-
-\item{output.ratio}{Numeric, length 2}
-
-\item{output.size}{Numeric, length 2}
-
-\item{method}{One of "auto", "kernel" or "blur"
+\item{...}{additional arguments to S4 methods
 
 This function smooths a heatmap using either binned kernel density
 (more efficient for binary heatmaps) or gaussian blur.
@@ -46,6 +40,14 @@ the matrix is either 1 or 0. For non-binary heatmaps, blur is most appropriate. 
 "auto" method will choose "kernel" for binary heatmaps and "blur" for any others.
 
 Scaling the output heatmap is handled as in CoverageHeatmap.}
+
+\item{sigma}{Numeric, length 2}
+
+\item{output.ratio}{Numeric, length 2}
+
+\item{output.size}{Numeric, length 2}
+
+\item{method}{One of "auto", "kernel" or "blur"}
 }
 \description{
 Smooth a heatmap

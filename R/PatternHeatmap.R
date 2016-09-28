@@ -5,6 +5,7 @@
 #' @param coords Co-ordinates for the heatmap, defaults to c(0, width(windows))
 #' @param min.score Minimum score for PWM match
 #' @param label Label for the heatmap
+#' @param ... additional arguments used by methods
 #'
 #' This function creates a Heatmap from a set of DNA sequences. The resulting
 #' heatmap will be binary, with 1 representing a match and 0 otherwise. Patterns
@@ -28,7 +29,7 @@ setGeneric(name="PatternHeatmap",
 )
 
 #' @describeIn PatternHeatmap Heatmap of sequence patterns from sequence and character
-#' @importFrom Biostrings vmatchPattern startIndex DNAStringSet
+#' @importFrom Biostrings vmatchPattern startIndex DNAStringSet start
 #' @importFrom Matrix sparseMatrix
 #' @export
 setMethod("PatternHeatmap",

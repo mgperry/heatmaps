@@ -11,6 +11,7 @@
 #' is required to smooth noisy signal.
 #'
 #' @export
+#' @importFrom graphics plot mtext legend axis lines
 #' @examples
 #' data(HeatmapExamples)
 #' plotHeatmapMeta(hm, color="steelblue")
@@ -41,11 +42,13 @@ plotHeatmapMeta = function(hm_list, binsize=1, colors=gg_col(length(hm_list)), a
     legend('topright', labels, bty="n", lty=1, lwd=2, col=colors)
 }
 
+#' @importFrom stats aggregate
 bin_heatmap = function(hm, breaks) {
     partition = data.frame(pos=xm(hm), value=colSums(image(hm)), bin=cut(xm(hm), breaks))
     aggregate(partition$value, sum, by=list(bin=partition$bin))$x
 }
 
+#' @importFrom grDevices hcl
 gg_col = function(n) {
     hues = seq(15, 375, length=n+1)
     hcl(h=hues, l=65, c=100)[1:n]

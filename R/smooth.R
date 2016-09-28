@@ -5,6 +5,7 @@
 #' @param output.ratio  Numeric, length 2
 #' @param output.size  Numeric, length 2
 #' @param method One of "auto", "kernel" or "blur"
+#' @param ... additional arguments to S4 methods
 #'
 #' This function smooths a heatmap using either binned kernel density
 #' (more efficient for binary heatmaps) or gaussian blur.
@@ -106,7 +107,8 @@ setMethod("smooth", signature(heatmap="Heatmap"),
 
 #' Make an appropriate scale for a heatmap
 #'
-#' @param x, y Min and max values for the heatmap
+#' @param x Min/max values for the heatmap
+#' @param y Min/max values for the heatmap
 #'
 #' This function takes min/max values for a heatmap and
 #' generates a scale either starting, ending or centered on

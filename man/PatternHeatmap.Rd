@@ -20,11 +20,7 @@ PatternHeatmap(seq, pattern, ...)
 
 \item{pattern}{A nucleotide pattern or PWM}
 
-\item{coords}{Co-ordinates for the heatmap, defaults to c(0, width(windows))}
-
-\item{min.score}{Minimum score for PWM match}
-
-\item{label}{Label for the heatmap
+\item{...}{additional arguments used by methods
 
 This function creates a Heatmap from a set of DNA sequences. The resulting
 heatmap will be binary, with 1 representing a match and 0 otherwise. Patterns
@@ -36,6 +32,12 @@ value, or more commonly as a percentage e.g. "80%". Refer to Biostrings document
 for details.
 
 PatternHeatmaps often look much better after smoothing.}
+
+\item{coords}{Co-ordinates for the heatmap, defaults to c(0, width(windows))}
+
+\item{min.score}{Minimum score for PWM match}
+
+\item{label}{Label for the heatmap}
 }
 \description{
 Generate a Heatmap of patterns in DNA sequence

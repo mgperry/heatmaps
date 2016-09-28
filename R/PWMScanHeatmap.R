@@ -4,6 +4,7 @@
 #' @param pwm A PWM
 #' @param coords Co-ordinates for the heatmap, defaults to c(0, width(windows))
 #' @param label Label for the heatmap
+#' @param ... additional arguments used by methods
 #'
 #' This function creates a heatmap where each point is the score of a PWM match
 #' starting from that position, which can visualise regions of enrichment or exclusion

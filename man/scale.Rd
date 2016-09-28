@@ -16,6 +16,11 @@ scale(x) <- value
 
 \S4method{scale}{Heatmap}(x) <- value
 }
+\arguments{
+\item{x}{A heatmap}
+
+\item{value}{Replacement value}
+}
 \description{
 Return or set the scale in a Heatmap
 }
