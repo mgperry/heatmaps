@@ -51,7 +51,7 @@ setMethod("plotHeatmap", signature="Heatmap",
     val[val < scale(heatmap)[1]] = scale(heatmap)[1]
     val[val > scale(heatmap)[2]] = scale(heatmap)[2]
 
-    image(xm(heatmap), ym(heatmap), z=t(val),
+    image(xm(heatmap), ym(heatmap), z=t(val)[,nrow(val):1],
           col=col_palette(256), breaks=breaks,
           xlim=c(0.5,width(heatmap)-0.5), # remove fluffy edges
           xlab="", ylab="",
