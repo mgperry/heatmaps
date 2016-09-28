@@ -65,24 +65,6 @@ cat("scale:", scale(object), "\n")
 cat("label:", label(object), "\n")
 })
 
-#' Reflect a heatmap in the y axis
-#'
-#' @param x A heatmap
-#' @export
-#' @examples
-#'
-#' data(HeatmapExamples)
-#' mirror(hm)
-setGeneric("mirror", def=function(x) standardGeneric("mirror"))
-
-#' @describeIn mirror Heatmap method
-#' @export
-setMethod("mirror", signature="Heatmap", function(x) {
-image(x) = t(apply(image(x), 1, rev))
-x@coords = -rev(x@coords)
-x
-})
-
 #' Reflect a heatmap in the x axis
 #'
 #' @param x A heatmap
