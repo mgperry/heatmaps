@@ -23,8 +23,7 @@
 #'
 #' @importFrom GenomicRanges coverage strand
 #' @importFrom GenomeInfoDb seqlevels
-#' @importFrom IRanges Views
-#' @importFrom genomation ScoreMatrixBin
+#' @importFrom IRanges Views revElements tile
 #' @export
 #' @examples
 #' data(HeatmapExamples)
@@ -42,17 +41,12 @@ def=function(windows, track, ...){
 setMethod("CoverageHeatmap",
 signature(windows = "GenomicRanges", track="GenomicRanges"),
     function(windows, track, coords=NULL, weight=1, label=NULL, nbin=0) {
-        # add bins, max.value ?
 
-        if (is.null(label)) label=deparse(substitute(track))
-        message(label)
-
-        if (!(length(unique(width(windows))) == 1)) {
-            stop("All sequences in the input DNAStringSet must have the same
-            length!")
-        }
+        w = unique(width(windows))
+        if (length(w) != 1) stop("All ranges in windows must have the same length!")
 
         if (is.null(coords)) coords = c(0, width(windows[1]))
+        if (is.null(label)) label=deparse(substitute(track))
 
         cov = coverage(track, weight=weight)
         hm = CoverageHeatmap(windows, cov, coords, label, nbin)
@@ -65,23 +59,23 @@ signature(windows = "GenomicRanges", track="GenomicRanges"),
 setMethod("CoverageHeatmap",
 signature(windows = "GenomicRanges", track="RleList"),
     function(windows, track, coords=NULL, label=NULL, nbin=0) {
-        # add bins, max.value ?
+
+        w = unique(width(windows))
+        if (length(w) != 1) stop("All ranges in windows must have the same length!")
 
         if (is.null(label)) label=deparse(substitute(track))
-
-        if (!(length(unique(width(windows))) == 1)) {
-            stop("All sequences in the input DNAStringSet must have the same
-            length!")
-        }
-
         if (is.null(coords)) coords = c(0, width(windows[1]))
 
+        neg = strand(windows) == "-"
+
         if (nbin==0) {
-            list_of_rle = windowViews(windows, track)
-            mat = do.call(rbind, lapply(list_of_rle, as.vector))
+            rle_list = track[windows]
+            rle_list[neg] = revElements(rle_list[neg])
+            mat = matrix(unlist(rle_list, use.names=FALSE), ncol=w, byrow=TRUE)
         } else if (nbin > 0) {
-            sm = ScoreMatrixBin(track, windows, nbin)
-            mat = as(sm, "matrix")
+            tiles = tile(windows, nbin)
+            tiles[neg] = revElements(tiles[neg])
+            mat = matrix(mean(track[unlist(tiles)]), ncol=nbin, byrow=TRUE)
         }
 
         hm = new(
@@ -95,15 +89,4 @@ signature(windows = "GenomicRanges", track="RleList"),
         return(hm)
     }
 )
-
-windowViews = function(gr, cov) {
-    ord = order(gr)
-    rnk = rank(gr)
-    gr = gr[ord]
-    chrs = intersect(names(cov), as.character(seqlevels(gr)))
-    myViews = Views(cov[chrs], as(gr, "RangesList")[chrs])
-    scores = unlist(lapply(myViews, as.list), recursive=FALSE)
-    scores = Map(function(x, s) if(s == "-") rev(x) else x, scores, as.vector(strand(gr)))
-    return(scores[rnk])
-}
 
