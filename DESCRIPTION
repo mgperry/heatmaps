@@ -1,11 +1,11 @@
 Package: heatmaps
 Title: Flexible Heatmaps for Functional Genomics and Sequence Features
-Version: 1.2.0
+Version: 0.99.0
 Date: 18-01-2016
 Author: Malcolm Perry <mgperry32@gmail.com>
 Maintainer: Malcolm Perry <mgperry32@gmail.com>
 Depends:
-    R (>= 3.4)
+    R (>= 3.3)
 Imports:
     Biostrings,
     GenomicRanges,
