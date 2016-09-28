@@ -203,8 +203,8 @@ heatmapOptions = function(...) {
         refline=TRUE,
         refline.width=1,
         transform=NA,
-        plot.mai=list(c(0.6, 0.3, 0.1, 0.3)),
-        legend.mai=list(c(0.6, 0.6, 0.1, 0.05))
+        plot.mai=c(0.6, 0.3, 0.1, 0.3),
+        legend.mai=c(0.6, 0.6, 0.1, 0.05)
     )
     default[names(opts)] = opts
     return(default)

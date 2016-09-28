@@ -2,7 +2,7 @@
 % Please edit documentation in R/PlotHeatmapList.R
 \name{plotHeatmapList}
 \alias{plotHeatmapList}
-\title{PLot a list of Heatmaps}
+\title{Plot a list of heatmaps}
 \usage{
 plotHeatmapList(heatmap_list, groups = NULL, options = heatmapOptions(),
   ...)
@@ -25,10 +25,11 @@ will try to guess the best scale, either starting or finishing at zero, or symet
 aronud zero - if this is not the desired behaviour, make sure the scales are
 identical before the heatmaps are passed to the function.
 
-Options are specified as for plotHeatmap, but can be specified per group.
-Some parameters can be passed as vectors, but care must be taken for parameters
-which are themselves vectors of length > 1, for example color palettes, which must
-be specified as lists. Examples of this are documented in the vignette.
+Options are specified as for plotHeatmap, but can be specified per group by passing
+a list of options instead of a single vector. Note the difference between a length-2
+character vector, c("Reds", "Blues"), and a list contatining two length-1 character
+vectors: list("Reds", "Blues").
+
 
 These are generally large, complex plots, so it can better to plot
 straight to a file. PNG is preferred since pdf files generated can be
@@ -38,11 +39,11 @@ using the options. For display-quality images, it helps to increase the resoluti
 at to at least 150ppi, double the default of 72ppi on most systems.}
 }
 \description{
-PLot a list of Heatmaps
+Plot a list of heatmaps
 }
 \examples{
 data(HeatmapExamples)
-plotHeatmapList(list(hm, hm2), groups=c(1,2), color=c("Reds", "Blues"))
+plotHeatmapList(list(hm, hm2), groups=c(1,2), color=list("Reds", "Blues"))
 }
 \seealso{
 plotHeatmap heatmapOptions plot_legend

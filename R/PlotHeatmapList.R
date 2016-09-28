@@ -1,4 +1,4 @@
-#' PLot a list of Heatmaps
+#' Plot a list of heatmaps
 #'
 #' @param heatmap_list A list of Heatmaps
 #' @param groups Optionally group heatmaps together
@@ -14,10 +14,11 @@
 #' aronud zero - if this is not the desired behaviour, make sure the scales are
 #' identical before the heatmaps are passed to the function.
 #'
-#' Options are specified as for plotHeatmap, but can be specified per group.
-#' Some parameters can be passed as vectors, but care must be taken for parameters
-#' which are themselves vectors of length > 1, for example color palettes, which must
-#' be specified as lists. Examples of this are documented in the vignette.
+#' Options are specified as for plotHeatmap, but can be specified per group by passing
+#' a list of options instead of a single vector. Note the difference between a length-2
+#' character vector, c("Reds", "Blues"), and a list contatining two length-1 character
+#' vectors: list("Reds", "Blues").
+#'
 #'
 #' These are generally large, complex plots, so it can better to plot
 #' straight to a file. PNG is preferred since pdf files generated can be
@@ -30,7 +31,7 @@
 #' @export
 #' @examples
 #' data(HeatmapExamples)
-#' plotHeatmapList(list(hm, hm2), groups=c(1,2), color=c("Reds", "Blues"))
+#' plotHeatmapList(list(hm, hm2), groups=c(1,2), color=list("Reds", "Blues"))
 plotHeatmapList = function(heatmap_list, groups=NULL, options=heatmapOptions(), ...) {
     if (class(heatmap_list) == "Heatmap") heatmap_list = list(heatmap_list) # allow single heatmap argument
     n_plots = length(heatmap_list)
@@ -46,7 +47,6 @@ plotHeatmapList = function(heatmap_list, groups=NULL, options=heatmapOptions(), 
     }
 
     n_groups = max(groups)
-    # message(paste("groups:", paste(groups, collapse=', '), "\ntotal:", n_groups, "groups"))
 
     for (i in 1:max(groups)) {
         group = which(groups == i)
@@ -59,19 +59,14 @@ plotHeatmapList = function(heatmap_list, groups=NULL, options=heatmapOptions(), 
         }
     }
 
-    # neater way of supplying group options
     dots = list(...)
     options[names(dots)] = dots
-    opt_lengths = lengths(options)
-    if (!all(opt_lengths %in% c(1, n_groups))) stop("supplied options must be length 1 or #groups")
+
     group_options = list()
+    option_lengths = lengths(Filter(is.list, options))
+    if (!all(option_lengths == n_groups)) stop("Options supplied as lists must have length equal to the number of groups")
     for (i in 1:n_groups) {
-        opt = options
-        extra_opts = opt[lengths(opt) == n_groups]
-        for (n in names(extra_opts)) {
-            opt[[n]] = extra_opts[[n]][i]
-        }
-        group_options[[i]] = lapply(opt, safe_unlist)
+        group_options[[i]] = lapply(options, function(x) if (is.list(x)) x[[i]] else x)
     }
 
     group_list = split(1:n_plots, groups)
@@ -98,28 +93,19 @@ plotHeatmapList = function(heatmap_list, groups=NULL, options=heatmapOptions(), 
         go = group_options[[i]]
         grp = group_list[[i]]
         if(go$legend == TRUE && go$legend.pos == 'l') {
-            par(mai=go$legend.mai[[1]])
+            par(mai=go$legend.mai)
             plot_legend(scale(heatmap_list[[grp[1]]]), go)
         }
         for (j in grp) {
             message(paste("plotting heatmap", go$label))
-            par(mai=go$plot.mai[[1]])
+            par(mai=go$plot.mai)
             plotHeatmap(heatmap_list[[j]], go)
         }
         if(go$legend == TRUE && go$legend.pos == 'r') {
-            par(mai=go$legend.mai[[1]])
+            par(mai=go$legend.mai)
             plot_legend(scale(heatmap_list[[grp[1]]]), go)
         }
     }
-}
-
-safe_unlist = function(x) {
-    for (i in seq_along(x)) {
-        if (is.list(x[[i]])) {
-            x[[i]] = x[[i]][[1]]
-        }
-    }
-    x
 }
 
 #' Plot a color legend for a heatmap

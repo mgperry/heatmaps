@@ -182,10 +182,10 @@ Having to set device parameters and plot heatmaps individually is hardly ideal, 
 heatmaps contains a function to help with this: `plotHeatmapList()`. Using this we can
 easily plot the CG dinucleotide plot alongside the CpG islands to see how they compare:
 
-```{r}
+```{r, fig.height=5, fig.width=5}
 cgi_hm_smooth = smooth(coverage_hm)
 scale(cgi_hm_smooth)[1] = 0
-plotHeatmapList(list(cg_hm_smooth, cgi_hm_smooth), color=c("Blues", "YlOrRd"))
+plotHeatmapList(list(cg_hm_smooth, cgi_hm_smooth), color=list("Blues", "YlOrRd"))
 ```
 
 We can see from this analysis that CpG Islands actually do quite a poor job of capturing
