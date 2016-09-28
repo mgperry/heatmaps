@@ -35,9 +35,7 @@
 #' @examples
 #' data(HeatmapExamples)
 #' hm_smoothed = smooth(hm, sigma=c(5,5), output.ratio=c(2,2), method="blur")
-setGeneric("smooth", function(heatmap, ...) {
-    StandardGeneric("smooth")
-})
+setGeneric("smooth", function(heatmap, ...) StandardGeneric("smooth"))
 
 #' @describeIn smooth Smooth a heatmap
 #' @export

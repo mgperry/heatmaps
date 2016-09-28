@@ -23,11 +23,8 @@
 #' data(HeatmapExamples)
 #' PatternHeatmap(string_set, "TA", coords=c(-100, 100), label="TA")
 #' PatternHeatmap(string_set, tata_pwm, coords=c(-100, 100), min.score="80%", label="TATA PWM")
-setGeneric(
-name="PatternHeatmap",
-def=function(seq, pattern, ...){
-        standardGeneric("PatternHeatmap")
-    }
+setGeneric(name="PatternHeatmap",
+           def=function(seq, pattern, ...) standardGeneric("PatternHeatmap")
 )
 
 #' @describeIn PatternHeatmap Heatmap of sequence patterns from sequence and character

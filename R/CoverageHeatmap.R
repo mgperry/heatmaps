@@ -28,11 +28,8 @@
 #' @examples
 #' data(HeatmapExamples)
 #' CoverageHeatmap(windows, rle_list, coords=c(-100, 100), label="Example")
-setGeneric(
-name="CoverageHeatmap",
-def=function(windows, track, ...){
-        standardGeneric("CoverageHeatmap")
-    }
+setGeneric(name="CoverageHeatmap",
+           def=function(windows, track, ...) standardGeneric("CoverageHeatmap")
 )
 
 

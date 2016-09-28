@@ -22,9 +22,8 @@
 #' data(HeatmapExamples)
 #' plotHeatmap(hm, color="Blues")
 setGeneric(name="plotHeatmap",
-           def=function(heatmap, options=NULL, ...) {
-    standardGeneric("plotHeatmap")
-})
+           def=function(heatmap, options=NULL, ...) standardGeneric("plotHeatmap")
+)
 
 setMethod("plotHeatmap", signature="Heatmap",
     function(heatmap, options=NULL, ...) {

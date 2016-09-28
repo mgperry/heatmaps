@@ -23,11 +23,8 @@
 #' @examples
 #' data(HeatmapExamples)
 #' plotPatternDensityMap(string_set, c("AT", "CG"), coords=c(-200, 200))
-setGeneric(
-    name="plotPatternDensityMap",
-    def=function(seq, patterns, ...) {
-            standardGeneric("plotPatternDensityMap")
-    }
+setGeneric(name="plotPatternDensityMap",
+           def=function(seq, patterns, ...) standardGeneric("plotPatternDensityMap")
 )
 
 #' @describeIn plotPatternDensityMap Plot heatmaps for several patterns in DNA sequence

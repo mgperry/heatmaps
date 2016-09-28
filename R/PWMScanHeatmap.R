@@ -14,11 +14,8 @@
 #' @examples
 #' data(HeatmapExamples)
 #' PatternHeatmap(string_set, tata_pwm, coords=c(-100, 100), label="TATA Scan")
-setGeneric(
-name="PWMScanHeatmap",
-def=function(seq, pwm, ...){
-    standardGeneric("PWMScanHeatmap")
-    }
+setGeneric(name="PWMScanHeatmap",
+           def=function(seq, pwm, ...) standardGeneric("PWMScanHeatmap")
 )
 
 #' @describeIn PWMScanHeatmap Heatmap of PWM Scores
