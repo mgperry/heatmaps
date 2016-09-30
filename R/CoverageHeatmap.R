@@ -69,10 +69,10 @@ signature(windows = "GenomicRanges", track="RleList"),
         if (nbin==0) {
             rle_list = track[windows]
             rle_list[neg] = revElements(rle_list[neg])
-            mat = matrix(unlist(rle_list, use.names=FALSE), ncol=w, byrow=TRUE)
+            mat = as.matrix(rle_list)
         } else if (nbin > 0) {
             tiles = tile(windows, nbin)
-            tiles[neg] = revElements(tiles[neg])
+            tiles[neg] = revElements(tiles[neg]) # window direction does not matter here
             mat = matrix(mean(track[unlist(tiles)]), ncol=nbin, byrow=TRUE)
         }
 
