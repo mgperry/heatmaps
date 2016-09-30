@@ -18,6 +18,8 @@
 #' If fine-grained control is desired, or you want to mix other plot types, then
 #' more information is available in the vignette.
 #'
+#' @return invisible(0)
+#'
 #' @seealso PatternHeatmap plotHeatmapList smooth
 #' @export
 #' @examples
@@ -57,6 +59,8 @@ signature(seq = "DNAStringSet"),
         }
 
         plotHeatmapList(heatmaps, groups=1, options)
+
+        invisible(0)
     }
 )
 

@@ -10,6 +10,9 @@
 \arguments{
 \item{x}{A heatmap}
 }
+\value{
+integer, value of x@nseq
+}
 \description{
 Return the number of sequences in a heatmap
 }

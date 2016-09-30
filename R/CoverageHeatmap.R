@@ -22,6 +22,8 @@
 #' over-emphasised. See ?getScale for details. The scale can be manually reset
 #' if desired using the "scale" method.
 #'
+#' @return A Heatmap object
+#'
 #' @importFrom GenomicRanges coverage strand
 #' @importFrom GenomeInfoDb seqlevels
 #' @importFrom IRanges Views revElements tile

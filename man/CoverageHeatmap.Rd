@@ -44,6 +44,9 @@ if desired using the "scale" method.}
 
 \item{nbin}{If set, number of bins to use across each window}
 }
+\value{
+A Heatmap object
+}
 \description{
 Generate a Heatmap of coverage
 }

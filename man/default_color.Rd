@@ -13,6 +13,9 @@ This function provides a convenient function to all color palettes from
 RColorBrewer, and a better version of R's rainbow function (specifically
 rev(rainbow(9, start=0, end=4/6)), so it starts blue and ends with red).}
 }
+\value{
+character, a length-9 color palette
+}
 \description{
 Predifined color palettes from RColorBrewer + Rainbow
 }

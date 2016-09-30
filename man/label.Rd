@@ -21,6 +21,9 @@ label(x) <- value
 
 \item{value}{Replacement value}
 }
+\value{
+character, value of hm@label
+}
 \description{
 Return or set the label in a Heatmap
 }

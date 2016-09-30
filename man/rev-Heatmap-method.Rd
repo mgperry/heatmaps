@@ -10,6 +10,9 @@
 \arguments{
 \item{x}{A heatmap}
 }
+\value{
+A heatmap
+}
 \description{
 Reflect a heatmap in the x axis
 }

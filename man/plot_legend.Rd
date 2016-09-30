@@ -15,6 +15,9 @@ This function plots a vertical color scale (or legend). With the default paramet
 it looks good at about 1/5 the width of a heatmap, about 1cm x 10cm. This
 function only plots the legend, it does not set margin parameters.}
 }
+\value{
+invisible(0)
+}
 \description{
 Plot a color legend for a heatmap
 }

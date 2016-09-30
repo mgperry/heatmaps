@@ -13,6 +13,9 @@ ym(x)
 \arguments{
 \item{x}{A Heatmap}
 }
+\value{
+numeric, a list of co-ordinates for plotting values in hm@image
+}
 \description{
 Generate co-ordinates for each column of the image matrix of a Heatmap
 }

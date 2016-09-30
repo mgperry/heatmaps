@@ -21,6 +21,9 @@ nseq(x) <- value
 
 \item{value}{Replacement value}
 }
+\value{
+integer, value of hm@nseq
+}
 \description{
 Return or set nseq in a Heatmap
 }

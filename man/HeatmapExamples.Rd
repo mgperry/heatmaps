@@ -27,6 +27,9 @@ tata_pwm
 
 windows
 }
+\value{
+invisible("HeatmapExamples")
+}
 \description{
 Generated Data for examples
 

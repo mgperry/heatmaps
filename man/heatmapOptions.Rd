@@ -63,6 +63,9 @@ plot.mai: Length-4 numeric, margins around plot
 
 legend.mai: Length-4 numeric, margins around legend}
 }
+\value{
+a list containing the specified options
+}
 \description{
 Generate default options for a Heatmap
 }

@@ -39,6 +39,9 @@ more information is available in the vignette.}
 
 \item{options}{Heatmap plotting options}
 }
+\value{
+invisible(0)
+}
 \description{
 Plot heatmaps for several patterns in DNA sequence
 }

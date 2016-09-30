@@ -21,6 +21,9 @@ coords(x) <- value
 
 \item{value}{Replacement value}
 }
+\value{
+integer, length 2, value of x@coords
+}
 \description{
 Return or set the coords in a Heatmap
 }

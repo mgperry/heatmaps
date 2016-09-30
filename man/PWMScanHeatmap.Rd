@@ -26,6 +26,9 @@ of certain motifs}
 
 \item{label}{Label for the heatmap}
 }
+\value{
+A heatmap
+}
 \description{
 Generate a Heatmap of PWM Scores in DNA sequnce
 }

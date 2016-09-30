@@ -24,6 +24,9 @@ Using this function avoids calling 'new' directly or manually setting coords and
 nseq to integers. Other constructors exist for creating heatmaps from data, rather
 than a raw matrix.}
 }
+\value{
+A Heatmap object
+}
 \description{
 Function to create a heatmap object
 }

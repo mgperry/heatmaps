@@ -47,14 +47,13 @@ setClass("Heatmap",
 
 #' Return the number of sequences in a heatmap
 #' @param x A heatmap
+#' @return integer, value of x@nseq
 #' @export
 setMethod("length", signature="Heatmap", function(x) x@nseq)
 
-#' @importMethodsFrom BiocGenerics width
-NULL
-
 #' Return the width of sequence represented in a heatmap
 #' @param x A heatmap
+#' @return integer
 #' @importMethodsFrom BiocGenerics width
 #' @export
 setMethod("width", signature="Heatmap", function(x) x@coords[2] - x@coords[1])
@@ -70,6 +69,7 @@ cat("label:", label(object), "\n")
 #' Reflect a heatmap in the x axis
 #'
 #' @param x A heatmap
+#' @return A heatmap
 #' @export
 setMethod("rev", signature="Heatmap", function(x) {
 image(x) = apply(image(x), 2, rev)
@@ -78,6 +78,7 @@ x
 
 #' Generate co-ordinates for each row of the image matrix of a Heatmap
 #' @param x A Heatmap
+#' @return numeric, a list of co-ordinates for plotting values in hm@image
 #' @export
 #' @examples
 #'
@@ -93,6 +94,7 @@ seq(1, width(x), length.out=ncol(image(x)))
 
 #' Generate co-ordinates for each column of the image matrix of a Heatmap
 #' @param x A Heatmap
+#' @return numeric, a list of co-ordinates for plotting values in hm@image
 #' @export
 #' @examples
 #'
@@ -109,6 +111,7 @@ seq(1, x@nseq, length.out=nrow(image(x)))
 #' Return or set the scale in a Heatmap
 #' @param x A heatmap
 #' @param value Replacement value
+#' @return numeric, length 2, the value of hm@scale
 #' @name scale
 NULL
 
@@ -140,6 +143,7 @@ setMethod("scale<-", signature="Heatmap", function(x, value) {
 #' Return or set the image in a Heatmap
 #' @param x A heatmap
 #' @param value Replacement value
+#' @return matrix, from hm@image
 #' @name image
 NULL
 
@@ -168,6 +172,7 @@ setMethod("image<-", signature="Heatmap", function(x, value) {
 #' Return or set the coords in a Heatmap
 #' @param x A heatmap
 #' @param value Replacement value
+#' @return integer, length 2, value of x@coords
 #' @name coords
 NULL
 
@@ -199,6 +204,7 @@ setMethod("coords<-", signature="Heatmap", function(x, value) {
 #' Return or set the label in a Heatmap
 #' @param x A heatmap
 #' @param value Replacement value
+#' @return character, value of hm@label
 #' @name label
 NULL
 
@@ -231,6 +237,7 @@ setMethod("label<-", signature="Heatmap", function(x, value) {
 #' Return or set nseq in a Heatmap
 #' @param x A heatmap
 #' @param value Replacement value
+#' @return integer, value of hm@nseq
 #' @name nseq
 NULL
 
@@ -261,10 +268,11 @@ setMethod("nseq<-", signature="Heatmap", function(x, value) {
 
 #' Return or set the metadata in a Heatmap
 #'
-#' This function can store arbitrary metadata in a list, if desired.
+#' Store arbitrary metadata in a list, if desired.
 #'
 #' @param x A heatmap
 #' @param value Replacement value
+#' @return list, value of hm@metadata
 #' @name metadata
 NULL
 
@@ -306,6 +314,8 @@ setMethod("metadata<-", signature="Heatmap", function(x, value) {
 #' Using this function avoids calling 'new' directly or manually setting coords and
 #' nseq to integers. Other constructors exist for creating heatmaps from data, rather
 #' than a raw matrix.
+#'
+#' @return A Heatmap object
 #'
 #' @seealso PatternHeatmap CoverageHeatmap PWMScanHeatmap
 #' @importFrom methods new

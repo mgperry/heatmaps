@@ -39,6 +39,9 @@ PatternHeatmaps often look much better after smoothing.}
 
 \item{label}{Label for the heatmap}
 }
+\value{
+A heatmap
+}
 \description{
 Generate a Heatmap of patterns in DNA sequence
 }

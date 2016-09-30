@@ -15,6 +15,9 @@ This function takes min/max values for a heatmap and
 generates a scale either starting, ending or centered on
 zero.}
 }
+\value{
+numeric, length 2, a new scale
+}
 \description{
 Make an appropriate scale for a heatmap
 }

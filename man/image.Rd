@@ -19,6 +19,9 @@ image(x) <- value
 
 \item{value}{Replacement value}
 }
+\value{
+matrix, from hm@image
+}
 \description{
 Return or set the image in a Heatmap
 }

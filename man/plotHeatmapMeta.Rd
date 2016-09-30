@@ -21,6 +21,9 @@ coordinates. A meta-region plot graphs the sum of the signal at each position in
 each heatmap rather than visualising the signal in two dimensions. Often binning
 is required to smooth noisy signal.}
 }
+\value{
+invisible(0)
+}
 \description{
 Plot a Meta-region plot from heatmaps
 }

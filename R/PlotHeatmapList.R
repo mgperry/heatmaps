@@ -27,6 +27,8 @@
 #' using the options. For display-quality images, it helps to increase the resolution
 #' at to at least 150ppi, double the default of 72ppi on most systems.
 #'
+#' @return invisible(0)
+#'
 #' @seealso plotHeatmap heatmapOptions plot_legend
 #' @importFrom graphics layout par
 #' @export
@@ -107,6 +109,8 @@ plotHeatmapList = function(heatmap_list, groups=NULL, options=heatmapOptions(), 
             plot_legend(scale(heatmap_list[[grp[1]]]), go)
         }
     }
+
+    invisible(0)
 }
 
 #' Plot a color legend for a heatmap
@@ -117,6 +121,8 @@ plotHeatmapList = function(heatmap_list, groups=NULL, options=heatmapOptions(), 
 #' This function plots a vertical color scale (or legend). With the default parameters,
 #' it looks good at about 1/5 the width of a heatmap, about 1cm x 10cm. This
 #' function only plots the legend, it does not set margin parameters.
+#'
+#' @return invisible(0)
 #'
 #' @seealso plotHeatmapList
 #' @importFrom plotrix color.legend
@@ -154,5 +160,7 @@ plot_legend <- function(scale, options) {
         color.legend(0, 0, 1, 7, legend=leg,
                      rect.col=color_palette,
                      align=align, gradient='y', cex=options$cex.legend)
+
+        invisible(0)
 }
 

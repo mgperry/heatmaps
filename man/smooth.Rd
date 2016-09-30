@@ -49,6 +49,9 @@ Scaling the output heatmap is handled as in CoverageHeatmap.}
 
 \item{method}{One of "auto", "kernel" or "blur"}
 }
+\value{
+A heatmap
+}
 \description{
 Smooth a heatmap
 }

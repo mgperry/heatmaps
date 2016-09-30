@@ -15,6 +15,8 @@
 #'
 #' See ?heatmapOptions for a full list of options.
 #'
+#' @return invisible(0)
+#'
 #' @export
 #' @seealso heatmapOptions plotHeatmapList
 #' @importFrom grDevices colorRamp colorRampPalette
@@ -93,6 +95,8 @@ setMethod("plotHeatmap", signature="Heatmap",
     if(options$refline){
         abline(v=(-heatmap@coords[1])+0.5, lty="dashed", lwd=options$refline.width)
     }
+
+    invisible(0)
 })
 
 #' Generate default options for a Heatmap
@@ -153,6 +157,7 @@ setMethod("plotHeatmap", signature="Heatmap",
 #'
 #' legend.mai: Length-4 numeric, margins around legend
 #'
+#' @return a list containing the specified options
 #' @seealso plotHeatmap plotHeatmapList
 #' @export
 #' @examples
@@ -207,6 +212,8 @@ make_x_ticks = function(coord) {
 #' This function provides a convenient function to all color palettes from
 #' RColorBrewer, and a better version of R's rainbow function (specifically
 #' rev(rainbow(9, start=0, end=4/6)), so it starts blue and ends with red).
+#'
+#' @return character, a length-9 color palette
 #'
 #' @importFrom RColorBrewer brewer.pal
 #' @importFrom grDevices rainbow

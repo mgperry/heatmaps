@@ -38,6 +38,9 @@ of about 5cm x 10cm per heatmap, but all of the relevant settigns can be tweaked
 using the options. For display-quality images, it helps to increase the resolution
 at to at least 150ppi, double the default of 72ppi on most systems.}
 }
+\value{
+invisible(0)
+}
 \description{
 Plot a list of heatmaps
 }

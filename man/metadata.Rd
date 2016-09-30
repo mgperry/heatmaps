@@ -21,8 +21,11 @@ metadata(x) <- value
 
 \item{value}{Replacement value}
 }
+\value{
+list, value of hm@metadata
+}
 \description{
-This function can store arbitrary metadata in a list, if desired.
+Store arbitrary metadata in a list, if desired.
 }
 \examples{
 

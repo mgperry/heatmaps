@@ -32,6 +32,8 @@
 #'
 #' Scaling the output heatmap is handled as in CoverageHeatmap.
 #'
+#' @return A heatmap
+#'
 #' @export
 #' @examples
 #' data(HeatmapExamples)
@@ -115,6 +117,7 @@ setMethod("smooth", signature(heatmap="Heatmap"),
 #' generates a scale either starting, ending or centered on
 #' zero.
 #'
+#' @return numeric, length 2, a new scale
 #' @export
 #' @examples
 #' getScale(0.5, 5) # c(0, 5)

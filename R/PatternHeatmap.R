@@ -18,6 +18,8 @@
 #'
 #' PatternHeatmaps often look much better after smoothing.
 #'
+#' @return A heatmap
+#'
 #' @seealso smooth
 #' @export
 #' @examples

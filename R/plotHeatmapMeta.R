@@ -10,6 +10,8 @@
 #' each heatmap rather than visualising the signal in two dimensions. Often binning
 #' is required to smooth noisy signal.
 #'
+#' @return invisible(0)
+#'
 #' @export
 #' @importFrom graphics plot mtext legend axis lines
 #' @examples

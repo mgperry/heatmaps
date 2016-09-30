@@ -10,6 +10,8 @@
 #' starting from that position, which can visualise regions of enrichment or exclusion
 #' of certain motifs
 #'
+#' @return A heatmap
+#'
 #' @seealso PatternHeatmap
 #' @export
 #' @examples

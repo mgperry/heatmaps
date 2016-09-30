@@ -28,6 +28,9 @@ set using plotHeatmapList() and the relevant options in heatmapOptions()
 
 See ?heatmapOptions for a full list of options.}
 }
+\value{
+invisible(0)
+}
 \description{
 Plot a Heatmap object to the device
 }

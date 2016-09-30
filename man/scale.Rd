@@ -21,6 +21,9 @@ scale(x) <- value
 
 \item{value}{Replacement value}
 }
+\value{
+numeric, length 2, the value of hm@scale
+}
 \description{
 Return or set the scale in a Heatmap
 }

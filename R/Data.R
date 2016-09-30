@@ -2,6 +2,7 @@
 #'
 #' Generated Data for examples
 #' @name HeatmapExamples
+#' @return invisible("HeatmapExamples")
 NULL
 
 #' An example heatmap
