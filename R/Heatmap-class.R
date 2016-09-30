@@ -308,6 +308,7 @@ setMethod("metadata<-", signature="Heatmap", function(x, value) {
 #' than a raw matrix.
 #'
 #' @seealso PatternHeatmap CoverageHeatmap PWMScanHeatmap
+#' @importFrom methods new
 #' @export
 #'
 #' @examples

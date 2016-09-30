@@ -45,8 +45,7 @@ function(seq, pwm, coords=NULL, label=NULL){
         min.score <- minScore(pwm)
         mat = (mat-min.score)/(max.score-min.score)*100
 
-        hm = new(
-            "Heatmap",
+        hm = Heatmap(
             image=mat,
             scale=c(0, 100),
             coords=as.integer(coords),

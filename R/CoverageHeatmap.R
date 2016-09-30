@@ -76,8 +76,7 @@ signature(windows = "GenomicRanges", track="RleList"),
             mat = matrix(mean(track[unlist(tiles)]), ncol=nbin, byrow=TRUE)
         }
 
-        hm = new(
-            "Heatmap",
+        hm = Heatmap(
             image=mat,
             scale=getScale(min(mat), max(mat)),
             coords=as.integer(coords),

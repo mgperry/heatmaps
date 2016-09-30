@@ -43,6 +43,7 @@ setGeneric("smooth", function(heatmap, ...) StandardGeneric("smooth"))
 #' @importFrom spatstat blur im
 #' @importFrom EBImage resize
 #' @importFrom KernSmooth bkde2D
+#' @importFrom methods as
 #' @importClassesFrom Matrix sparseMatrix
 #' @importMethodsFrom Matrix summary
 setMethod("smooth", signature(heatmap="Heatmap"),
