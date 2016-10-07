@@ -42,7 +42,22 @@ setClass("Heatmap",
             coords=c(0L,0L),
             nseq=0L,
             label="",
-            metadata=list())
+            metadata=list()),
+        validity=function(object) {
+            errors = character()
+            if (length(scale(object)) != 2) {
+                errors = c(errors, "Scale should be length 2")
+            }
+            if (length(coords(object)) != 2) {
+                errors = c(errors, "coords should be length 2")
+            }
+            if (length(nseq(object)) != 1) {
+                errors = c(errors, "nseq should be length 1")
+            }
+            if (length(label(object)) != 1) {
+                errors = c(errors, "label should be length 1")
+            }
+            if (length(errors) == 0) TRUE else errors }
 )
 
 #' Return the number of sequences in a heatmap
