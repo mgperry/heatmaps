@@ -1,5 +1,5 @@
 ---
-title: "heatmaps vignette"
+title: "heatmaps User Guide"
 author: "Malcolm Perry"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
