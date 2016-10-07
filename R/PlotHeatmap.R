@@ -193,7 +193,7 @@ heatmapOptions = function(...) {
         legend.mai=c(0.6, 0.6, 0.1, 0.05)
     )
     bad_names = names(opts)[!names(opts) %in% names(default)]
-    warning(paste("Arguments", bad_names, "are not heatmap options"))
+    if (length(bad_names) > 0) warning(paste("Arguments", bad_names, "are not heatmap options"))
     default[names(opts)] = opts
     return(default)
 }
