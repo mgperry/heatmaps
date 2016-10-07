@@ -100,7 +100,7 @@ plotHeatmapList = function(heatmap_list, groups=NULL, options=heatmapOptions(), 
             plot_legend(scale(heatmap_list[[grp[1]]]), go)
         }
         for (j in grp) {
-            message(paste("plotting heatmap", go$label))
+            message(paste("plotting heatmap", label(heatmap_list[[j]])))
             par(mai=go$plot.mai)
             plotHeatmap(heatmap_list[[j]], go)
         }
