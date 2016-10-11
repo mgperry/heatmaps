@@ -2,8 +2,8 @@
 #'
 #' @param heatmap A heatmap object
 #' @param sigma Numeric, length 2
-#' @param output.ratio  Numeric, length 2
-#' @param output.size  Numeric, length 2
+#' @param output.ratio  Numeric, length 2, c(x, y)
+#' @param output.size  Numeric, length 2, c(x, y)
 #' @param method One of "auto", "kernel" or "blur"
 #' @param ... additional arguments to S4 methods
 #'
@@ -82,6 +82,7 @@ setMethod("smooth", signature(heatmap="Heatmap"),
             resize_img = FALSE
             output.size = rev(dim(image(heatmap)))
         } else {
+            output.size = rev(output.size)
             resize_img = TRUE
         }
     }
