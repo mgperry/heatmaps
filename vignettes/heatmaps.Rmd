@@ -1,0 +1,407 @@
+---
+title: "heatmaps vignette"
+author: "Malcolm Perry"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+# heatmaps
+
+## Flexible plotting of Functional Genomics data + Sequence features
+
+This package provides simple functions for plotting heatmaps over sets 
+of genomic windows. 
+
+This vignette is an example workflow using ChIP-seq data
+in zebrafish: the *User Guide* contains detailed information on the package
+internals if you want fine-grained control of your plots or to develop tools
+which use parts of the package.
+
+First things first, load the `heatmaps` package:
+
+```{r load_heatmaps, message=FALSE, warning=FALSE}
+library(heatmaps)
+```
+
+## Reading in Data
+
+`heatmaps` is written using  core Bioconductor packages, so reading in data can
+be easily accomplished with the standard tools. 
+
+Here we read in a set of zebrafish promoters from a 30% Epiboly (30p) embryo,
+defined using CAGE data, and corresponding H3K4me3 ChIP-seq data:
+
+```{r data_1, message=FALSE, warning=FALSE}
+library(rtracklayer)
+library(GenomicRanges)
+library(BSgenome.Drerio.UCSC.danRer7)
+
+heatmaps_file = function(fn) system.file("extdata", fn, package="heatmaps")
+
+zf_30p_promoters = import(heatmaps_file("30pEpi_proms.bed"), genome=seqinfo(Drerio))
+
+h3k4me3_30p_pos = readRDS(heatmaps_file("H3K4me3_30p_pos.rds"))
+h3k4me3_30p_neg = readRDS(heatmaps_file("H3K4me3_30p_neg.rds"))
+h3k4me3_30p = h3k4me3_30p_pos + h3k4me3_30p_neg
+```
+
+## Plotting Functional Genomics Data
+
+Many kinds of functional genomics data, such as ChIP-seq, RNA-seq or
+DNase-seq can be visualised as 'coverage' tracks. In UCSC, these would
+be wig, bigWig or bedGraph files.
+
+First, we need to create our windows. We can create another `GRanges` object
+which contains 500bp either side of our promoters, using the `promoters`
+function in `GenomicRanges`. Unfortunately, some of the resulting ranges
+go off the end of a chromosome and so must be dropped: this is done
+by testing the width of the trimmed object.
+
+The `CoverageHeatmap` function creates a heatmap object from a `GRanges` object
+or an `RleList`. If we are using a `GRanges` object then the weight
+can be specified. Internally, this is passed to the `coverage` function from
+`GenomicRanges`. In the example we are working with `RleList`s, which are
+returned by the `coverage` function.
+
+All heatmaps contain a `coords` slot, which lets `plotHeatmap` know how to
+plot the co-ordinates on the x-axis: very often, our plots will be centered
+on some feature rather than starting from zero on the x axis. The `label`
+slot is optional, and is displayed in the top left-hand corner of the plot
+by default, if present.
+
+```{r coverage_heatmap}
+coords=c(-500, 500)
+
+windows_30p = promoters(zf_30p_promoters, -coords[1], coords[2])
+windows_30p = windows_30p[width(trim(windows_30p)) == 1000]
+h3k4me3_30p_heatmap = CoverageHeatmap(
+    windows_30p, 
+    h3k4me3_30p, 
+    coords=coords, 
+    label="H3K4me3 30p")
+
+```
+
+The `plotHeatmapList` function will plot the returned heatmap object to the
+active device. This function also allows multiple plots to be plotted at the
+same time, and sets the device margins. It is usually easier to `plotHeatmapList`
+rather than `plotHeatmap` directly.
+
+Options for plotting can be passed to `plotHeatmapList` function. Here, we set
+the label text size (`cex.label`) to be smaller than the default, and use the
+default color scheme from `RColorBrewer`. A complete list of color schemes is
+available using the command `RColorBrewer::display.brewer.all()`, or on the
+[ColorBrewer website](http://colorbrewer2.org/).
+
+```{r plot_coverage_heatmap, fig.height=6, fig.width=3}
+plotHeatmapList(h3k4me3_30p_heatmap, cex.label=1, color="Greens")
+```
+
+Another way of visualising this signal is using a meta-region plot. This
+is effectively just a sum over the 'columns' of a heatmap.
+
+```{r plot_meta, fig.height=8, fig.width=8}
+plotHeatmapMeta(h3k4me3_30p_heatmap)
+```
+
+We can see from this picture that there is an enrichment of H3K4me3 signal
+downstream of the promoters. It appears to have some kind of phase, but
+it's not very clear what's happening.
+
+If we subtract negative strand reads from positive strand reads, a better
+picture starts to emerge.
+
+It is very easy to specify custom color schemes in `heatmaps`. If a
+vector of colors is supplied (in any format R understands), then
+they are interpolated by `colorRamp`.
+
+When we are using non-obvious color schemes, it can help to plot a
+legend describing the value of the colors. This is handled automatically
+by `plotHeatmapList` if the option `legend=TRUE` is set.
+
+```{r subtracted, fig.height=6, fig.width=4}
+h3k4me3_30p_subtracted = h3k4me3_30p_pos - h3k4me3_30p_neg
+
+h3k4me3_30p_subtracted_hm = CoverageHeatmap(
+    windows_30p, 
+    h3k4me3_30p_subtracted, 
+    coords=coords, 
+    label="Phase")
+
+scale(h3k4me3_30p_subtracted_hm) = c(-150, 150)
+
+plotHeatmapList(h3k4me3_30p_subtracted_hm, cex.label=1.5, color=c("red", "white", "blue"), legend=TRUE)
+```
+
+## Plotting Sequence Features
+
+`heatmaps` also contains convenient functions to plot sequence features, such as
+kmer content or PWM matches, or genomic windows.
+
+First we extract the sequence associated with our windows:
+
+```{r get_seq}
+seq_30p = getSeq(Drerio, windows_30p)
+```
+
+Now we can use the function `PatternHeatmap` to extract patterns from our sequence.
+We can specify either kmers, including ambiguity codes, or using PWMs.
+
+```{r pattern_heatmap, fig.height=6, fig.width=3}
+ta_30p = PatternHeatmap(seq_30p, "TA", coords=coords)
+plotHeatmapList(ta_30p)
+```
+
+This heatmap is difficult to see patterns in because the points are binary and
+the data is sparse. `heatmaps` provides a function to smooth this data. It also
+lets us resize the image so that our plots don't take ages to plot. If we plotted
+every point individually, the result would be much higher resolution than could possibly
+fit onscreen. `output.size` specifies the dimensions of the output image matrix.
+
+The `method` argument specifies the smoothing method. Specifying "kernel" uses
+the `bkde2D` function from the package `KernSmooth`. In this case, because we
+are using binary data, this method would be chosen automatically.
+
+```{r smoothing, fig.height=6, fig.width=3}
+ta_30p_smoothed = smooth(ta_30p, output.size=c(250, 500), method="kernel")
+plotHeatmapList(ta_30p_smoothed)
+```
+
+Using PWMs instead of kmers is very similar, except we also have to specify
+a minimum match score. This can either be absolute or expressed as a percentage
+(see `?Biostrings::matchPWM` for details).
+
+```{r pwm_pattern_hm, warning=FALSE, fig.height=6, fig.width=3}
+example_data = new.env()
+data(HeatmapExamples, envir=example_data)
+tata_pwm = get("tata_pwm", example_data)
+
+tata_pwm_30p = PatternHeatmap(seq_30p, tata_pwm, coords=coords, label="TATA", min.score="60%")
+plotHeatmapList(smooth(tata_pwm_30p, output.size=c(250, 500)))
+```
+
+An alternative way to visualise PWMs is to plot the score at every point, which
+is what the function `PWMScanHeatmap` does. It's also useful to smooth the
+output of this function, except this time, because we have continuous rather
+than binary data, a Gaussian blur is used (`EBImage::blur`). Again, this would
+be chosen automatically in this particular case.
+
+Because PWMScanHeatmap can produce some very high and very low values, it's
+visually often better to centre the scale around the mean value (as defined
+in percentages) before plotting, rather than from 0 to 100, or just the
+min/max values in the heatmap.
+
+```{r pwm_scan_hm, warning=FALSE, fig.height=6, fig.width=4}
+tata_pwm_scan_30p = PWMScanHeatmap(seq_30p, tata_pwm, coords=coords, label="TATA")
+tata_pwm_scan_30p_smoothed = smooth(tata_pwm_scan_30p, method="blur", output.size=c(250, 500))
+scale(tata_pwm_scan_30p_smoothed) = c(40, 60)
+plotHeatmapList(tata_pwm_scan_30p_smoothed, color="Spectral", legend=TRUE)
+```
+
+## Plotting lists of plots
+
+We have so been using `plotHeatmapList` to plot individual plots, because
+it automatically controls the device for use. As its name suggests, we
+can also plot lists of plots together using this function.
+
+In order to normalise signals between heatmaps, we can specify groups
+of related plots to `plotHeatmapList` which will normalise the scales
+and display settings. In this example we normalise our "AT" and "CG"
+plots, because these occur at different frequencies. The `groups`
+parameter takes anything interpretable as a factor - just specifying
+numbers is usually the easiest option.
+
+We can specify options for all plots at once, or on a per-group basis.
+This works by passing a list of options, rather than a vector. Note that
+for colors (among others), a list (e.g. `list("red", "white", "blue")` has
+a very different meaning to the vector (`c("red", "white", "blue")`) that
+we used in an earlier example.
+
+The resulting plots shows how "TA" and "CG" content contribute to "TATA"
+binding potential, as well as promoter H3K4me3, around promoters.
+
+```{r lists, fig.height=6, fig.width=12}
+cg_30p = PatternHeatmap(seq_30p, "CG", coords=coords)
+cg_30p_smoothed = smooth(cg_30p, output.size=c(250, 500))
+
+hm_list = list(
+    ta_30p_smoothed,
+    cg_30p_smoothed,
+    tata_pwm_scan_30p_smoothed,
+    smooth(h3k4me3_30p_heatmap, output.size=c(250, 500))
+)
+
+plotHeatmapList(hm_list, 
+                groups=c(1, 1, 2, 3),
+                color=list("Blues", "Spectral", "Greens"),
+                cex.label=list(2, 2, 1.25))
+```
+
+## Plotting to file
+
+Heatmaps can take a long time to plot, so it is usually best to plot straight
+to a file rather than to the R graphics device (although this works fine, and
+is reasonably quick if you smooth the plots). The default settings for margin
+sizes, text size etc. are aimed at creating plots which are around 10cm x 20cm
+(per heatmap), or 4 in by 8 in, as this also looks good on the R graphics
+device. 
+
+PNG is recommended, since PDFs can end up being massive files if care is not
+taken reducing the image size. When using the PNG device to produce high quality
+images (which would be suitable for printing), it's helpful to set the size
+in real-world units (rather than pixels) and then increase the resolution above
+the default 72ppi, since this produced high-res plots without the scaling issues
+than come with specifying pixel sizes.
+
+```{r plot_to_file, eval=FALSE}
+png("heatmap_list.png", height=20, width=40, units="cm", res="150")
+
+plotHeatmapList(list(ta_30p_smoothed, cg_30p_smoothed, smooth(h3k4me3_30p_heatmap), tata_pwm_scan_30p_smoothed), 
+                groups=c(1, 1, 2, 3),
+                color=list("Blues", "Spectral", "Greens"),
+                cex.label=list(1.25, 2, 2))
+
+dev.off()
+```
+
+## More Complex Plots
+
+The examples above should give an indication of how publication quality figures can
+be made from most data types and easily plotted in any format. However, `heatmaps` was
+also designed to be more flexible than that, so complex, publication-ready figures can
+be generated programmatically rather than painstakingly edited in Illustrator or
+Inkscape. This improves redproducibility, and save a lot of time in cases where the
+data change, or the same operation is carried out repeatedly.
+
+The following example is taken from Haberle et al, 2014, Nature.
+
+<!-- explain data -->
+
+```{r complex_data}
+zf_24h_promoters = import(heatmaps_file("24h_proms.bed"), genome=seqinfo(Drerio))
+windows_24h = promoters(zf_24h_promoters, 500, 500)
+windows_24h = windows_24h[width(trim(windows_24h)) == 1000]
+seq_24h = getSeq(Drerio, windows_24h)
+seq_30p = rev(seq_30p)
+seq_24h = rev(seq_24h)
+```
+
+Since we're going to be making several `PatternHeatmap`s and smoothing them,
+we first create a function to do this quickly.
+
+```{r complex_heatmaps, width=9, height=8, warning=FALSE}
+SmoothPatternHM = function(seq, pattern, ...) {
+    hm = PatternHeatmap(seq, pattern, ...)
+    smooth(hm, output.size=c(200, 200))
+}
+
+hm_list = list(
+    ta_30p=SmoothPatternHM(seq_30p, "TA", coords=coords),
+    cg_30p=SmoothPatternHM(seq_30p, "CG", coords=coords),
+    ta_24h=SmoothPatternHM(seq_24h, "TA", coords=coords),
+    cg_24h=SmoothPatternHM(seq_24h, "CG", coords=coords)
+)
+
+```
+
+We're not using `plotHeatmapList`, so our scales won't be normalised
+automatically.
+
+```{r complex_scale}
+scale = c(0, max(sapply(hm_list, scale)))
+for(n in names(hm_list)) {
+    scale(hm_list[[n]]) = scale
+}
+
+```
+
+We can set options for top and bottom plots separately. If we want
+to pass options to a `plotHeatmap` from a list (rather than typing
+them out in the function call), we must pass all available options
+as a list. (The function only looks at dots (`...`) if the options
+argument is empty). To save us setting all the default options 
+manually, `heatmapOptions` creates a full list with the specified
+changes. 
+
+Here we want the top plots to have white labels to stand
+out from the background, and no x ticks since they will be present
+in the bottom plot. We specify slightly larger x-axis labels than
+the default.
+
+```{r complex_opts}
+upperOpts = heatmapOptions(
+    label.col="white",
+    x.ticks=FALSE
+)
+
+lowerOpts = heatmapOptions(
+    cex.axis=1.5
+)
+
+```
+
+We also need to specify the margins for our plots, which will be 
+different depending on which part of the final image they occupy.
+the total margins for each plot are the same so that each heatmap
+will be the same size. 
+
+```{r complex margins}
+margins = list(
+    topleft = c(0.1, 0.3, 1, 0.2),
+    topright = c(0.1, 0.2, 1, 0.3),
+    bottomleft = c(1, 0.3, 0.1, 0.2),
+    bottomright = c(1, 0.2, 0.1, 0.3)
+)
+
+```
+
+Finally we can get to the actual plotting. The layout is specified to have a narrow column on the right for a legend.
+
+We have to set the parameters before each call to `plotHeatmap`.
+
+Plotting additional features to the canvas is easy. The coordinates in use are
+calculated as follows:
+
+1 sequence or window in the original heatmap is one unit along the y axis.
+
+1 bp in the original sequence or windows is one unit along the x axis.
+
+The bottom left corner is (0, 0), so to label a particular window on the y axis
+the reverse index `(nseq - index)` is used, and for bp along the x axis are
+calculated from `-coords(hm)[1]`.
+
+`par(xpd=TRUE/FALSE)` is used to allow plotting of the colored triangles outside
+the normal plotting regions, and has to be reset otherwise the reference lines
+at x=0 will be plotted outside the canvas as well. 
+
+```{r complex_plot, fig.height=8, fig.width=9, fig.keep="last"}
+layout(matrix(c(1:3, 1, 4, 5), nrow=2, byrow=TRUE), width=c(0.25, 1, 1))
+
+par(mai=c(3, 0.7, 3, 0.05))
+plot_legend(scale, options=upperOpts)
+
+par(mai=margins$topleft)
+plotHeatmap(hm_list$ta_30p, options=upperOpts)
+par(xpd=TRUE); points(470, 8480, pch=25, cex=2.5, lwd=2, bg="blue"); par(xpd=FALSE)
+
+par(mai=margins$topright)
+plotHeatmap(hm_list$ta_24h, options=upperOpts)
+par(xpd=TRUE); points(550, 8480, pch=25, cex=2.5, lwd=2, bg="red"); par(xpd=FALSE)
+
+par(mai=margins$bottomleft)
+plotHeatmap(hm_list$cg_30p, options=lowerOpts)
+mtext("Distance to maternal CTSS (bp)", side=1, line=3, cex=1.2)
+
+par(mai=margins$bottomright)
+plotHeatmap(hm_list$cg_24h, options=lowerOpts)
+mtext("Distance to maternal CTSS (bp)", side=1, line=3, cex=1.2)
+points(c(680, 860), c(7000, 7000), pch=8, lwd=3, cex=2.5)
+
+```
+
+Et voila! A full figure for a paper produced entirely from R.
+
