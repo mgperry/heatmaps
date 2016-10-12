@@ -80,7 +80,7 @@ setMethod("smooth", signature(heatmap="Heatmap"),
     } else {
         if (is.null(output.size)) {
             resize_img = FALSE
-            output.size = rev(dim(image(heatmap)))
+            output.size = dim(image(heatmap))
         } else {
             output.size = rev(output.size)
             resize_img = TRUE
