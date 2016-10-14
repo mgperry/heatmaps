@@ -43,9 +43,9 @@ Scaling the output heatmap is handled as in CoverageHeatmap.}
 
 \item{sigma}{Numeric, length 2}
 
-\item{output.ratio}{Numeric, length 2}
+\item{output.ratio}{Numeric, length 2, c(x, y)}
 
-\item{output.size}{Numeric, length 2}
+\item{output.size}{Numeric, length 2, c(x, y)}
 
 \item{method}{One of "auto", "kernel" or "blur"}
 }
