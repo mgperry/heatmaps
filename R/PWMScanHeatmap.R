@@ -35,17 +35,18 @@ function(seq, pwm, coords=NULL, label=NULL){
 
         if (is.null(coords)) coords = c(0, length(seq[1]))
 
-        scanning.score.list <- lapply(seq, function(x){
-           PWMscoreStartingAt(pwm = pwm, subject = x,
-                               starting.at = c(1:(length(seq[[1]]) - ncol(pwm + 1))))
-        })
-        mat <- do.call(rbind, scanning.score.list)
-        mat[mat < minScore(pwm)] <- minScore(pwm)
+        # new fast way
+        w = width(seq[1])
+        columns = w - ncol(pwm)
+        bp = length(seq)*width(seq)[[1]]
+        scores = PWMscoreStartingAt(pwm, unlist(seq), starting.at = c(1:(bp-ncol(pwm))))
+        mat = matrix(c(scores, rep(0, ncol(pwm))), ncol=width(seq), byrow=TRUE)
 
         # normalise to avoid < zero values
         max.score <- maxScore(pwm)
         min.score <- minScore(pwm)
         mat = (mat-min.score)/(max.score-min.score)*100
+        mat[,columns] = 50 # set irrelevant columns to average
 
         hm = Heatmap(
             image=mat,

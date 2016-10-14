@@ -134,7 +134,7 @@ h3k4me3_30p_subtracted_hm = CoverageHeatmap(
 
 scale(h3k4me3_30p_subtracted_hm) = c(-150, 150)
 
-plotHeatmapList(h3k4me3_30p_subtracted_hm, cex.label=1.5, color=c("red", "white", "blue"), legend=TRUE)
+plotHeatmapList(h3k4me3_30p_subtracted_hm, cex.label=1.5, color=c("red", "white", "blue"), legend=TRUE, legend.width=0.3)
 ```
 
 ## Plotting Sequence Features
@@ -199,7 +199,7 @@ min/max values in the heatmap.
 tata_pwm_scan_30p = PWMScanHeatmap(seq_30p, tata_pwm, coords=coords, label="TATA")
 tata_pwm_scan_30p_smoothed = smooth(tata_pwm_scan_30p, method="blur", output.size=c(250, 500))
 scale(tata_pwm_scan_30p_smoothed) = c(40, 60)
-plotHeatmapList(tata_pwm_scan_30p_smoothed, color="Spectral", legend=TRUE)
+plotHeatmapList(tata_pwm_scan_30p_smoothed, color="Spectral", legend=TRUE, legend.width=0.3)
 ```
 
 ## Plotting lists of plots

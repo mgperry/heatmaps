@@ -77,10 +77,11 @@ plotHeatmapList = function(heatmap_list, groups=NULL, options=heatmapOptions(), 
     if (options$legend == TRUE) {
         widths = numeric(0)
         for (i in 1:length(group_list)) {
+            legend.width = group_options[[i]]$legend.width
             if (group_options[[i]]$legend.pos == 'l') {
-                widths = c(widths, 0.2, rep(1, length(group_list[[i]])))
+                widths = c(widths, legend.width, rep(1, length(group_list[[i]])))
             } else if (group_options[[i]]$legend.pos == 'r') {
-                widths = c(widths, rep(1, length(group_list[[i]])), 0.2)
+                widths = c(widths, rep(1, length(group_list[[i]])), legend.width)
             }
         }
         mat = t(1:length(widths))
@@ -149,7 +150,7 @@ plot_legend <- function(scale, options) {
         color_palette = rgb(col_ramp(values)/256)
         align = ifelse(options$legend.pos=='l', 'lt', 'rb')
         leg = rep('', 256)
-        leg[seq(1, 256, length.out=ticks)] = formatC(seq(scale[1], scale[2], length.out=ticks), format='f', digits=2)
+        leg[seq(1, 256, length.out=ticks)] = formatC(seq(scale[1], scale[2], length.out=ticks), format='g', digits=3)
         plot(1, 1,
              type='n', bty='n',
              xaxt='n', yaxt='n',

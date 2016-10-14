@@ -31,8 +31,7 @@ setGeneric(name="PatternHeatmap",
 )
 
 #' @describeIn PatternHeatmap Heatmap of sequence patterns from sequence and character
-#' @importFrom Biostrings vmatchPattern startIndex DNAStringSet start
-#' @importFrom Matrix sparseMatrix
+#' @importFrom Biostrings matchPattern startIndex DNAStringSet start
 #' @export
 setMethod("PatternHeatmap",
 signature(seq = "DNAStringSet", pattern="character"),
@@ -52,16 +51,11 @@ signature(seq = "DNAStringSet", pattern="character"),
 
         seq <- DNAStringSet(gsub("N", "+", seq)) # avoid matching Ns
 
-        pattern.matches <- vmatchPattern(pattern=pattern, subject=seq, fixed=FALSE)
-        pattern.starts <- startIndex(pattern.matches)
-        pattern.starts.ul <- unlist(pattern.starts) + floor(length(pattern)/2)
-
-        sm = sparseMatrix(
-            i = rep(1:length(pattern.starts), lengths(pattern.starts)),
-            j = pattern.starts.ul,
-            dims = c(length(seq), width(seq)[1]))
-
-        mat = as.matrix(sm)*1
+        bp = width(seq[1])*length(seq)
+        st = start(matchPattern(pattern, unlist(seq), fixed=FALSE))
+        vec = numeric(bp)
+        vec[st] = 1
+        mat = matrix(vec, nrow=length(seq), byrow=TRUE)
 
         hm = Heatmap(
             image=mat,
@@ -89,17 +83,11 @@ function(seq, pattern, coords=NULL, min.score="80%", label=NULL) {
         if (is.null(coords)) coords = c(0, width(seq[1]))
         if (is.null(label)) label = "pwm"
 
-        pattern.starts <- lapply(seq, function(x) {
-            start(matchPWM(subject=x, pwm=pattern, min.score=min.score))
-        })
-        pattern.starts.ul <- unlist(pattern.starts) + floor(ncol(pattern)/2)
-
-        sm = sparseMatrix(
-            i = rep(1:length(pattern.starts), lengths(pattern.starts)),
-            j = pattern.starts.ul,
-            dims = c(length(seq), width(seq)[1]))
-
-        mat = as.matrix(sm)*1
+        bp = length(seq)*width(seq[1])
+        st = start(matchPWM(subject=unlist(seq), pwm=pattern, min.score=min.score))
+        vec = numeric(bp)
+        vec[st] = 1
+        mat = matrix(vec, nrow=length(seq), byrow=TRUE)
 
         hm = Heatmap(
             image=mat,
@@ -107,6 +95,7 @@ function(seq, pattern, coords=NULL, min.score="80%", label=NULL) {
             coords=as.integer(coords),
             nseq=length(seq),
             label=label)
+
         return(hm)
     }
 )
