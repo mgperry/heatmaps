@@ -24,11 +24,12 @@
 #' a warning.
 #'
 #' Smoothing can use either a kernel density estimate or a blurring function.
-#' The methods implemented are KernSmooth:bkde2D and spatstat::blur. The kernel
-#' based method assumes we are smoothing individual points so the value of these points
-#' are ignored. This is most useful for smoothing PatternHeatmaps where each cell in
-#' the matrix is either 1 or 0. For non-binary heatmaps, blur is most appropriate. The
-#' "auto" method will choose "kernel" for binary heatmaps and "blur" for any others.
+#' The methods implemented are KernSmooth:bkde2D and EBImage::filter2 with a
+#' gaussian filter. The kernel based method assumes we are smoothing individual
+#' points so the value of these points are ignored. This is most useful for
+#' smoothing PatternHeatmaps where each cell in the matrix is either 1 or 0.
+#' For non-binary heatmaps, blur is most appropriate. The "auto" method will
+#' choose "kernel" for binary heatmaps and "blur" for any others.
 #'
 #' Scaling the output heatmap is handled as in CoverageHeatmap.
 #'
@@ -42,8 +43,7 @@ setGeneric("smooth", function(heatmap, ...) standardGeneric("smooth"))
 
 #' @describeIn smooth Smooth a heatmap
 #' @export
-#' @importFrom spatstat blur im
-#' @importFrom EBImage resize
+#' @importFrom EBImage resize filter2
 #' @importFrom KernSmooth bkde2D
 #' @importFrom methods as
 #' @importClassesFrom Matrix sparseMatrix
@@ -97,7 +97,8 @@ setMethod("smooth", signature(heatmap="Heatmap"),
         scale = getScale(min(mat.new), max(mat.new))
     } else if (method=="blur") {
         message("\nApplying Gaussian blur...")
-        mat.new = as.matrix(blur(im(image(heatmap)), sigma=sigma))
+        brush = makeGaussian2D(sigma)
+        mat.new = filter2(image(heatmap), brush)
         if (resize_img == TRUE) {
             mat.new = resize(mat.new, output.size[1], output.size[2])
         }
@@ -108,6 +109,17 @@ setMethod("smooth", signature(heatmap="Heatmap"),
     scale(heatmap) = scale
     return(heatmap)
 })
+
+makeGaussian2D = function(sigma) {
+    dim = sigma*3
+    x = -dim[1]:dim[1]
+    y = -dim[2]:dim[2]
+    x_d = vapply(x, dnorm, numeric(1), sd=sigma[1])
+    y_d = vapply(y, dnorm, numeric(1), sd=sigma[2])
+    brush = outer(x_d, y_d)
+    brush
+}
+
 
 #' Make an appropriate scale for a heatmap
 #'

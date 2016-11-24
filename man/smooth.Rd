@@ -33,11 +33,12 @@ if they are in conflict output.ratio will override output.size and there will be
 a warning.
 
 Smoothing can use either a kernel density estimate or a blurring function.
-The methods implemented are KernSmooth:bkde2D and spatstat::blur. The kernel
-based method assumes we are smoothing individual points so the value of these points
-are ignored. This is most useful for smoothing PatternHeatmaps where each cell in
-the matrix is either 1 or 0. For non-binary heatmaps, blur is most appropriate. The
-"auto" method will choose "kernel" for binary heatmaps and "blur" for any others.
+The methods implemented are KernSmooth:bkde2D and EBImage::filter2 with a
+gaussian filter. The kernel based method assumes we are smoothing individual
+points so the value of these points are ignored. This is most useful for
+smoothing PatternHeatmaps where each cell in the matrix is either 1 or 0.
+For non-binary heatmaps, blur is most appropriate. The "auto" method will
+choose "kernel" for binary heatmaps and "blur" for any others.
 
 Scaling the output heatmap is handled as in CoverageHeatmap.}
 

@@ -18,7 +18,6 @@ Imports:
     plotrix,
     Matrix,
     EBImage,
-    spatstat,
     RColorBrewer,
     BiocGenerics,
     GenomeInfoDb
