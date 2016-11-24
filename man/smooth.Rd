@@ -8,8 +8,8 @@
 \usage{
 smooth(heatmap, ...)
 
-\S4method{smooth}{Heatmap}(heatmap, sigma = c(3, 3), output.ratio = c(1, 1),
-  output.size = NULL, method = c("auto", "kernel", "blur"))
+\S4method{smooth}{Heatmap}(heatmap, sigma = c(3, 3),
+  output.size = dim(image(heatmap)), algorithm = NULL)
 }
 \arguments{
 \item{heatmap}{A heatmap object}
@@ -19,36 +19,29 @@ smooth(heatmap, ...)
 This function smooths a heatmap using either binned kernel density
 (more efficient for binary heatmaps) or gaussian blur.
 
-Sigma controls
-the SD of the kernel in both cases, defined in terms of pixels. This means
-that if you have very diffirent x and y dimensions (eg. a 200bp heatmap around
-10000 promoters) you will need to compensate by setting sigma[2] higher to get
-the same visual effect in both dimensions
+Sigma controls the SD of the kernel in both cases, defined in terms of
+pixels. This means that if you have very diffirent x and y dimensions (eg. a
+200bp heatmap around 10000 promoters) you will need to compensate by setting
+sigma[2] higher to get the same visual effect in both dimensions
 
-The output size can be determined by output.ratio or output.size. "output.ratio"
-specifies the size of the output as a negative scaling factor, so c(2, 4) would
-result in an image half as wide and a quarter as high. "output.size" specifies
-the dimensions of the output matrix explicitly. One or the other should be used:
-if they are in conflict output.ratio will override output.size and there will be
-a warning.
+"output.size" specifies the dimensions of the output matrix. This can be
+useful to reduce plotting time significantly.
 
 Smoothing can use either a kernel density estimate or a blurring function.
 The methods implemented are KernSmooth:bkde2D and EBImage::filter2 with a
 gaussian filter. The kernel based method assumes we are smoothing individual
 points so the value of these points are ignored. This is most useful for
 smoothing PatternHeatmaps where each cell in the matrix is either 1 or 0.
-For non-binary heatmaps, blur is most appropriate. The "auto" method will
-choose "kernel" for binary heatmaps and "blur" for any others.
+For non-binary heatmaps, blur is most appropriate. Not setting this parameter
+will choose the method automatically.
 
 Scaling the output heatmap is handled as in CoverageHeatmap.}
 
-\item{sigma}{Numeric, length 2}
+\item{sigma}{Numeric, lengt2, (recycled if length 1)}
 
-\item{output.ratio}{Numeric, length 2, c(x, y)}
+\item{output.size}{Numeric, length 2}
 
-\item{output.size}{Numeric, length 2, c(x, y)}
-
-\item{method}{One of "auto", "kernel" or "blur"}
+\item{method}{"kernel" or "blur"}
 }
 \value{
 A heatmap
