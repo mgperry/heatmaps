@@ -26,7 +26,7 @@ setGeneric(name="PWMScanHeatmap",
 #' @export
 setMethod("PWMScanHeatmap",
 signature(seq = "DNAStringSet", pwm = "matrix"),
-function(seq, pwm, coords=NULL, label=NULL){
+function(seq, pwm, coords=NULL, label=""){
 
         if(!(length(unique(width(seq))) == 1)){
             stop("All sequences in the input DNAStringSet must have the same
