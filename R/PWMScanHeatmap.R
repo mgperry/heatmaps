@@ -33,7 +33,7 @@ function(seq, pwm, coords=NULL, label=NULL){
             length!")
         }
 
-        if (is.null(coords)) coords = c(0, length(seq[1]))
+        if (is.null(coords)) coords = c(0, length(seq[[1]]))
 
         # new fast way
         w = width(seq[1])
