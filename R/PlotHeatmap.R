@@ -60,7 +60,8 @@ setMethod("plotHeatmap", signature="Heatmap",
           col=col_palette(256), breaks=breaks,
           xlim=c(0.5,width(heatmap)-0.5), # remove fluffy edges
           xlab="", ylab="",
-          axes=FALSE)
+          axes=FALSE,
+          useRaster=TRUE)
 
     if (options$box.width > 0) box(lwd = options$box.width)
 
