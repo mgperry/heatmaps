@@ -9,7 +9,7 @@
 PWMScanHeatmap(seq, pwm, ...)
 
 \S4method{PWMScanHeatmap}{DNAStringSet,matrix}(seq, pwm, coords = NULL,
-  label = NULL)
+  label = "")
 }
 \arguments{
 \item{seq}{A DNAString of equal length}

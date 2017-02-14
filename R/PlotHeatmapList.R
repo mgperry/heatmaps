@@ -23,7 +23,7 @@
 #' These are generally large, complex plots, so it can better to plot
 #' straight to a file. PNG is preferred since pdf files generated can be
 #' if the images are not downsized. The default settings are designed for plots
-#' of about 5cm x 10cm per heatmap, but all of the relevant settigns can be tweaked
+#' of about 10cm x 20cm per heatmap, but all of the relevant settigns can be tweaked
 #' using the options. For display-quality images, it helps to increase the resolution
 #' at to at least 150ppi, double the default of 72ppi on most systems.
 #'
