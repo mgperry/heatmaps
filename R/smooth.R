@@ -134,9 +134,10 @@ makeGaussian2D = function(sigma) {
 #' getScale(-6, -2) # c(-6, 6)
 #' getScale(-6, 2) # c(-6, 6)
 getScale = function(x, y) {
-    if (x >= 0 && y >=0) {
+    eps = 10^(-10)
+    if (x >= -eps && y >= -eps) {
         scale = c(0, max(x, y))
-    } else if (x <= 0 && y <= 0) {
+    } else if (x <= eps && y <= eps) {
         scale = c(min(x, y), 0)
     } else {
         max_abs = max(abs(c(x, y)))
