@@ -40,7 +40,7 @@ Collate:
     PWMScanHeatmap.R
     PatternHeatmap.R
     CoverageHeatmap.R
-    smooth.R
+    smoothHeatmap.R
     plotHeatmapMeta.R
     Data.R
 NeedsCompilation: no

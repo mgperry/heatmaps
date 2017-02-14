@@ -12,7 +12,7 @@
 #'
 #' This function is a convenient wrapper for plotting many different patterns
 #' for the same set of sequences. PatternHeatmap() is applied to the sequence
-#' for each pattern in the list, they are passed to smooth() with the supplied
+#' for each pattern in the list, they are passed to smoothHeatmap() with the supplied
 #' parameters and finally PlotHeatmapList().
 #'
 #' If fine-grained control is desired, or you want to mix other plot types, then
@@ -20,7 +20,7 @@
 #'
 #' @return invisible(0)
 #'
-#' @seealso PatternHeatmap plotHeatmapList smooth
+#' @seealso PatternHeatmap plotHeatmapList smoothHeatmap
 #' @export
 #' @examples
 #' data(HeatmapExamples)
@@ -53,7 +53,7 @@ signature(seq = "DNAStringSet"),
 
         heatmaps <- list()
         for (i in 1:length(patterns)) {
-            sm_hm = smooth(raw_hm[[i]], sigma=sigma, output.ratio=output.ratio, output.size=output.size, method="kernel")
+            sm_hm = smoothHeatmap(raw_hm[[i]], sigma=sigma, output.ratio=output.ratio, output.size=output.size, method="kernel")
             sm_hm@label = labels[i]
             heatmaps[[i]] = sm_hm
         }

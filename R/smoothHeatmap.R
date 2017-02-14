@@ -32,17 +32,17 @@
 #' @export
 #' @examples
 #' data(HeatmapExamples)
-#' hm_smoothed = smooth(hm, sigma=c(5,5), output.ratio=c(2,2), method="blur")
-setGeneric("smooth", function(heatmap, ...) standardGeneric("smooth"))
+#' hm_smoothed = smoothHeatmap(hm, sigma=c(5,5), output.ratio=c(2,2), method="blur")
+setGeneric("smoothHeatmap", function(heatmap, ...) standardGeneric("smoothHeatmap"))
 
-#' @describeIn smooth Smooth a heatmap
+#' @describeIn smoothHeatmap Smooth a heatmap
 #' @export
 #' @importFrom EBImage resize filter2
 #' @importFrom KernSmooth bkde2D
 #' @importFrom methods as
 #' @importClassesFrom Matrix sparseMatrix
 #' @importMethodsFrom Matrix summary
-setMethod("smooth", signature(heatmap="Heatmap"),
+setMethod("smoothHeatmap", signature(heatmap="Heatmap"),
     function(heatmap, sigma=c(3,3), output.size=dim(image(heatmap)), algorithm=NULL) {
 
     if (!all(output.size %% 1 == 0)) stop("output.size must have positive integer values")

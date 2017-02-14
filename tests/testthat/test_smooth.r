@@ -53,16 +53,16 @@ test_that("getScale works as expected", {
 
 test_that("smooth checks inputs correctly", {
     hm = Heatmap(matrix(rbern(50), nrow=10))
-    expect_error(smooth(hm, output.size=c(0, 5)))
-    expect_error(smooth(hm, output.size=c(2.5, 5)))
-    expect_error(smooth(hm, output.size=c(2.5, 5, 10)))
-    expect_error(smooth(hm, sigma=c(5, 5, 5)))
-    expect_error(smooth(hm, sigma=c(-2)))
-    expect_error(smooth(hm, algorithm="box_blur"))
+    expect_error(smoothHeatmap(hm, output.size=c(0, 5)))
+    expect_error(smoothHeatmap(hm, output.size=c(2.5, 5)))
+    expect_error(smoothHeatmap(hm, output.size=c(2.5, 5, 10)))
+    expect_error(smoothHeatmap(hm, sigma=c(5, 5, 5)))
+    expect_error(smoothHeatmap(hm, sigma=c(-2)))
+    expect_error(smoothHeatmap(hm, algorithm="box_blur"))
 })
 
-test_that("smooth returns a heatmap", {
+test_that("smoothHeatmap returns a heatmap", {
     hm = Heatmap(matrix(rbern(500), nrow=25))
-    expect_true(class(smooth(hm, sigma=c(3,3), output.size=c(8, 10))) == "Heatmap")
+    expect_true(class(smoothHeatmap(hm, sigma=c(3,3), output.size=c(8, 10))) == "Heatmap")
 })
 

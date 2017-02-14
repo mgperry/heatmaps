@@ -170,7 +170,7 @@ Visualising nucleotide patterns is much more effective if we smooth the image
 first, rather than drawing the binary matrix.
 
 ```{r, fig.height=5, fig.width=2.5}
-cg_hm_smooth = smooth(cg_hm)
+cg_hm_smooth = smoothHeatmap(cg_hm)
 
 par(mai=c(0.6, 0.3, 0.1, 0.3))
 plotHeatmap(cg_hm_smooth)
@@ -183,7 +183,7 @@ heatmaps contains a function to help with this: `plotHeatmapList()`. Using this 
 easily plot the CG dinucleotide plot alongside the CpG islands to see how they compare:
 
 ```{r, fig.height=5, fig.width=5}
-cgi_hm_smooth = smooth(coverage_hm)
+cgi_hm_smooth = smoothHeatmap(coverage_hm)
 scale(cgi_hm_smooth)[1] = 0
 plotHeatmapList(list(cg_hm_smooth, cgi_hm_smooth), color=list("Blues", "YlOrRd"))
 ```

@@ -57,6 +57,6 @@ PatternHeatmap(string_set, "TA", coords=c(-100, 100), label="TA")
 PatternHeatmap(string_set, tata_pwm, coords=c(-100, 100), min.score="80\%", label="TATA PWM")
 }
 \seealso{
-smooth
+smoothHeatmap
 }
 

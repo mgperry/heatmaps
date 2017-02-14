@@ -167,7 +167,7 @@ the `bkde2D` function from the package `KernSmooth`. In this case, because we
 are using binary data, this method would be chosen automatically.
 
 ```{r smoothing, fig.height=6, fig.width=3}
-ta_30p_smoothed = smooth(ta_30p, output.size=c(250, 500), method="kernel")
+ta_30p_smoothed = smoothHeatmap(ta_30p, output.size=c(250, 500), method="kernel")
 plotHeatmapList(ta_30p_smoothed)
 ```
 
@@ -181,7 +181,7 @@ data(HeatmapExamples, envir=example_data)
 tata_pwm = get("tata_pwm", example_data)
 
 tata_pwm_30p = PatternHeatmap(seq_30p, tata_pwm, coords=coords, label="TATA", min.score="60%")
-plotHeatmapList(smooth(tata_pwm_30p, output.size=c(250, 500)))
+plotHeatmapList(smoothHeatmap(tata_pwm_30p, output.size=c(250, 500)))
 ```
 
 An alternative way to visualise PWMs is to plot the score at every point, which
@@ -197,7 +197,7 @@ min/max values in the heatmap.
 
 ```{r pwm_scan_hm, warning=FALSE, fig.height=6, fig.width=4}
 tata_pwm_scan_30p = PWMScanHeatmap(seq_30p, tata_pwm, coords=coords, label="TATA")
-tata_pwm_scan_30p_smoothed = smooth(tata_pwm_scan_30p, method="blur", output.size=c(250, 500))
+tata_pwm_scan_30p_smoothed = smoothHeatmap(tata_pwm_scan_30p, method="blur", output.size=c(250, 500))
 scale(tata_pwm_scan_30p_smoothed) = c(40, 60)
 plotHeatmapList(tata_pwm_scan_30p_smoothed, color="Spectral", legend=TRUE, legend.width=0.3)
 ```
@@ -226,7 +226,7 @@ binding potential, as well as promoter H3K4me3, around promoters.
 
 ```{r lists, fig.height=6, fig.width=12}
 cg_30p = PatternHeatmap(seq_30p, "CG", coords=coords)
-cg_30p_smoothed = smooth(cg_30p, output.size=c(250, 500))
+cg_30p_smoothed = smoothHeatmap(cg_30p, output.size=c(250, 500))
 
 hm_list = list(
     ta_30p_smoothed,
@@ -260,7 +260,7 @@ than come with specifying pixel sizes.
 ```{r plot_to_file, eval=FALSE}
 png("heatmap_list.png", height=20, width=40, units="cm", res="150")
 
-plotHeatmapList(list(ta_30p_smoothed, cg_30p_smoothed, smooth(h3k4me3_30p_heatmap), tata_pwm_scan_30p_smoothed), 
+plotHeatmapList(list(ta_30p_smoothed, cg_30p_smoothed, smoothHeatmap(h3k4me3_30p_heatmap), tata_pwm_scan_30p_smoothed), 
                 groups=c(1, 1, 2, 3),
                 color=list("Blues", "Spectral", "Greens"),
                 cex.label=list(1.25, 2, 2))
@@ -296,7 +296,7 @@ we first create a function to do this quickly.
 ```{r complex_heatmaps, width=9, height=8, warning=FALSE}
 SmoothPatternHM = function(seq, pattern, ...) {
     hm = PatternHeatmap(seq, pattern, ...)
-    smooth(hm, output.size=c(200, 200))
+    smoothHeatmap(hm, output.size=c(200, 200))
 }
 
 hm_list = list(

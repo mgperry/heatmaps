@@ -20,7 +20,7 @@
 #'
 #' @return A heatmap
 #'
-#' @seealso smooth
+#' @seealso smoothHeatmap
 #' @export
 #' @examples
 #' data(HeatmapExamples)

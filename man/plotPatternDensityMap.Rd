@@ -21,7 +21,7 @@ plotPatternDensityMap(seq, patterns, ...)
 
 This function is a convenient wrapper for plotting many different patterns
 for the same set of sequences. PatternHeatmap() is applied to the sequence
-for each pattern in the list, they are passed to smooth() with the supplied
+for each pattern in the list, they are passed to smoothHeatmap() with the supplied
 parameters and finally PlotHeatmapList().
 
 If fine-grained control is desired, or you want to mix other plot types, then
@@ -54,6 +54,6 @@ data(HeatmapExamples)
 plotPatternDensityMap(string_set, c("AT", "CG"), coords=c(-200, 200))
 }
 \seealso{
-PatternHeatmap plotHeatmapList smooth
+PatternHeatmap plotHeatmapList smoothHeatmap
 }
 
