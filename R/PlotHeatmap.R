@@ -206,6 +206,11 @@ make_x_ticks = function(coord) {
     xTicksAt
 }
 
+color_palettes = list(
+  Rainbow=rev(rainbow(9, start=0, end=4/6)),
+  Rasta=c("#E20D0D", "#F0D817", "#3EB308")
+)
+
 #' Predifined color palettes from RColorBrewer + Rainbow
 #'
 #' @param col Character, RColorBrewer colorscheme or "Rainbow"
@@ -223,8 +228,8 @@ make_x_ticks = function(coord) {
 #' default_color("Blues")
 #' default_color("Rainbow")
 default_color = function(col) {
-    if (col == "Rainbow") {
-        palette = rev(rainbow(9, start=0, end=4/6))
+    if (col %in% names(color_palettes)) {
+        palette = color_palettes[[col]]
     } else {
        palette = tryCatch(brewer.pal(9, col), error=color_error)
     }
