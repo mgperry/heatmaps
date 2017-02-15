@@ -35,84 +35,105 @@
 #' @examples
 #' data(HeatmapExamples)
 #' plotHeatmapList(list(hm, hm2), groups=c(1,2), color=list("Reds", "Blues"))
-plotHeatmapList = function(heatmap_list, groups=NULL, options=heatmapOptions(), ...) {
-    if (class(heatmap_list) == "Heatmap") heatmap_list = list(heatmap_list) # allow single heatmap argument
+plotHeatmapList = function(heatmap_list,
+                           groups=1:length(heatmap_list),
+                           options=heatmapOptions(),
+                           ...) {
+
+    # allow single heatmap argument
+    if (class(heatmap_list) == "Heatmap") heatmap_list = list(heatmap_list)
     n_plots = length(heatmap_list)
 
-    if (is.null(groups) || length(unique(groups)) == n_plots) {
-        groups = 1:n_plots
-    } else if (length(groups) == 1) {
+    if (length(groups) == 1) {
         groups = rep(1, n_plots)
-    } else if (length(groups) != n_plots) {
-        stop("groups must have 1 value per plot")
     } else {
         groups = as.numeric(factor(groups, levels=unique(groups)))
     }
 
-    n_groups = max(groups)
+    if (length(groups) != n_plots) stop("groups must have 1 value per plot")
 
-    for (i in 1:max(groups)) {
-        group = which(groups == i)
-        # test if scales are equal
-        scales = vapply(heatmap_list[group], function(x) scale(x), numeric(2))
-        if (!(length(unique(scales[1,])) == 1) && (length(unique(scales[2,])) == 1)) {
-            for (index in group) {
-                scale(heatmap_list[[index]]) = getScale(min(scales), max(scales))
-            }
-        }
-    }
+    normalise_scales(heatmap_list, groups)
 
     dots = list(...)
     options[names(dots)] = dots
 
-    group_options = list()
-    option_lengths = lengths(Filter(is.list, options))
-    if (!all(option_lengths == n_groups)) stop("Options supplied as lists must have length equal to the number of groups")
-    for (i in 1:n_groups) {
-        group_options[[i]] = lapply(options, function(x) if (is.list(x)) x[[i]] else x)
-    }
+    options_list = expand_options(options, groups)
 
-    group_list = split(1:n_plots, groups)
-
-    if (options$legend == TRUE) {
-        widths = numeric(0)
-        for (i in 1:length(group_list)) {
-            legend.width = group_options[[i]]$legend.width
-            if (group_options[[i]]$legend.pos == 'l') {
-                widths = c(widths, legend.width, rep(1, length(group_list[[i]])))
-            } else if (group_options[[i]]$legend.pos == 'r') {
-                widths = c(widths, rep(1, length(group_list[[i]])), legend.width)
-            }
-        }
-        mat = t(1:length(widths))
-        widths = widths/sum(widths)
-        layout(mat, widths)
-    } else {
-        layout(t(1:n_plots))
-    }
-
+    params = get_device_params(options_list)
+    layout(params$layout, params$width)
     par(cex=1) # can be changed by layout
 
-    for (i in 1:n_groups) {
-        go = group_options[[i]]
-        grp = group_list[[i]]
-        if(go$legend == TRUE && go$legend.pos == 'l') {
-            par(mai=go$legend.mai)
-            plot_legend(scale(heatmap_list[[grp[1]]]), go)
+    for (i in 1:n_plots) {
+        opts = options_list[[i]]
+        hm = heatmap_list[[i]]
+        message(paste("plotting heatmap", label(hm)))
+
+        if(legend_left(opts)) {
+            par(mai=opts$legend.mai)
+            plot_legend(scale(hm), opts)
         }
-        for (j in grp) {
-            message(paste("plotting heatmap", label(heatmap_list[[j]])))
-            par(mai=go$plot.mai)
-            plotHeatmap(heatmap_list[[j]], go)
-        }
-        if(go$legend == TRUE && go$legend.pos == 'r') {
-            par(mai=go$legend.mai)
-            plot_legend(scale(heatmap_list[[grp[1]]]), go)
+
+        par(mai=opts$plot.mai)
+        plotHeatmap(hm, opts)
+
+        if(legend_right(opts)) {
+            par(mai=opts$legend.mai[c(1,4,3,2)])
+            plot_legend(scale(hm), opts)
         }
     }
 
     invisible(0)
 }
+
+legend_left = function(x) x$legend == TRUE && x$legend.pos == 'l'
+legend_right = function(x) x$legend == TRUE && x$legend.pos == 'r'
+
+normalise_scales = function(heatmaps, groups) {
+    max = rep(-Inf, max(groups))
+    min = rep(Inf, max(groups))
+    for (i in seq_along(heatmaps)) {
+        g = groups[i]
+        s = scale(heatmaps[[i]])
+        if (s[1] < min[g]) min[g] = s[1]
+        if (s[2] > max[g]) max[g] = s[2]
+    }
+    for (i in seq_along(heatmaps)) {
+        g = groups[i]
+        scale(heatmaps[[i]]) = getScale(min[g], max[g])
+    }
+}
+
+get_device_params = function(options_list) {
+    width = numeric(0)
+    for (opts in options_list) {
+        if (legend_left(opts)) width = c(width, opts$legend.width)
+        width = c(width, 1)
+        if (legend_right(opts)) width = c(width, opts$legend.width)
+    }
+    list(layout=t(1:length(width)), width=width)
+}
+
+expand_options = function(options, groups) {
+    if (!all(lengths(Filter(is.list, options)) == max(groups))) {
+        stop("Options supplied as lists must have length equal to the number of groups")
+    }
+    options_list = list()
+    for (i in seq_along(groups)) {
+        g = groups[i]
+        opts = get_options(g, options)
+        if (legend_left(opts)) {
+            opts$legend = (min(which(groups == g)) == i) # plot only if first plot
+        } else if (legend_right(opts)) {
+            opts$legend = (max(which(groups == g)) == i) # plot  only if last plot
+        }
+        options_list[[i]] = opts
+    }
+    options_list
+}
+
+get_options = function(i, options) lapply(options, subset_if_list, i=i)
+
+subset_if_list = function(x, i) { if (is.list(x)) x[[i]] else x }
 
 #' Plot a color legend for a heatmap
 #'

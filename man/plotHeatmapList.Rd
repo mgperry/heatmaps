@@ -4,8 +4,8 @@
 \alias{plotHeatmapList}
 \title{Plot a list of heatmaps}
 \usage{
-plotHeatmapList(heatmap_list, groups = NULL, options = heatmapOptions(),
-  ...)
+plotHeatmapList(heatmap_list, groups = 1:length(heatmap_list),
+  options = heatmapOptions(), ...)
 }
 \arguments{
 \item{heatmap_list}{A list of Heatmaps}
