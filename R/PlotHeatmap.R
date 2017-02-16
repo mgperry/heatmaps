@@ -70,6 +70,11 @@ setMethod("plotHeatmap", signature="Heatmap",
         axis(1, at=x.ticks, labels=names(x.ticks), cex.axis=options$cex.axis, lwd=options$box.width, tcl=options$tcl, padj=options$padj)
     }
 
+    if(length(options$partition) > 1 && options$partition.lines == TRUE) {
+        line_coords = hm@nseq * (1 - cumsum(opts$partition/sum(opts$partition)))
+        abline(h=line_coords[1:(length(line_coords) - 1)], lwd=opts$box.width)
+    }
+
     if(options$scale){
         scale.length = width(heatmap)/5
         x.start.in = grconvertX(0, from="user", to="inches") + options$label.xpos
@@ -158,7 +163,16 @@ setMethod("plotHeatmap", signature="Heatmap",
 #'
 #' legend.mai: Length-4 numeric, margins around legend
 #'
+#' partition: Numeric, relative sizes of clusters
+#'
+#' partition.lines: Logical, plot lines delineating clusters
+#'
+#' partition.legend: Logical, plot cluster legend in HeatmapList
+#'
+#' partition.col: Character, colours to use for plotting clusters. Defaults to RColorBrewer's Set1
+#'
 #' @return a list containing the specified options
+#' @importFrom RColorBrewer brewer.pal
 #' @seealso plotHeatmap plotHeatmapList
 #' @export
 #' @examples
@@ -191,7 +205,11 @@ heatmapOptions = function(...) {
         refline.width=1,
         transform=NA,
         plot.mai=c(0.6, 0.3, 0.1, 0.3),
-        legend.mai=c(0.6, 0.6, 0.1, 0.05)
+        legend.mai=c(0.6, 0.6, 0.1, 0.05),
+        partition=1,
+        partition.lines=FALSE,
+        partition.legend=FALSE,
+        partition.col=brewer.pal(9, "Set1")
     )
     bad_names = names(opts)[!names(opts) %in% names(default)]
     if (length(bad_names) > 0) warning(paste("Arguments", bad_names, "are not heatmap options"))

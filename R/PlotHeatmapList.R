@@ -63,6 +63,11 @@ plotHeatmapList = function(heatmap_list,
     layout(params$layout, params$width)
     par(cex=1) # can be changed by layout
 
+    if (options$partition.legend) {
+        par(mai=options_list[[1]]$legend.mai)
+        plot_clusters(options)
+    }
+
     for (i in 1:n_plots) {
         opts = options_list[[i]]
         hm = heatmap_list[[i]]
@@ -104,7 +109,11 @@ normalise_scales = function(heatmaps, groups) {
 }
 
 get_device_params = function(options_list) {
-    width = numeric(0)
+    if (options_list[[1]]$partition.legend) {
+        width = options_list[[1]]$legend.width
+    } else {
+        width = numeric(0)
+    }
     for (opts in options_list) {
         if (legend_left(opts)) width = c(width, opts$legend.width)
         width = c(width, 1)
@@ -133,7 +142,7 @@ expand_options = function(options, groups) {
 
 get_options = function(i, options) lapply(options, subset_if_list, i=i)
 
-subset_if_list = function(x, i) { if (is.list(x)) x[[i]] else x }
+subset_if_list = function(i, x) { if (is.list(x)) x[[i]] else x }
 
 #' Plot a color legend for a heatmap
 #'
@@ -184,5 +193,48 @@ plot_legend <- function(scale, options) {
                      align=align, gradient='y', cex=options$cex.legend)
 
         invisible(0)
+}
+
+
+#' Plot partition in a separate panel
+#'
+#' @param options heatmapOptions passed as a list
+#'
+#' Two heatmapOptions values are relevant:
+#'
+#' * partition Numeric vector containing relative sizes of the clusters
+#' * colors Colors to use for clusters, additional colors are discarded
+#'
+#' This function plots a vertical color scale (or legend). With the default parameters,
+#' it looks good at about 1/5 the width of a heatmap, about 1cm x 10cm. This
+#' function only plots the legend, it does not set margin parameters.
+#'
+#' @return invisible(0)
+#'
+#' @seealso plotHeatmapList
+#' @importFrom graphics box rect
+#' @export
+#' @examples
+#' data(HeatmapExamples)
+#' opts = heatmapOptions()
+#' opts$partition = c(1,2,3,4)
+#' par(mai=opts$legend.mai)
+#' plot_clusters(opts)
+plot_clusters <- function(opts) {
+    p = opts$partition
+    plot(1, 1,
+         type='n', bty='n',
+         xaxt='n', yaxt='n',
+         xlim=c(0,1), ylim=c(0,sum(opts$partition)),
+         xaxs="i", yaxs="i",
+         xlab='', ylab='')
+    box(lwd = opts$box.width)
+    y_0 = 0
+    for (i in seq_along(p)) {
+        y_1 = y_0 + p[i]
+        rect(0, y_0, 1, y_1, col=opts$partition.col[i], lwd=opts$box.width)
+        y_0 = y_1
+    }
+    invisible(0)
 }
 
