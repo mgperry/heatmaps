@@ -40,8 +40,8 @@ Collate:
     PWMScanHeatmap.R
     PatternHeatmap.R
     CoverageHeatmap.R
-    smoothHeatmap.R
-    plotHeatmapMeta.R
+    SmoothHeatmap.R
+    PlotHeatmapMeta.R
     Data.R
 NeedsCompilation: no
 RoxygenNote: 5.0.1
