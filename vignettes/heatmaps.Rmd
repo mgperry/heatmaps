@@ -13,8 +13,8 @@ vignette: >
 
 ## Flexible plotting of Functional Genomics data + Sequence features
 
-This package provides simple functions for plotting heatmaps over sets 
-of genomic windows. 
+This package provides simple functions for plotting heatmaps over sets
+of genomic windows.
 
 This vignette is an example workflow using ChIP-seq data
 in zebrafish: the *User Guide* contains detailed information on the package
@@ -30,14 +30,14 @@ library(heatmaps)
 ## Reading in Data
 
 `heatmaps` is written using  core Bioconductor packages, so reading in data can
-be easily accomplished with the standard tools. 
+be easily accomplished with the standard tools.
 
 Here we read in a set of zebrafish promoters from a 30% Epiboly (30p) embryo,
 defined using CAGE data, and corresponding H3K4me3 ChIP-seq data:
 
 ```{r data_1, message=FALSE, warning=FALSE}
 library(rtracklayer)
-library(GenomicRanges)
+sibrary(GenomicRanges)
 library(BSgenome.Drerio.UCSC.danRer7)
 
 heatmaps_file = function(fn) system.file("extdata", fn, package="heatmaps")
@@ -79,9 +79,9 @@ coords=c(-500, 500)
 windows_30p = promoters(zf_30p_promoters, -coords[1], coords[2])
 windows_30p = windows_30p[width(trim(windows_30p)) == 1000]
 h3k4me3_30p_heatmap = CoverageHeatmap(
-    windows_30p, 
-    h3k4me3_30p, 
-    coords=coords, 
+    windows_30p,
+    h3k4me3_30p,
+    coords=coords,
     label="H3K4me3 30p")
 
 ```
@@ -127,9 +127,9 @@ by `plotHeatmapList` if the option `legend=TRUE` is set.
 h3k4me3_30p_subtracted = h3k4me3_30p_pos - h3k4me3_30p_neg
 
 h3k4me3_30p_subtracted_hm = CoverageHeatmap(
-    windows_30p, 
-    h3k4me3_30p_subtracted, 
-    coords=coords, 
+    windows_30p,
+    h3k4me3_30p_subtracted,
+    coords=coords,
     label="Phase")
 
 scale(h3k4me3_30p_subtracted_hm) = c(-150, 150)
@@ -162,12 +162,12 @@ lets us resize the image so that our plots don't take ages to plot. If we plotte
 every point individually, the result would be much higher resolution than could possibly
 fit onscreen. `output.size` specifies the dimensions of the output image matrix.
 
-The `method` argument specifies the smoothing method. Specifying "kernel" uses
+The `algorithm` argument specifies the smoothing method. Specifying "kernel" uses
 the `bkde2D` function from the package `KernSmooth`. In this case, because we
-are using binary data, this method would be chosen automatically.
+are using binary data, this would be chosen automatically.
 
 ```{r smoothing, fig.height=6, fig.width=3}
-ta_30p_smoothed = smoothHeatmap(ta_30p, output.size=c(250, 500), method="kernel")
+ta_30p_smoothed = smoothHeatmap(ta_30p, output.size=c(250, 500), algorithm="kernel")
 plotHeatmapList(ta_30p_smoothed)
 ```
 
@@ -197,7 +197,7 @@ min/max values in the heatmap.
 
 ```{r pwm_scan_hm, warning=FALSE, fig.height=6, fig.width=4}
 tata_pwm_scan_30p = PWMScanHeatmap(seq_30p, tata_pwm, coords=coords, label="TATA")
-tata_pwm_scan_30p_smoothed = smoothHeatmap(tata_pwm_scan_30p, method="blur", output.size=c(250, 500))
+tata_pwm_scan_30p_smoothed = smoothHeatmap(tata_pwm_scan_30p, algorithm="blur", output.size=c(250, 500))
 scale(tata_pwm_scan_30p_smoothed) = c(40, 60)
 plotHeatmapList(tata_pwm_scan_30p_smoothed, color="Spectral", legend=TRUE, legend.width=0.3)
 ```
@@ -232,10 +232,10 @@ hm_list = list(
     ta_30p_smoothed,
     cg_30p_smoothed,
     tata_pwm_scan_30p_smoothed,
-    smooth(h3k4me3_30p_heatmap, output.size=c(250, 500))
+    smoothHeatmap(h3k4me3_30p_heatmap, output.size=c(250, 500))
 )
 
-plotHeatmapList(hm_list, 
+plotHeatmapList(hm_list,
                 groups=c(1, 1, 2, 3),
                 color=list("Blues", "Spectral", "Greens"),
                 cex.label=list(2, 2, 1.25))
@@ -248,7 +248,7 @@ to a file rather than to the R graphics device (although this works fine, and
 is reasonably quick if you smooth the plots). The default settings for margin
 sizes, text size etc. are aimed at creating plots which are around 10cm x 20cm
 (per heatmap), or 4 in by 8 in, as this also looks good on the R graphics
-device. 
+device.
 
 PNG is recommended, since PDFs can end up being massive files if care is not
 taken reducing the image size. When using the PNG device to produce high quality
@@ -260,7 +260,7 @@ than come with specifying pixel sizes.
 ```{r plot_to_file, eval=FALSE}
 png("heatmap_list.png", height=20, width=40, units="cm", res="150")
 
-plotHeatmapList(list(ta_30p_smoothed, cg_30p_smoothed, smoothHeatmap(h3k4me3_30p_heatmap), tata_pwm_scan_30p_smoothed), 
+plotHeatmapList(list(ta_30p_smoothed, cg_30p_smoothed, smoothHeatmap(h3k4me3_30p_heatmap), tata_pwm_scan_30p_smoothed),
                 groups=c(1, 1, 2, 3),
                 color=list("Blues", "Spectral", "Greens"),
                 cex.label=list(1.25, 2, 2))
@@ -323,9 +323,9 @@ We can set options for top and bottom plots separately. If we want
 to pass options to a `plotHeatmap` from a list (rather than typing
 them out in the function call), we must pass all available options
 as a list. (The function only looks at dots (`...`) if the options
-argument is empty). To save us setting all the default options 
+argument is empty). To save us setting all the default options
 manually, `heatmapOptions` creates a full list with the specified
-changes. 
+changes.
 
 Here we want the top plots to have white labels to stand
 out from the background, and no x ticks since they will be present
@@ -344,10 +344,10 @@ lowerOpts = heatmapOptions(
 
 ```
 
-We also need to specify the margins for our plots, which will be 
+We also need to specify the margins for our plots, which will be
 different depending on which part of the final image they occupy.
 the total margins for each plot are the same so that each heatmap
-will be the same size. 
+will be the same size.
 
 ```{r complex margins}
 margins = list(
@@ -376,7 +376,7 @@ calculated from `-coords(hm)[1]`.
 
 `par(xpd=TRUE/FALSE)` is used to allow plotting of the colored triangles outside
 the normal plotting regions, and has to be reset otherwise the reference lines
-at x=0 will be plotted outside the canvas as well. 
+at x=0 will be plotted outside the canvas as well.
 
 ```{r complex_plot, fig.height=8, fig.width=9, fig.keep="last"}
 layout(matrix(c(1:3, 1, 4, 5), nrow=2, byrow=TRUE), width=c(0.25, 1, 1))
@@ -404,4 +404,3 @@ points(c(680, 860), c(7000, 7000), pch=8, lwd=3, cex=2.5)
 ```
 
 Et voila! A full figure for a paper produced entirely from R.
-
