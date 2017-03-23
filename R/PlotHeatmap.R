@@ -102,6 +102,10 @@ setMethod("plotHeatmap", signature="Heatmap",
         abline(v=(-heatmap@coords[1])+0.5, lty="dashed", lwd=options$refline.width)
     }
 
+    if(!is.na(options$hook)){
+        options$hook()
+    }
+
     invisible(0)
 })
 
@@ -198,6 +202,8 @@ setMethod("plotHeatmap", signature="Heatmap",
 #'
 #' partition.col: Character, colours to use for plotting clusters. Defaults to RColorBrewer's Set1
 #'
+#' hook: Function called after plotting is complete.
+#'
 #' @return a list containing the specified options
 #' @importFrom RColorBrewer brewer.pal
 #' @seealso plotHeatmap plotHeatmapList
@@ -239,7 +245,8 @@ heatmapOptions = function(...) {
         partition=1,
         partition.lines=FALSE,
         partition.legend=FALSE,
-        partition.col=brewer.pal(9, "Set1")
+        partition.col=brewer.pal(9, "Set1"),
+        hook=NA
     )
     bad_names = names(opts)[!names(opts) %in% names(default)]
     if (length(bad_names) > 0) warning(paste("Arguments", bad_names, "are not heatmap options"))
