@@ -37,7 +37,7 @@ defined using CAGE data, and corresponding H3K4me3 ChIP-seq data:
 
 ```{r data_1, message=FALSE, warning=FALSE}
 library(rtracklayer)
-sibrary(GenomicRanges)
+library(GenomicRanges)
 library(BSgenome.Drerio.UCSC.danRer7)
 
 heatmaps_file = function(fn) system.file("extdata", fn, package="heatmaps")
