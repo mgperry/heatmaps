@@ -3,6 +3,7 @@
 \docType{methods}
 \name{coords}
 \alias{coords}
+\alias{coords}
 \alias{coords,Heatmap-method}
 \alias{coords<-}
 \alias{coords<-,Heatmap-method}
@@ -32,4 +33,3 @@ Return or set the coords in a Heatmap
 data(HeatmapExamples)
 coords(hm) = c(-100, 100)
 }
-

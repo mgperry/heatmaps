@@ -38,4 +38,3 @@ hm = Heatmap(mat, coords=c(-100, 100), label="Test")
 \seealso{
 PatternHeatmap CoverageHeatmap PWMScanHeatmap
 }
-

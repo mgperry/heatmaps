@@ -23,6 +23,8 @@ box.width: width of box around the heatmap, passed to box()
 
 x.ticks: Logical, plot x axis ticks
 
+x.tick.labels: Character, labels to use for x ticks, (default blank)
+
 tcl: Length of x axis ticks
 
 padj: Vertical adjustment of x axis labels
@@ -31,8 +33,33 @@ cex.axis: cex for axis labels
 
 scale: Logical, Plot scale or not
 
+scale.label: Character, label for scale
+
 scale.lwd: Width for line around scale
 
+cex.scale: Cex for Scale
+
+label: Logical, plot label or not
+
+label.xpos: x position for label, from left
+
+label.ypos: y position for label, from top
+
+cex.label: cex for axis labels
+
+label.col: Color for label, white is often useful for dark plots
+
+legend: Logical, plot legend (scale indicating values for colors)
+
+legend: Color for label, white is often useful for dark plots
+
+legend.pos: Character, position of legend relative to heatmap: 'l' for left, 'r' for right
+
+legend.ticks: Number of ticks to use on legend.
+
+cex.legend: cex to use for legend marks
+
+refline: Logical, Draw dashed line at coords = 0
 label: Logical, plot label or not
 
 label.xpos: x position for label, from left
@@ -61,7 +88,17 @@ transform: Function to transform values before plotting
 
 plot.mai: Length-4 numeric, margins around plot
 
-legend.mai: Length-4 numeric, margins around legend}
+legend.mai: Length-4 numeric, margins around legend
+
+partition: Numeric, relative sizes of clusters
+
+partition.lines: Logical, plot lines delineating clusters
+
+partition.legend: Logical, plot cluster legend in HeatmapList
+
+partition.col: Character, colours to use for plotting clusters. Defaults to RColorBrewer's Set1
+
+hook: Function called after plotting is complete.}
 }
 \value{
 a list containing the specified options
@@ -78,4 +115,3 @@ myOptions$color = "Reds"
 \seealso{
 plotHeatmap plotHeatmapList
 }
-

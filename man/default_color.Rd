@@ -23,4 +23,3 @@ Predifined color palettes from RColorBrewer + Rainbow
 default_color("Blues")
 default_color("Rainbow")
 }
-

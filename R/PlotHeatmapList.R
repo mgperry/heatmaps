@@ -220,19 +220,19 @@ plot_legend <- function(scale, options) {
 #' opts$partition = c(1,2,3,4)
 #' par(mai=opts$legend.mai)
 #' plot_clusters(opts)
-plot_clusters <- function(opts) {
-    p = opts$partition
+plot_clusters <- function(options) {
+    p = options$partition
     plot(1, 1,
          type='n', bty='n',
          xaxt='n', yaxt='n',
-         xlim=c(0,1), ylim=c(0,sum(opts$partition)),
+         xlim=c(0,1), ylim=c(0,sum(options$partition)),
          xaxs="i", yaxs="i",
          xlab='', ylab='')
-    box(lwd = opts$box.width)
+    box(lwd = options$box.width)
     y_0 = 0
     for (i in seq_along(p)) {
         y_1 = y_0 + p[i]
-        rect(0, y_0, 1, y_1, col=opts$partition.col[i], lwd=opts$box.width)
+        rect(0, y_0, 1, y_1, col=options$partition.col[i], lwd=options$box.width)
         y_0 = y_1
     }
     invisible(0)

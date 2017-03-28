@@ -3,6 +3,7 @@
 \docType{methods}
 \name{scale}
 \alias{scale}
+\alias{scale}
 \alias{scale,Heatmap-method}
 \alias{scale<-}
 \alias{scale<-,Heatmap-method}
@@ -32,4 +33,3 @@ Return or set the scale in a Heatmap
 data(HeatmapExamples)
 scale(hm) = c(-1000, 1000)
 }
-

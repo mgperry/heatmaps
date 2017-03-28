@@ -3,6 +3,7 @@
 \docType{methods}
 \name{metadata}
 \alias{metadata}
+\alias{metadata}
 \alias{metadata,Heatmap-method}
 \alias{metadata<-}
 \alias{metadata<-,Heatmap-method}
@@ -33,4 +34,3 @@ data(HeatmapExamples)
 metadata(hm) = list(replicate=1, cell_line="ESC")
 metadata(hm)$replicate == 1
 }
-

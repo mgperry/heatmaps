@@ -16,4 +16,3 @@ A heatmap
 \description{
 Reflect a heatmap in the x axis
 }
-

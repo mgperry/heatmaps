@@ -9,8 +9,8 @@
 plotPatternDensityMap(seq, patterns, ...)
 
 \S4method{plotPatternDensityMap}{DNAStringSet}(seq, patterns, coords = NULL,
-  min.score = "80\%", sigma = c(3, 3), output.ratio = c(1, 1),
-  output.size = NULL, options = NULL, ...)
+  min.score = "80\%", sigma = c(3, 3), output.size = NULL,
+  options = NULL, ...)
 }
 \arguments{
 \item{seq}{DNAStringSet of equal width}
@@ -33,8 +33,6 @@ more information is available in the vignette.}
 
 \item{sigma}{Bandwith for smoothing kernel}
 
-\item{output.ratio}{Output ratio of final image}
-
 \item{output.size}{Output size of final image}
 
 \item{options}{Heatmap plotting options}
@@ -49,6 +47,7 @@ Plot heatmaps for several patterns in DNA sequence
 \itemize{
 \item \code{DNAStringSet}: Plot heatmaps for several patterns in DNA sequence
 }}
+
 \examples{
 data(HeatmapExamples)
 plotPatternDensityMap(string_set, c("AT", "CG"), coords=c(-200, 200))
@@ -56,4 +55,3 @@ plotPatternDensityMap(string_set, c("AT", "CG"), coords=c(-200, 200))
 \seealso{
 PatternHeatmap plotHeatmapList smoothHeatmap
 }
-

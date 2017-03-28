@@ -3,6 +3,7 @@
 \docType{methods}
 \name{nseq}
 \alias{nseq}
+\alias{nseq}
 \alias{nseq,Heatmap-method}
 \alias{nseq<-}
 \alias{nseq<-,Heatmap-method}
@@ -32,4 +33,3 @@ Return or set nseq in a Heatmap
 data(HeatmapExamples)
 nseq(hm) = 1000
 }
-

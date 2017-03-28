@@ -16,4 +16,3 @@ integer
 \description{
 Return the width of sequence represented in a heatmap
 }
-

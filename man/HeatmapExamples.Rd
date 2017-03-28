@@ -48,4 +48,3 @@ An example PWM
 An example GRanges
 }
 \keyword{datasets}
-

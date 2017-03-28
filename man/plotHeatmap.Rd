@@ -21,7 +21,7 @@ This function will take a heatmap and plot it to the device with
 the specified options. Options can be passed together in a list
 or individually as additional arguments. If passing options as a list,
 it's best to first create a list containing the default settings using
-heatmapOptions() and then setting options individually.
+heatmapOptions() andmethod  then setting options individually.
 
 plotHeatmap() does not control device settings at all, these can be
 set using plotHeatmapList() and the relevant options in heatmapOptions()
@@ -38,6 +38,7 @@ Plot a Heatmap object to the device
 \itemize{
 \item \code{Heatmap}: Plot a Heatmap object to the device
 }}
+
 \examples{
 
 data(HeatmapExamples)
@@ -46,4 +47,3 @@ plotHeatmap(hm, color="Blues")
 \seealso{
 heatmapOptions plotHeatmapList
 }
-

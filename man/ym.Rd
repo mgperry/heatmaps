@@ -23,9 +23,9 @@ Generate co-ordinates for each column of the image matrix of a Heatmap
 \itemize{
 \item \code{Heatmap}: Generate co-ordinates for each column of the matrix
 }}
+
 \examples{
 
 data(HeatmapExamples)
 ym(hm)
 }
-

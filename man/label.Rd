@@ -3,6 +3,7 @@
 \docType{methods}
 \name{label}
 \alias{label}
+\alias{label}
 \alias{label,Heatmap-method}
 \alias{label<-}
 \alias{label<-,Heatmap-method}
@@ -33,4 +34,3 @@ data(HeatmapExamples)
 label(hm) = "NewLabel"
 label(hm) # "NewLabel"
 }
-

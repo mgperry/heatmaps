@@ -5,7 +5,6 @@
 #' @param coords Heatmap coords
 #' @param min.score Minimum score for PWM match
 #' @param sigma Bandwith for smoothing kernel
-#' @param output.ratio Output ratio of final image
 #' @param output.size Output size of final image
 #' @param options Heatmap plotting options
 #' @param ... Additional Heatmap plotting options
@@ -32,10 +31,14 @@ setGeneric(name="plotPatternDensityMap",
 #' @describeIn plotPatternDensityMap Plot heatmaps for several patterns in DNA sequence
 setMethod("plotPatternDensityMap",
 signature(seq = "DNAStringSet"),
-    function(seq, patterns, coords=NULL, min.score="80%", sigma=c(3, 3), output.ratio=c(1, 1), output.size=NULL, options=NULL, ...){
+    function(seq, patterns, coords=NULL, min.score="80%", sigma=c(3, 3), output.size=NULL, options=NULL, ...){
 
         if (is.null(options)) {
             options = heatmapOptions(...)
+        }
+
+        if (is.null(output.size)) {
+            output.size = c(length(seq), width(seq[2]))
         }
 
         if (is.null(coords)) {
@@ -53,7 +56,7 @@ signature(seq = "DNAStringSet"),
 
         heatmaps <- list()
         for (i in 1:length(patterns)) {
-            sm_hm = smoothHeatmap(raw_hm[[i]], sigma=sigma, output.ratio=output.ratio, output.size=output.size, method="kernel")
+            sm_hm = smoothHeatmap(raw_hm[[i]], sigma=sigma, output.size=output.size)
             sm_hm@label = labels[i]
             heatmaps[[i]] = sm_hm
         }

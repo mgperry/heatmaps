@@ -26,6 +26,7 @@ A class used to represent a heatmap in a simple, self-contained way
 
 Slots can be accessed and set using getters and setters with the same name.}
 }}
+
 \examples{
 
 data(HeatmapExamples)
@@ -44,4 +45,3 @@ hm = Heatmap(mat, coords=c(-100, 100), label="Test")
 \seealso{
 CoverageHeatmap PatternHeatmap plotHeatmap plotHeatmapMeta
 }
-

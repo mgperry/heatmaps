@@ -31,4 +31,3 @@ data(HeatmapExamples)
 image(hm) = log(image(hm))
 scale(hm) = c(0, max(image(hm)))
 }
-

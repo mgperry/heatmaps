@@ -51,4 +51,3 @@ plotHeatmapList(list(hm, hm2), groups=c(1,2), color=list("Reds", "Blues"))
 \seealso{
 plotHeatmap heatmapOptions plot_legend
 }
-

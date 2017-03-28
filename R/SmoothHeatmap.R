@@ -3,7 +3,7 @@
 #' @param heatmap A heatmap object
 #' @param sigma Numeric, lengt2, (recycled if length 1)
 #' @param output.size  Numeric, length 2
-#' @param method "kernel" or "blur"
+#' @param algorithm "kernel" or "blur"
 #' @param ... additional arguments to S4 methods
 #'
 #' This function smooths a heatmap using either binned kernel density
@@ -32,7 +32,7 @@
 #' @export
 #' @examples
 #' data(HeatmapExamples)
-#' hm_smoothed = smoothHeatmap(hm, sigma=c(5,5), output.ratio=c(2,2), method="blur")
+#' hm_smoothed = smoothHeatmap(hm, sigma=c(5,5), algorithm="blur")
 setGeneric("smoothHeatmap", function(heatmap, ...) standardGeneric("smoothHeatmap"))
 
 #' @describeIn smoothHeatmap Smooth a heatmap

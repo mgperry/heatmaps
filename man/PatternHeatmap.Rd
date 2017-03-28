@@ -51,6 +51,7 @@ Generate a Heatmap of patterns in DNA sequence
 
 \item \code{seq = DNAStringSet,pattern = matrix}: Heatmap of sequence patterns from sequence and matrix
 }}
+
 \examples{
 data(HeatmapExamples)
 PatternHeatmap(string_set, "TA", coords=c(-100, 100), label="TA")
@@ -59,4 +60,3 @@ PatternHeatmap(string_set, tata_pwm, coords=c(-100, 100), min.score="80\%", labe
 \seealso{
 smoothHeatmap
 }
-
