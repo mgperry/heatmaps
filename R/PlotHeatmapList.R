@@ -221,7 +221,7 @@ plot_legend <- function(scale, options) {
 #' par(mai=opts$legend.mai)
 #' plot_clusters(opts)
 plot_clusters <- function(options) {
-    p = options$partition
+    p = rev(options$partition)
     plot(1, 1,
          type='n', bty='n',
          xaxt='n', yaxt='n',

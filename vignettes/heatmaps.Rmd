@@ -137,6 +137,38 @@ scale(h3k4me3_30p_subtracted_hm) = c(-150, 150)
 plotHeatmapList(h3k4me3_30p_subtracted_hm, cex.label=1.5, color=c("red", "white", "blue"), legend=TRUE, legend.width=0.3)
 ```
 
+It can also be helpful to cluster heatmaps. The `heatmaps` package does not provide
+methods for clustering, but can display a partition defined by the user. This is to
+make sure any method can be used, and that the clusters can be recovered after 
+plotting (particularly using non-deterministic methods like k-means).
+
+We can use a simple k-means approach from within R to partition the rows of our
+image matrix, then re-order the rows, remembering the clustering:
+
+```{r clustering, fig.height=6, fig.width=5}
+raw_matrix = image(h3k4me3_30p_subtracted_hm)
+clusters = kmeans(raw_matrix, 2)$cluster
+
+mat = raw_matrix[order(clusters),]
+
+h3k4me3_30p_subtracted_kmeans = Heatmap(
+  mat,
+  coords=coords,
+  label="kmeans",
+  scale=c(-150, 150))
+
+plotHeatmapList(h3k4me3_30p_subtracted_kmeans,
+                cex.label=1.5,
+                color=c("red", "white", "blue"),
+                partition=c(sum(clusters==1), sum(clusters==2)),
+                partition.legend=TRUE,
+                partition.lines=TRUE,
+                legend=TRUE,
+                legend.pos="r",
+                legend.width=0.3)
+
+```
+
 ## Plotting Sequence Features
 
 `heatmaps` also contains convenient functions to plot sequence features, such as

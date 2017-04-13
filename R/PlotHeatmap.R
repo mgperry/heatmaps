@@ -71,8 +71,8 @@ setMethod("plotHeatmap", signature="Heatmap",
     }
 
     if(length(options$partition) > 1 && options$partition.lines == TRUE) {
-        line_coords = hm@nseq * (1 - cumsum(opts$partition/sum(opts$partition)))
-        abline(h=line_coords[1:(length(line_coords) - 1)], lwd=opts$box.width)
+        line_coords = heatmap@nseq * (1 - cumsum(options$partition/sum(options$partition)))
+        abline(h=line_coords[1:(length(line_coords) - 1)], lwd=options$box.width)
     }
 
     if(options$scale){
