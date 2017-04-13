@@ -5,7 +5,7 @@ Date: 18-01-2016
 Author: Malcolm Perry <mgperry32@gmail.com>
 Maintainer: Malcolm Perry <mgperry32@gmail.com>
 Depends:
-    R (>= 3.3)
+    R (>= 3.4)
 Imports:
     methods,
     grDevices,
@@ -26,7 +26,7 @@ Suggests:
     knitr,
     rmarkdown,
     testthat
-biocViews: biocViews: Visualization, SequenceMatching, FunctionalGenomics
+biocViews: Visualization, SequenceMatching, FunctionalGenomics
 License: Artistic-2.0
 Description: This package provides functions for plotting heatmaps of genome-wide
              data across genomic intervals, such as ChIP-seq signals at peaks or across promoters.
