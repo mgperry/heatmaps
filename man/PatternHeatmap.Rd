@@ -28,8 +28,10 @@ can be specified as a character vectore, eg. "CTCCC", or as a PWM. These
 arguments are passed to Biostrings functions, `vmatchPattern` and `matchPWM`.
 Character arguments can contain standard ambiguity codes. PWMs must be 4 by n
 matricies with columns names ACGT. "min.score" is specified either as an absolute
-value, or more commonly as a percentage e.g. "80%". Refer to Biostrings documentation
-for details.
+value, or more commonly as a percentage e.g. "80%". This is calculated based
+on the difference between the minimum and maximum scores, not between zero and
+the maximum score, since it is based on the log odds ratio. As of Bioconductor 3.5,
+this behaviour is different to the `matchPWM` function in Biostrings.
 
 PatternHeatmaps often look much better after smoothing.}
 

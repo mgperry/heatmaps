@@ -203,16 +203,18 @@ ta_30p_smoothed = smoothHeatmap(ta_30p, output.size=c(250, 500), algorithm="kern
 plotHeatmapList(ta_30p_smoothed)
 ```
 
-Using PWMs instead of kmers is very similar, except we also have to specify
-a minimum match score. This can either be absolute or expressed as a percentage
-(see `?Biostrings::matchPWM` for details).
+Using PWMs instead of kmers is very similar, except we also have to specify a
+minimum match score. This can either be absolute or expressed as a percentage.
+Our implementation of this differs from Biostrinngs: see ?PatternHeatmap for
+details.
+
 
 ```{r pwm_pattern_hm, warning=FALSE, fig.height=6, fig.width=3}
 example_data = new.env()
 data(HeatmapExamples, envir=example_data)
 tata_pwm = get("tata_pwm", example_data)
 
-tata_pwm_30p = PatternHeatmap(seq_30p, tata_pwm, coords=coords, label="TATA", min.score="60%")
+tata_pwm_30p = PatternHeatmap(seq_30p, tata_pwm, coords=coords, label="TATA", min.score="80%")
 plotHeatmapList(smoothHeatmap(tata_pwm_30p, output.size=c(250, 500)))
 ```
 

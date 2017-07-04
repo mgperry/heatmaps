@@ -13,8 +13,10 @@
 #' arguments are passed to Biostrings functions, `vmatchPattern` and `matchPWM`.
 #' Character arguments can contain standard ambiguity codes. PWMs must be 4 by n
 #' matricies with columns names ACGT. "min.score" is specified either as an absolute
-#' value, or more commonly as a percentage e.g. "80%". Refer to Biostrings documentation
-#' for details.
+#' value, or more commonly as a percentage e.g. "80%". This is calculated based
+#' on the difference between the minimum and maximum scores, not between zero and
+#' the maximum score, since it is based on the log odds ratio. As of Bioconductor 3.5,
+#' this behaviour is different to the `matchPWM` function in Biostrings.
 #'
 #' PatternHeatmaps often look much better after smoothing.
 #'
@@ -31,7 +33,7 @@ setGeneric(name="PatternHeatmap",
 )
 
 #' @describeIn PatternHeatmap Heatmap of sequence patterns from sequence and character
-#' @importFrom Biostrings matchPattern startIndex DNAStringSet start
+#' @importFrom Biostrings matchPattern startIndex DNAStringSet start maxScore minScore
 #' @export
 setMethod("PatternHeatmap",
 signature(seq = "DNAStringSet", pattern="character"),
@@ -81,7 +83,13 @@ function(seq, pattern, coords=NULL, min.score="80%", label=NULL) {
         }
 
         if (is.null(coords)) coords = c(0, width(seq[1]))
-        if (is.null(label)) label = "pwm"
+        if (is.null(label)) label = "PWM"
+
+        nc = nchar(min.score)
+        if (substr(min.score, nc, nc) == "%") {
+            percent = as.double(substr(min.score, 1L, nc-1L))
+            min.score = pwm_score_percentile(pattern, percent/100)
+        }
 
         bp = length(seq)*width(seq[1])
         st = start(matchPWM(subject=unlist(seq), pwm=pattern, min.score=min.score))
@@ -100,3 +108,8 @@ function(seq, pattern, coords=NULL, min.score="80%", label=NULL) {
     }
 )
 
+pwm_score_percentile = function(pwm, percent) {
+            min.value = minScore(pwm)
+            max.value = maxScore(pwm)
+            score.threshold = min.value + percent * (max.value-min.value)
+}
